@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+:root {
+  --background: #090b10;
+  --foreground: #f4f4f5;
+  --accent-lime: #D0FF71;
+  --accent-lime-hover: #b8f547;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-lime: var(--accent-lime);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+}
+
+/* Ziel Global Signature Lime Button Styling */
+.liquid-lime-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #D0FF71;
+  color: #000000;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 9999px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 25px rgba(208, 255, 113, 0.25);
+}
+
+.liquid-lime-btn:hover {
+  background-color: #bdf74d;
+  box-shadow: 0 0 35px rgba(208, 255, 113, 0.45);
+  transform: translateY(-1px);
+}
+
+.liquid-lime-btn .arrow-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: #000000;
+  color: #D0FF71;
+  border-radius: 9999px;
+  transition: transform 0.3s ease;
+}
+
+.liquid-lime-btn:hover .arrow-icon {
+  transform: translateX(4px) rotate(-45deg);
+}
+
+/* Subtle editorial grid */
+.bg-ziel-grid {
+  background-size: 60px 60px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Infinite Marquee Animation for Logos */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Continuous Moving Video Reels Track */
+@keyframes reelScroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-reel-scroll {
+  display: flex;
+  width: max-content;
+  animation: reelScroll 40s linear infinite;
+}
+
+.animate-reel-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Hide scrollbar for video reels carousel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
