@@ -13,8 +13,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Zamooq — Next-Gen Autonomous Cloud Platform",
-  description: "Founded by Owner & CEO Mir Mujeeb Ul Hassan. Next-generation distributed systems, edge microservices, and autonomous AI infrastructure.",
+  title: "ZamNexus — Connecting Intelligence. Enabling Action.",
+  description:
+    "ZamNexus, a technology brand of Zamooq Limited. We design and deliver intelligent solutions powered by AI, cloud-native engineering, SaaS, automation, Microsoft Dynamics 365, Power Platform and Salesforce.",
+  openGraph: {
+    title: "ZamNexus — Connecting Intelligence. Enabling Action.",
+    description:
+      "Intelligent technology solutions: AI, SaaS, cloud-native engineering, automation and connected business platforms.",
+    type: "website",
+    siteName: "ZamNexus",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -5,6 +5,8 @@
   --foreground: #f4f4f5;
   --accent-lime: #D0FF71;
   --accent-lime-hover: #b8f547;
+  --surface-primary: #11141D;
+  --surface-secondary: #0f1117;
 }
 
 @theme inline {
@@ -21,7 +23,9 @@ body {
   overflow-x: hidden;
 }
 
-/* Ziel Global Signature Lime Button Styling */
+/* ——————————————————————————————————————
+   ZamNexus Signature Lime Button
+   —————————————————————————————————————— */
 .liquid-lime-btn {
   display: inline-flex;
   align-items: center;
@@ -57,7 +61,9 @@ body {
   transform: translateX(4px) rotate(-45deg);
 }
 
-/* Subtle editorial grid */
+/* ——————————————————————————————————————
+   Editorial Background Grid
+   —————————————————————————————————————— */
 .bg-ziel-grid {
   background-size: 60px 60px;
   background-image: 
@@ -65,7 +71,9 @@ body {
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
-/* Infinite Marquee Animation for Logos */
+/* ——————————————————————————————————————
+   Infinite Marquee (Logo Ticker)
+   —————————————————————————————————————— */
 @keyframes marquee {
   0% {
     transform: translateX(0%);
@@ -85,7 +93,9 @@ body {
   animation-play-state: paused;
 }
 
-/* Continuous Moving Video Reels Track */
+/* ——————————————————————————————————————
+   Video Reels Horizontal Scroll
+   —————————————————————————————————————— */
 @keyframes reelScroll {
   0% {
     transform: translateX(0%);
@@ -105,11 +115,142 @@ body {
   animation-play-state: paused;
 }
 
-/* Hide scrollbar for video reels carousel */
+/* ——————————————————————————————————————
+   Mobile Menu Fade-In Animation
+   —————————————————————————————————————— */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* ——————————————————————————————————————
+   Section Reveal Animation (Scroll)
+   —————————————————————————————————————— */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+/* ——————————————————————————————————————
+   Checkmark / Bullet Pulse Dot
+   —————————————————————————————————————— */
+@keyframes gentlePulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-gentle-pulse {
+  animation: gentlePulse 3s ease-in-out infinite;
+}
+
+/* ——————————————————————————————————————
+   Number Counter Glow (Process Steps)
+   —————————————————————————————————————— */
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background-color: rgba(208, 255, 113, 0.1);
+  border: 1px solid rgba(208, 255, 113, 0.2);
+  color: #D0FF71;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-geist-mono);
+  transition: all 0.3s ease;
+}
+
+.step-number:hover,
+.group:hover .step-number {
+  background-color: #D0FF71;
+  color: #000;
+  box-shadow: 0 0 20px rgba(208, 255, 113, 0.3);
+}
+
+/* ——————————————————————————————————————
+   Scrollbar Hiding (Carousel / Reels)
+   —————————————————————————————————————— */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ——————————————————————————————————————
+   Technology Pill Tags
+   —————————————————————————————————————— */
+.tech-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background-color: rgba(39, 39, 42, 0.6);
+  border: 1px solid rgba(63, 63, 70, 0.6);
+  font-size: 12px;
+  font-family: var(--font-geist-mono);
+  color: #a1a1aa;
+  transition: all 0.2s ease;
+}
+
+.tech-pill:hover {
+  border-color: rgba(208, 255, 113, 0.4);
+  color: #D0FF71;
+}
+
+/* ——————————————————————————————————————
+   Capability Checkmark Row
+   —————————————————————————————————————— */
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #d4d4d8;
+}
+
+.check-item::before {
+  content: "✓";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background-color: rgba(208, 255, 113, 0.12);
+  border: 1px solid rgba(208, 255, 113, 0.25);
+  color: #D0FF71;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 2px;
 }
