@@ -60,7 +60,7 @@ const products = [
     tagline: "The right information, for the right decision, at the right time.",
     stat: "0",
     statLabel: "Decisions left uninformed",
-    modules: ["Registration", "Billing", "Laboratory", "Pharmacy", "X-Ray", "Pharmacy", "Dashboard"],
+    modules: ["Registration", "Admissions", "Billing", "Laboratory", "Pharmacy", "X-Ray", "Dashboard"],
     accent: "#6ee7b7",
     index: "04",
     href: "/Products/znxcare",
@@ -124,7 +124,7 @@ export default function ProductsPage() {
         >
           <h2 id="product-list-heading" className="sr-only">Our Four Products</h2>
 
-          {products.map((product, i) => (
+          {products.map((product) => (
             <Link
               key={product.id}
               href={product.href}
@@ -153,9 +153,9 @@ export default function ProductsPage() {
                     {product.tagline}
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    {product.modules.map((mod) => (
+                    {product.modules.map((mod, modIdx) => (
                       <span
-                        key={mod}
+                        key={`${product.id}-${mod}-${modIdx}`}
                         className="px-3 py-1 rounded-lg text-xs font-mono font-medium border transition-all duration-200"
                         style={{
                           background: `${product.accent}10`,

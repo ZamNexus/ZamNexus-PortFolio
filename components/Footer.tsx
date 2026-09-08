@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
@@ -29,15 +30,21 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
           {/* Brand Info */}
           <div className="col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#D0FF71] flex items-center justify-center text-black font-extrabold text-sm">
-                Z
+            <Link href="/" className="flex items-center gap-3.5 group" aria-label="ZamNexus Home">
+              <div className="h-12 px-3 py-1 rounded-2xl bg-white flex items-center justify-center shadow-xl shadow-[#D0FF71]/20 border border-white/30 group-hover:scale-105 transition-all duration-300">
+                <Image
+                  src="/logo_znx.png"
+                  alt="ZamNexus Logo"
+                  width={70}
+                  height={47}
+                  className="h-9 w-auto object-contain"
+                />
               </div>
               <div className="flex flex-col leading-none">
-                <span className="text-2xl font-bold tracking-tight text-white">
+                <span className="text-2xl font-bold tracking-tight text-white group-hover:text-zinc-100 transition-colors">
                   ZamNexus<span className="text-[#D0FF71]">.</span>
                 </span>
-                <span className="text-[8px] font-mono text-zinc-500 tracking-wider">
+                <span className="text-[8px] font-mono text-zinc-500 tracking-wider mt-0.5">
                   A ZAMOOQ LIMITED BRAND
                 </span>
               </div>

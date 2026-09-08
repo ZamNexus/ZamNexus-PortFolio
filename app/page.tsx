@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -291,10 +292,20 @@ export default function HomePage() {
           aria-labelledby="hero-heading"
           className="max-w-6xl mx-auto px-6 pt-44 pb-24 text-center flex flex-col items-center"
         >
-          {/* Status badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-zinc-300 mb-8 backdrop-blur-xl">
-            <span className="w-2 h-2 rounded-full bg-[#D0FF71] animate-pulse" aria-hidden="true" />
-            Connecting Intelligence. Enabling Action.
+          {/* Status badge with ZNX emblem */}
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-zinc-800 bg-zinc-900/90 text-xs font-mono font-medium text-zinc-300 mb-8 backdrop-blur-xl shadow-xl shadow-black/40">
+            <div className="h-6 px-1.5 py-0.5 rounded-md bg-white flex items-center justify-center shadow-sm">
+              <Image
+                src="/logo_znx.png"
+                alt="ZNX"
+                width={36}
+                height={24}
+                className="h-4 w-auto object-contain"
+                priority
+              />
+            </div>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D0FF71] animate-pulse" aria-hidden="true" />
+            <span>Connecting Intelligence. Enabling Action.</span>
           </div>
 
           {/* H1 — single per page */}
@@ -605,36 +616,82 @@ export default function HomePage() {
         {/* ── TECHNOLOGIES WE WORK WITH ─────────────────────────────────────── */}
         <section
           aria-labelledby="tech-heading"
-          className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
+          className="py-20 border-t border-zinc-800/60 overflow-hidden"
         >
-          <div className="mb-10">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
-              Our Technology Stack
-            </span>
-            <h2
-              id="tech-heading"
-              className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-3"
-            >
-              Technologies We Work With
-            </h2>
+          {/* Section header — constrained width */}
+          <div className="max-w-6xl mx-auto px-6 mb-12">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div>
+                <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+                  Our Technology Stack
+                </span>
+                <h2
+                  id="tech-heading"
+                  className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-3"
+                >
+                  Technologies We Work With
+                </h2>
+                <p className="mt-3 text-zinc-400 text-base max-w-xl leading-relaxed">
+                  A curated ecosystem of cloud, AI, and enterprise platforms that power every solution we deliver.
+                </p>
+              </div>
+              {/* Live indicator */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D0FF71] opacity-60" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#D0FF71]" />
+                </span>
+                <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
+                  Continuously Expanding
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-8">
-            {techGroups.map((group) => (
-              <div key={group.label}>
-                <div className="text-xs font-mono uppercase tracking-widest text-zinc-500 mb-3">
-                  {group.label}
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {group.items.map((tech) => (
-                    <span key={tech} className="tech-pill">
-                      {tech}
-                    </span>
+          {/* ── Row 1 — Marquee RTL (AI + Cloud) ── */}
+          {(() => {
+            const row1: { tech: string; category: string }[] = [
+              ...techGroups[0].items.map((t) => ({ tech: t, category: techGroups[0].label })),
+              ...techGroups[1].items.map((t) => ({ tech: t, category: techGroups[1].label })),
+            ];
+            const row1Loop = [...row1, ...row1];
+            return (
+              <div className="marquee-fade-mask mb-4">
+                <div className="animate-marquee flex" style={{ gap: "16px" }}>
+                  {row1Loop.map((item, idx) => (
+                    <div key={`r1-${idx}`} className="marquee-tech-card" style={{ marginRight: "16px" }}>
+                      <span className="tech-category-label">{item.category}</span>
+                      <span className="tech-name">{item.tech}</span>
+                    </div>
                   ))}
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })()}
+
+          {/* ── Row 2 — Marquee RTL reversed (Microsoft + Salesforce) ── */}
+          {(() => {
+            const row2: { tech: string; category: string }[] = [
+              ...techGroups[2].items.map((t) => ({ tech: t, category: techGroups[2].label })),
+              ...techGroups[3].items.map((t) => ({ tech: t, category: techGroups[3].label })),
+            ];
+            const row2Loop = [...row2, ...row2];
+            return (
+              <div className="marquee-fade-mask">
+                <div
+                  className="animate-marquee-row2 flex"
+                  style={{ gap: "16px", animationDirection: "reverse" }}
+                >
+                  {row2Loop.map((item, idx) => (
+                    <div key={`r2-${idx}`} className="marquee-tech-card" style={{ marginRight: "16px" }}>
+                      <span className="tech-category-label">{item.category}</span>
+                      <span className="tech-name">{item.tech}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </section>
 
         {/* ── INDUSTRIES TEASER ────────────────────────────────────────────── */}

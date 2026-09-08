@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
@@ -47,15 +48,27 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto rounded-full bg-[#11141D]/90 backdrop-blur-2xl border border-zinc-800/80 px-5 py-3 flex items-center justify-between shadow-2xl pointer-events-auto">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-          <div className="w-8 h-8 rounded-full bg-[#D0FF71] flex items-center justify-center text-black font-extrabold text-sm group-hover:scale-110 transition-transform shadow-md shadow-[#D0FF71]/20">
-            Z
+        <Link
+          href="/"
+          className="flex items-center gap-3 group flex-shrink-0"
+          aria-label="ZamNexus Home"
+        >
+          {/* High-contrast brand emblem badge */}
+          <div className="h-10 px-2.5 py-1 rounded-xl bg-white flex items-center justify-center shadow-lg shadow-[#D0FF71]/25 border border-white/40 group-hover:scale-105 transition-all duration-300">
+            <Image
+              src="/logo_znx.png"
+              alt="ZamNexus Logo"
+              width={54}
+              height={36}
+              className="h-7 w-auto object-contain"
+              priority
+            />
           </div>
           <div className="flex flex-col leading-none">
-            <span className="text-xl font-bold tracking-tight text-white">
+            <span className="text-xl font-bold tracking-tight text-white group-hover:text-zinc-100 transition-colors">
               ZamNexus<span className="text-[#D0FF71]">.</span>
             </span>
-            <span className="text-[8px] font-mono text-zinc-500 tracking-wider hidden sm:block">
+            <span className="text-[8px] font-mono text-zinc-500 tracking-wider hidden sm:block mt-0.5">
               A ZAMOOQ LIMITED BRAND
             </span>
           </div>

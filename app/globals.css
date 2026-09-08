@@ -86,7 +86,7 @@ body {
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 25s linear infinite;
+  animation: marquee 40s linear infinite;
 }
 
 .animate-marquee:hover {
@@ -224,6 +224,86 @@ body {
 .tech-pill:hover {
   border-color: rgba(208, 255, 113, 0.4);
   color: #D0FF71;
+}
+
+/* ——————————————————————————————————————
+   Marquee Tech Card (Stack Carousel)
+   —————————————————————————————————————— */
+.marquee-tech-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px 22px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(17, 20, 29, 0.9) 0%, rgba(15, 17, 23, 0.7) 100%);
+  border: 1px solid rgba(63, 63, 70, 0.45);
+  white-space: nowrap;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+  backdrop-filter: blur(8px);
+}
+
+.marquee-tech-card:hover {
+  border-color: rgba(208, 255, 113, 0.35);
+  box-shadow: 0 0 22px rgba(208, 255, 113, 0.08), 0 4px 16px rgba(0,0,0,0.4);
+}
+
+.marquee-tech-card .tech-category-label {
+  font-size: 9px;
+  font-family: var(--font-geist-mono);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #D0FF71;
+  opacity: 0.7;
+}
+
+.marquee-tech-card .tech-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e4e4e7;
+  transition: color 0.2s ease;
+}
+
+.marquee-tech-card:hover .tech-name {
+  color: #ffffff;
+}
+
+/* ——————————————————————————————————————
+   Marquee Track — Edge Fade Mask
+   —————————————————————————————————————— */
+.marquee-fade-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+}
+
+/* Row-specific marquee speeds */
+@keyframes marqueeRow2 {
+  0%   { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee-row2 {
+  display: flex;
+  width: max-content;
+  animation: marqueeRow2 45s linear infinite;
+}
+
+.animate-marquee-row2:hover {
+  animation-play-state: paused;
 }
 
 /* ——————————————————————————————————————
