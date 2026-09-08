@@ -2,26 +2,52 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+
+      // Hide on scroll down past 80px; show on any upward scroll
+      if (delta > 0 && currentY > 80) {
+        setVisible(false);
+        setMobileOpen(false); // close mobile menu when hiding
+      } else if (delta < 0) {
+        setVisible(true);
+      }
+
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navLinks = [
     { label: "Solutions", href: "/Solutions" },
     { label: "Services", href: "/Services" },
+    { label: "Products", href: "/Products" },
     { label: "Platforms", href: "/Platforms" },
     { label: "Industries", href: "/Industries" },
-    { label: "Insights", href: "/Insights" },
     { label: "About", href: "/About" },
   ];
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 px-4 sm:px-6 pt-4 pointer-events-none">
-      <div className="max-w-6xl mx-auto rounded-full bg-[#11141D]/85 backdrop-blur-2xl border border-zinc-800/80 px-6 py-3 flex items-center justify-between shadow-2xl pointer-events-auto transition-all">
+    <header
+      className={`fixed top-0 inset-x-0 z-50 px-4 sm:px-6 pt-4 pointer-events-none transition-transform duration-300 ease-in-out ${
+        visible ? "translate-y-0" : "-translate-y-[120%]"
+      }`}
+    >
+      <div className="max-w-6xl mx-auto rounded-full bg-[#11141D]/90 backdrop-blur-2xl border border-zinc-800/80 px-5 py-3 flex items-center justify-between shadow-2xl pointer-events-auto">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group">
+        <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
           <div className="w-8 h-8 rounded-full bg-[#D0FF71] flex items-center justify-center text-black font-extrabold text-sm group-hover:scale-110 transition-transform shadow-md shadow-[#D0FF71]/20">
             Z
           </div>
@@ -35,15 +61,18 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Nav Items */}
-        <nav className="hidden lg:flex items-center gap-0.5">
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-0.5" aria-label="Main navigation">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive =
+              link.href === "/Products"
+                ? pathname.startsWith("/Products")
+                : pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                   isActive
                     ? "bg-zinc-800/90 text-[#D0FF71]"
                     : "text-zinc-300 hover:text-white hover:bg-zinc-800/40"
@@ -55,24 +84,22 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* CTA Button — Desktop */}
-        <div className="hidden sm:flex items-center gap-3">
-          <Link
-            href="/Contact"
-            className="liquid-lime-btn text-sm py-2 px-5"
-          >
+        {/* CTA — Desktop */}
+        <div className="hidden sm:flex items-center gap-3 flex-shrink-0">
+          <Link href="/Contact" className="liquid-lime-btn text-sm py-2 px-5">
             <span>Talk to Us</span>
-            <span className="arrow-icon w-6 h-6 text-xs">→</span>
+            <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
           </Link>
         </div>
 
-        {/* Mobile Hamburger Toggle */}
+        {/* Mobile Hamburger */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
           className="lg:hidden p-2 rounded-full text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors"
           aria-label="Toggle Navigation Menu"
+          aria-expanded={mobileOpen}
         >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             {mobileOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             ) : (
@@ -82,12 +109,15 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Dropdown */}
       {mobileOpen && (
         <div className="lg:hidden max-w-sm mx-auto mt-2 rounded-3xl bg-[#11141D]/95 backdrop-blur-2xl border border-zinc-800 p-6 shadow-2xl pointer-events-auto space-y-4 text-center animate-fade-in">
           <div className="flex flex-col gap-1">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive =
+                link.href === "/Products"
+                  ? pathname.startsWith("/Products")
+                  : pathname === link.href;
               return (
                 <Link
                   key={link.href}
@@ -111,7 +141,7 @@ export default function Navbar() {
               className="liquid-lime-btn w-full justify-center text-sm py-3"
             >
               <span>Talk to Us</span>
-              <span className="arrow-icon w-6 h-6 text-xs">→</span>
+              <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
             </Link>
           </div>
         </div>

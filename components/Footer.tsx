@@ -93,6 +93,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/Products" className="hover:text-[#D0FF71] transition-colors">
+                  Products
+                </Link>
+              </li>
+              <li>
                 <Link href="/Platforms" className="hover:text-[#D0FF71] transition-colors">
                   Platforms
                 </Link>
@@ -115,6 +120,35 @@ export default function Footer() {
               <li>
                 <Link href="/Contact" className="hover:text-[#D0FF71] transition-colors">
                   Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Products Suite */}
+          <div>
+            <h4 className="text-xs font-mono uppercase tracking-widest text-white font-bold mb-4">
+              Product Suite
+            </h4>
+            <ul className="space-y-2.5 text-sm">
+              <li>
+                <Link href="/Products/znxerp" className="hover:text-[#D0FF71] transition-colors">
+                  ZNXERP
+                </Link>
+              </li>
+              <li>
+                <Link href="/Products/znxepos" className="hover:text-[#7dd3fc] transition-colors">
+                  ZNXePOS
+                </Link>
+              </li>
+              <li>
+                <Link href="/Products/znxedu" className="hover:text-[#c4b5fd] transition-colors">
+                  ZNXEdu
+                </Link>
+              </li>
+              <li>
+                <Link href="/Products/znxcare" className="hover:text-[#6ee7b7] transition-colors">
+                  ZNXCare
                 </Link>
               </li>
             </ul>
