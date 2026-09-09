@@ -186,7 +186,7 @@ export default function SolutionsPage() {
           className="max-w-6xl mx-auto px-6 pt-44 pb-20 text-center"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
-            Connecting Intelligence. Enabling Action.
+            Enterprise Cloud &amp; AI Solutions
           </div>
           <h1
             id="solutions-hero-heading"

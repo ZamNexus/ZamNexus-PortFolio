@@ -1,19 +1,64 @@
 @import "tailwindcss";
 
+/* ════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — single source of truth for color, type & spacing.
+   Change a value here and it propagates everywhere it's used.
+   ════════════════════════════════════════════════════════════════ */
 :root {
-  --background: #090b10;
-  --foreground: #f4f4f5;
-  --accent-lime: #D0FF71;
-  --accent-lime-hover: #b8f547;
-  --surface-primary: #11141D;
-  --surface-secondary: #0f1117;
+  /* ── Color: core palette ── */
+  --background: #0A0F1E;              /* deep navy — primary background */
+  --background-secondary: #1E293B;    /* slate — section gradient end / elevated ground */
+  --foreground: #E2E8F0;              /* body text (slate-200) */
+  --foreground-strong: #F8FAFC;       /* headings / high-emphasis text */
+  --foreground-muted: #94A3B8;        /* secondary / caption text (slate-400) */
+
+  --accent: #2563EB;                  /* electric blue — primary accent */
+  --accent-hover: #3B82F6;            /* lighter blue — hover state */
+  --accent-active: #1D4ED8;           /* darker blue — pressed state */
+  --accent-glow: rgba(37, 99, 235, 0.35);
+  --accent-glow-soft: rgba(37, 99, 235, 0.15);
+
+  --surface-primary: #111827;         /* card / panel surface */
+  --surface-secondary: #1E293B;       /* elevated surface (matches slate) */
+  --border-subtle: rgba(148, 163, 184, 0.14);
+  --border-strong: rgba(37, 99, 235, 0.45);
+
+  /* ── Spacing: 8px baseline grid ── */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-7: 56px;
+  --space-8: 64px;
+  --space-10: 80px;
+  --space-12: 96px;
+  --space-16: 128px;
+  --space-20: 160px;
+
+  /* ── Motion ── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 150ms var(--ease-out);
+  --transition-base: 250ms var(--ease-out);
+  --transition-slow: 450ms var(--ease-out);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
   --color-foreground: var(--foreground);
-  --color-lime: var(--accent-lime);
-  --font-sans: var(--font-geist-sans);
+  --color-foreground-strong: var(--foreground-strong);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-active: var(--accent-active);
+  --color-surface: var(--surface-primary);
+  --color-surface-2: var(--surface-secondary);
+
+  /* Typography hierarchy: Inter (body) + Sora (headings) + Geist Mono (labels/data) */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-sora);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -21,27 +66,476 @@ body {
   background: var(--background);
   color: var(--foreground);
   overflow-x: hidden;
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
 }
 
 /* ——————————————————————————————————————
-   ZamNexus Signature Lime Button
+   Section Gradient — navy to slate wash
+   —————————————————————————————————————— */
+.bg-section-gradient {
+  background: linear-gradient(180deg, var(--background) 0%, var(--background-secondary) 100%);
+}
+
+/* ——————————————————————————————————————
+   Noise / Grain Overlay — depth on hero sections
+   —————————————————————————————————————— */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-repeat: repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ——————————————————————————————————————
+   Typewriter Word-Cycle (Hero Headline)
+   —————————————————————————————————————— */
+.typewriter-cycle {
+  display: inline-grid;
+  vertical-align: baseline;
+  text-align: left;
+}
+
+.typewriter-ghost {
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+
+.typewriter-text {
+  grid-area: 1 / 1;
+  background: linear-gradient(90deg, var(--accent-hover), #8B5CF6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.typewriter-caret {
+  display: inline-block;
+  width: 3px;
+  height: 0.82em;
+  margin-left: 3px;
+  background: var(--accent-hover);
+  vertical-align: -0.08em;
+  animation: caret-blink 1s steps(1, end) infinite;
+}
+
+@keyframes caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-caret {
+    animation: none;
+  }
+}
+
+/* ——————————————————————————————————————
+   Particle Network Canvas (Hero Background)
+   —————————————————————————————————————— */
+.particle-network-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* ——————————————————————————————————————
+   Floating Gradient Orb (Hero Backdrop)
+   —————————————————————————————————————— */
+.hero-orb {
+  position: absolute;
+  top: -160px;
+  left: 50%;
+  margin-left: -320px;
+  width: 640px;
+  height: 640px;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(37, 99, 235, 0.42), transparent 60%),
+    radial-gradient(circle at 65% 65%, rgba(139, 92, 246, 0.30), transparent 60%);
+  filter: blur(100px);
+  pointer-events: none;
+  animation: orb-float 22s ease-in-out infinite alternate;
+}
+
+@keyframes orb-float {
+  0%   { transform: translate(-6%, -4%) scale(1); }
+  50%  { transform: translate(5%, 4%) scale(1.08); }
+  100% { transform: translate(-3%, 6%) scale(0.95); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb {
+    animation: none;
+  }
+}
+
+/* ——————————————————————————————————————
+   Staggered Word Reveal (Tagline)
+   —————————————————————————————————————— */
+.tagline-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: word-reveal 0.6s var(--ease-out) forwards;
+}
+
+@keyframes word-reveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tagline-word {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ——————————————————————————————————————
+   Scroll Reveal — sitewide section + card entrance
+   —————————————————————————————————————— */
+.scroll-reveal {
+  opacity: 0;
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal--up {
+  transform: translateY(40px);
+}
+
+.scroll-reveal--left {
+  transform: translateX(-24px);
+  transition-duration: 0.5s;
+}
+
+.scroll-reveal[data-visible="true"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ——————————————————————————————————————
+   Delivery Timeline — horizontal, scroll-linked
+   —————————————————————————————————————— */
+.delivery-timeline {
+  position: relative;
+}
+
+.delivery-timeline-track {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(63, 63, 70, 0.5);
+  display: none;
+}
+
+.delivery-timeline-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--accent), var(--accent-hover));
+  box-shadow: 0 0 12px var(--accent-glow);
+  transition: width 0.15s linear;
+}
+
+.delivery-timeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.delivery-timeline-step {
+  opacity: 0.25;
+  transform: translateY(14px) scale(0.96);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  padding: 24px;
+  border-radius: 20px;
+  background-color: rgba(24, 24, 27, 0.4);
+  border: 1px solid rgba(39, 39, 42, 1);
+}
+
+.delivery-timeline-step[data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  border-color: var(--border-strong);
+}
+
+.delivery-timeline-node {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background-color: rgba(24, 24, 27, 1);
+  border: 2px solid rgba(63, 63, 70, 1);
+  color: var(--foreground-muted);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: var(--font-geist-mono);
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+  transition: background-color 0.4s var(--ease-out), border-color 0.4s var(--ease-out), color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+
+.delivery-timeline-step[data-revealed="true"] .delivery-timeline-node {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.delivery-timeline-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.delivery-timeline-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--foreground-muted);
+}
+
+@media (min-width: 1024px) {
+  .delivery-timeline-track {
+    display: block;
+  }
+
+  .delivery-timeline-steps {
+    flex-direction: row;
+    gap: 0;
+  }
+
+  .delivery-timeline-step {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    padding: 0 12px;
+    border-radius: 0;
+  }
+
+  .delivery-timeline-step[data-revealed="true"] {
+    border: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .delivery-timeline-step {
+    transition: none;
+  }
+  .delivery-timeline-fill {
+    transition: none;
+  }
+}
+
+/* ——————————————————————————————————————
+   Glass Capability / Product Card
+   Usage: set --card-accent inline per card (per-capability color),
+   put the icon in .glass-capability-icon, and give the card's own
+   wrapper element `height: 100%` (or Tailwind `h-full`) so equal-height
+   rows fall out of the parent grid's default `align-items: stretch`.
+   —————————————————————————————————————— */
+.glass-capability-card {
+  --card-accent: var(--accent);
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  border-radius: 24px;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out),
+    background-color 0.4s var(--ease-out);
+}
+
+/* Subtle 1px blue gradient border — the glassmorphism edge, same on every card */
+.glass-capability-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(96, 165, 250, 0.45),
+    rgba(37, 99, 235, 0.05) 45%,
+    rgba(139, 92, 246, 0.30)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* 2px gradient top border — unique per card via --card-accent */
+.glass-capability-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--card-accent), transparent);
+  z-index: 2;
+}
+
+.glass-capability-card:hover {
+  transform: translateY(-6px);
+  background: rgba(17, 24, 39, 0.75);
+  box-shadow:
+    0 28px 56px -16px rgba(0, 0, 0, 0.6),
+    0 0 40px -8px color-mix(in srgb, var(--card-accent) 55%, transparent);
+}
+
+.glass-capability-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  background: color-mix(in srgb, var(--card-accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--card-accent) 30%, transparent);
+  color: var(--card-accent);
+  flex-shrink: 0;
+  transition: box-shadow 0.4s var(--ease-out);
+}
+
+.glass-capability-card:hover .glass-capability-icon {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--card-accent) 65%, transparent);
+  animation: icon-wiggle 0.6s var(--ease-out);
+}
+
+/* Variant for a product logo image instead of a square glyph box */
+.glass-capability-icon--logo {
+  width: auto;
+  height: 44px;
+  padding: 0 4px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.glass-capability-card:hover .glass-capability-icon--logo {
+  box-shadow: none;
+  filter: drop-shadow(0 0 16px color-mix(in srgb, var(--card-accent) 70%, transparent));
+}
+
+@keyframes icon-wiggle {
+  0%   { transform: rotate(0deg) scale(1); }
+  30%  { transform: rotate(-10deg) scale(1.08); }
+  60%  { transform: rotate(8deg) scale(1.08); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+.glass-capability-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.glass-capability-card:hover .glass-capability-title {
+  color: var(--card-accent);
+}
+
+.glass-capability-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--foreground-muted);
+  flex: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-capability-card {
+    transition: none;
+  }
+  .glass-capability-card:hover {
+    transform: none;
+  }
+  .glass-capability-card:hover .glass-capability-icon {
+    animation: none;
+  }
+}
+
+/* ——————————————————————————————————————
+   CTA Gentle Pulse — draws the eye once every 4s
+   —————————————————————————————————————— */
+@keyframes cta-pulse {
+  0%, 92%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 25px var(--accent-glow-soft);
+  }
+  96% {
+    transform: scale(1.045);
+    box-shadow: 0 0 38px var(--accent-glow);
+  }
+}
+
+.animate-cta-pulse {
+  animation: cta-pulse 4s ease-in-out infinite;
+}
+
+.animate-cta-pulse:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-cta-pulse {
+    animation: none;
+  }
+}
+
+/* ——————————————————————————————————————
+   ZamNexus Signature Button
    —————————————————————————————————————— */
 .liquid-lime-btn {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  background-color: #D0FF71;
-  color: #000000;
+  background-color: var(--accent);
+  color: #ffffff;
   font-weight: 600;
   padding: 10px 24px;
   border-radius: 9999px;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 0 25px rgba(208, 255, 113, 0.25);
+  transition: background-color var(--transition-base), box-shadow var(--transition-base), transform var(--transition-base);
+  box-shadow: 0 0 25px var(--accent-glow-soft);
 }
 
 .liquid-lime-btn:hover {
-  background-color: #bdf74d;
-  box-shadow: 0 0 35px rgba(208, 255, 113, 0.45);
+  background-color: var(--accent-hover);
+  box-shadow: 0 0 35px var(--accent-glow);
   transform: translateY(-1px);
 }
 
@@ -51,10 +545,10 @@ body {
   justify-content: center;
   width: 32px;
   height: 32px;
-  background-color: #000000;
-  color: #D0FF71;
+  background-color: var(--background);
+  color: var(--accent-hover);
   border-radius: 9999px;
-  transition: transform 0.3s ease;
+  transition: transform var(--transition-base);
 }
 
 .liquid-lime-btn:hover .arrow-icon {
@@ -66,7 +560,7 @@ body {
    —————————————————————————————————————— */
 .bg-ziel-grid {
   background-size: 60px 60px;
-  background-image: 
+  background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
@@ -177,20 +671,20 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 16px;
-  background-color: rgba(208, 255, 113, 0.1);
-  border: 1px solid rgba(208, 255, 113, 0.2);
-  color: #D0FF71;
+  background-color: var(--accent-glow-soft);
+  border: 1px solid var(--border-strong);
+  color: var(--accent-hover);
   font-size: 14px;
   font-weight: 700;
   font-family: var(--font-geist-mono);
-  transition: all 0.3s ease;
+  transition: all var(--transition-base);
 }
 
 .step-number:hover,
 .group:hover .step-number {
-  background-color: #D0FF71;
-  color: #000;
-  box-shadow: 0 0 20px rgba(208, 255, 113, 0.3);
+  background-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 20px var(--accent-glow);
 }
 
 /* ——————————————————————————————————————
@@ -218,12 +712,12 @@ body {
   font-size: 12px;
   font-family: var(--font-geist-mono);
   color: #a1a1aa;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
 }
 
 .tech-pill:hover {
-  border-color: rgba(208, 255, 113, 0.4);
-  color: #D0FF71;
+  border-color: var(--border-strong);
+  color: var(--accent-hover);
 }
 
 /* ——————————————————————————————————————
@@ -236,17 +730,17 @@ body {
   gap: 8px;
   padding: 16px 22px;
   border-radius: 16px;
-  background: linear-gradient(135deg, rgba(17, 20, 29, 0.9) 0%, rgba(15, 17, 23, 0.7) 100%);
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.9) 0%, rgba(15, 23, 42, 0.7) 100%);
   border: 1px solid rgba(63, 63, 70, 0.45);
   white-space: nowrap;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
   cursor: default;
   backdrop-filter: blur(8px);
 }
 
 .marquee-tech-card:hover {
-  border-color: rgba(208, 255, 113, 0.35);
-  box-shadow: 0 0 22px rgba(208, 255, 113, 0.08), 0 4px 16px rgba(0,0,0,0.4);
+  border-color: var(--border-strong);
+  box-shadow: 0 0 22px var(--accent-glow-soft), 0 4px 16px rgba(0,0,0,0.4);
 }
 
 .marquee-tech-card .tech-category-label {
@@ -255,15 +749,15 @@ body {
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #D0FF71;
-  opacity: 0.7;
+  color: var(--accent-hover);
+  opacity: 0.85;
 }
 
 .marquee-tech-card .tech-name {
   font-size: 14px;
   font-weight: 600;
   color: #e4e4e7;
-  transition: color 0.2s ease;
+  transition: color var(--transition-fast);
 }
 
 .marquee-tech-card:hover .tech-name {
@@ -327,9 +821,9 @@ body {
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  background-color: rgba(208, 255, 113, 0.12);
-  border: 1px solid rgba(208, 255, 113, 0.25);
-  color: #D0FF71;
+  background-color: var(--accent-glow-soft);
+  border: 1px solid var(--border-strong);
+  color: var(--accent-hover);
   font-size: 11px;
   font-weight: 700;
   margin-top: 2px;

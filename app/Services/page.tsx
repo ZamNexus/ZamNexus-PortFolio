@@ -235,7 +235,7 @@ export default function ServicesPage() {
           className="max-w-6xl mx-auto px-6 pt-44 pb-20 text-center"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
-            Connecting Intelligence. Enabling Action.
+            Full-Lifecycle Engineering Services
           </div>
           <h1
             id="services-hero-heading"
@@ -246,16 +246,16 @@ export default function ServicesPage() {
               what&apos;s next.
             </span>
           </h1>
-          <p className="mt-7 text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            Deep capability across AI, cloud engineering, SaaS, automation
-            and enterprise platforms — designed around your business
-            objectives, not just a technology brief.
+          <p className="mt-7 text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed line-clamp-2">
+            Deep capability across AI, cloud, SaaS and automation —
+            designed around your business objectives, not a technology brief.
           </p>
-          <div className="mt-10">
+          <div className="mt-10 flex flex-col items-center gap-2">
             <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
               <span>Talk to Us</span>
               <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
             </Link>
+            <span className="text-xs text-zinc-500 font-mono">No commitment · 30-min call</span>
           </div>
         </section>
 
@@ -340,9 +340,9 @@ export default function ServicesPage() {
             >
               From Discovery to Evolution
             </h2>
-            <p className="mt-4 text-zinc-400 max-w-2xl text-base leading-relaxed">
-              A structured, repeatable delivery approach that ensures every engagement
-              starts with understanding and ends with continuous improvement.
+            <p className="mt-4 text-zinc-400 max-w-2xl text-base leading-relaxed line-clamp-2">
+              A structured, repeatable delivery approach — every engagement starts with
+              understanding and ends with continuous improvement.
             </p>
           </div>
 
@@ -385,6 +385,9 @@ export default function ServicesPage() {
             >
               What Sets Us Apart
             </h2>
+            <p className="mt-3 text-zinc-400 text-base leading-relaxed max-w-xl line-clamp-2">
+              The judgement of a senior team, applied to every engagement we take on.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -424,19 +427,21 @@ export default function ServicesPage() {
             >
               Let&apos;s build what&apos;s next.
             </h2>
-            <p className="text-zinc-400 text-base leading-relaxed max-w-xl mx-auto">
-              Tell us about your challenge, your idea or your ambition.
-              We&apos;ll help you define the right approach and build a
-              solution that works.
+            <p className="text-zinc-400 text-base leading-relaxed max-w-xl mx-auto line-clamp-2">
+              Tell us about your challenge, your idea or your ambition — we&apos;ll
+              help you define the right approach.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                <span>Start a Conversation</span>
-                <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-              </Link>
+            <div className="flex flex-wrap items-start justify-center gap-6 pt-2">
+              <div className="flex flex-col items-center gap-2">
+                <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
+                  <span>Start a Conversation</span>
+                  <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
+                </Link>
+                <span className="text-xs text-zinc-500 font-mono">No commitment · 30-min call</span>
+              </div>
               <Link
                 href="/Solutions"
-                className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300"
+                className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300 mt-4"
               >
                 Explore Solutions →
               </Link>

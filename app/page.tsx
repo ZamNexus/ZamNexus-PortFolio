@@ -1,10 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
+import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ParticleNetwork from "@/components/ParticleNetwork";
+import AnimatedStat from "@/components/AnimatedStat";
+import ScrollReveal from "@/components/ScrollReveal";
+import DeliveryTimeline from "@/components/DeliveryTimeline";
+import { useParallax } from "@/hooks/useParallax";
 
 // ─── Type Definitions ────────────────────────────────────────────────────────
 
@@ -25,9 +29,13 @@ interface Solution {
   capabilities: string[];
 }
 
+type WhyIcon = "briefcase" | "spark" | "building" | "cloud" | "shield" | "trending";
+
 interface WhyPoint {
   title: string;
   description: string;
+  icon: WhyIcon;
+  accent: string;
 }
 
 interface DeliveryStep {
@@ -142,31 +150,43 @@ const whyPoints: WhyPoint[] = [
     title: "Business-Focused",
     description:
       "We start with your business challenges, opportunities and goals — not just the technology.",
+    icon: "briefcase",
+    accent: "#F59E0B",
   },
   {
     title: "Intelligence-Driven",
     description:
       "We help you use AI, automation and real-time data to make smarter decisions and act faster.",
+    icon: "spark",
+    accent: "#8B5CF6",
   },
   {
     title: "Enterprise Experience",
     description:
       "Proven delivery of complex enterprise applications, integrations and technology programmes.",
+    icon: "building",
+    accent: "#2563EB",
   },
   {
     title: "Cloud-Native Thinking",
     description:
       "Systems designed to be secure, resilient, scalable and ready to evolve.",
+    icon: "cloud",
+    accent: "#14B8A6",
   },
   {
     title: "Secure & Responsible by Design",
     description:
       "Security, governance and responsible AI practice built in from the start, not bolted on afterwards.",
+    icon: "shield",
+    accent: "#F43F5E",
   },
   {
     title: "Built to Scale",
     description:
       "Solutions designed to grow with your organisation and adapt to changing business needs.",
+    icon: "trending",
+    accent: "#10B981",
   },
 ];
 
@@ -270,12 +290,53 @@ const industries: Industry[] = [
   { name: "Technology & SaaS", href: "/Industries" },
 ];
 
+// ─── Icons ───────────────────────────────────────────────────────────────────
+
+const whyIconPaths: Record<WhyIcon, string> = {
+  briefcase:
+    "M3 7h18v13H3V7Z M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M3 12h18",
+  spark: "M13 2 4 14h6l-1 8 9-12h-6l1-8Z",
+  building:
+    "M4 3h16v18H4V3Z M9 21v-4h6v4 M9 8h1.5 M13.5 8H15 M9 12h1.5 M13.5 12H15 M9 16h1.5 M13.5 16H15",
+  cloud:
+    "M6 18h11a4 4 0 0 0 .5-7.97A6 6 0 0 0 5.5 11 4 4 0 0 0 6 18Z",
+  shield: "M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z M9 12l2 2 4-4",
+  trending: "M3 17l6-6 4 4 8-8 M17 7h4v4",
+};
+
+interface WhyPointIconProps {
+  icon: WhyIcon;
+}
+
+function WhyPointIcon({ icon }: WhyPointIconProps) {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={whyIconPaths[icon]} />
+    </svg>
+  );
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
   const [activeSolution, setActiveSolution] = useState<SolutionCategory>("ai");
 
   const activeSolutionData = solutions.find((s) => s.id === activeSolution)!;
+
+  // Subtle 20px parallax on decorative background blobs
+  const whyBlobRef = useParallax<HTMLDivElement>(0.1, 20);
+  const timelineBlobRef = useParallax<HTMLDivElement>(-0.08, 20);
+  const visionBlobRef = useParallax<HTMLDivElement>(0.12, 20);
 
   return (
     <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black overflow-x-hidden">
@@ -290,67 +351,83 @@ export default function HomePage() {
         {/* ── HERO ──────────────────────────────────────────────────────────── */}
         <section
           aria-labelledby="hero-heading"
-          className="max-w-6xl mx-auto px-6 pt-44 pb-24 text-center flex flex-col items-center"
+          className="relative isolate overflow-hidden max-w-6xl mx-auto px-6 pt-44 pb-24 text-center flex flex-col items-center"
         >
-          {/* Status badge with ZNX emblem */}
-          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-zinc-800 bg-zinc-900/90 text-xs font-mono font-medium text-zinc-300 mb-8 backdrop-blur-xl shadow-xl shadow-black/40">
-            <div className="h-6 px-1.5 py-0.5 rounded-md bg-white flex items-center justify-center shadow-sm">
-              <Image
-                src="/logo_znx.png"
-                alt="ZNX"
-                width={36}
-                height={24}
-                className="h-4 w-auto object-contain"
-                priority
-              />
-            </div>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D0FF71] animate-pulse" aria-hidden="true" />
-            <span>Connecting Intelligence. Enabling Action.</span>
+          {/* Floating gradient orb — behind everything */}
+          <div className="hero-orb" aria-hidden="true" />
+
+          {/* Particle network — neural-net background */}
+          <ParticleNetwork />
+
+          {/* Grain texture for depth */}
+          <div className="noise-overlay" aria-hidden="true" />
+
+          {/* Status badge — staggered word reveal on load */}
+          <div className="relative z-10 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/90 text-xs font-mono font-medium text-zinc-300 mb-8 backdrop-blur-xl shadow-xl shadow-black/40">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-hover)] animate-pulse shadow-[0_0_8px_var(--accent-hover)]" aria-hidden="true" />
+            <span className="font-semibold tracking-wide text-[var(--accent-hover)]">
+              {"Connecting Intelligence. Enabling Action.".split(" ").map((word, i) => (
+                <span
+                  key={`${word}-${i}`}
+                  className="tagline-word"
+                  style={{ animationDelay: `${i * 80}ms` }}
+                >
+                  {word}
+                  {i < 4 ? " " : ""}
+                </span>
+              ))}
+            </span>
           </div>
 
           {/* H1 — single per page */}
           <h1
             id="hero-heading"
-            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight max-w-5xl text-balance leading-[1.08] text-white"
+            className="relative z-10 text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight max-w-4xl text-balance leading-[1.08] text-white"
           >
-            Turning intelligent technology into{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#D0FF71] to-emerald-300">
-              real business outcomes.
-            </span>
+            We Build AI Systems That Work.{" "}
+            <span className="typewriter-text">Not Demos.</span>
           </h1>
 
-          <p className="mt-7 text-lg sm:text-xl text-zinc-400 max-w-2xl leading-relaxed text-balance">
+          <p className="relative z-10 mt-7 text-lg sm:text-xl text-zinc-400 max-w-2xl leading-relaxed text-balance">
             ZamNexus helps organisations simplify complex processes, connect
             fragmented systems and unlock the value of their data — using
             Artificial Intelligence, agentic automation, cloud-native
             engineering and modern business applications.
           </p>
 
-          {/* CTAs */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/Solutions" className="liquid-lime-btn text-base py-4 px-8">
-              <span>Explore Our Solutions</span>
-              <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-            </Link>
-            <Link
-              href="/Contact"
-              className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300"
-            >
-              Talk to Us →
-            </Link>
+          {/* CTAs — each with a secondary micro-copy line */}
+          <div className="relative z-10 mt-10 flex flex-wrap items-start justify-center gap-6">
+            <div className="flex flex-col items-center gap-2">
+              <Link href="/Solutions" className="liquid-lime-btn text-base py-4 px-8">
+                <span>Explore Our Solutions</span>
+                <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
+              </Link>
+              <span className="text-xs text-zinc-500 font-mono">6 capabilities · one team</span>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <Link
+                href="/Contact"
+                className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300"
+              >
+                Talk to Us →
+              </Link>
+              <span className="text-xs text-zinc-500 font-mono">No commitment · 30-min call</span>
+            </div>
           </div>
 
-          {/* Stat bar */}
-          <div className="mt-16 w-full max-w-3xl grid grid-cols-3 gap-px rounded-2xl overflow-hidden border border-zinc-800/60 bg-zinc-800/20">
+          {/* Stat bar — counts up on viewport entry */}
+          <div className="relative z-10 mt-16 w-full max-w-3xl grid grid-cols-3 gap-px rounded-2xl overflow-hidden border border-zinc-800/60 bg-zinc-800/20">
             {[
               { value: "15+", label: "Years Experience" },
               { value: "6", label: "Core Capabilities" },
               { value: "9", label: "Industries Served" },
             ].map((stat) => (
               <div key={stat.label} className="bg-zinc-900/40 px-6 py-5 text-center">
-                <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
-                  {stat.value}
-                </div>
+                <AnimatedStat
+                  value={stat.value}
+                  accent="#ffffff"
+                  className="!text-2xl sm:!text-3xl"
+                />
                 <div className="text-xs font-mono uppercase tracking-widest text-zinc-500 mt-1">
                   {stat.label}
                 </div>
@@ -364,7 +441,7 @@ export default function HomePage() {
           aria-labelledby="connects-heading"
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <ScrollReveal className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
                 Our Purpose
@@ -393,7 +470,7 @@ export default function HomePage() {
                 organisation, we help turn ideas into practical, scalable solutions.
               </p>
             </div>
-          </div>
+          </ScrollReveal>
         </section>
 
         {/* ── WHAT WE DO — INTERACTIVE SOLUTION EXPLORER ────────────────────── */}
@@ -401,6 +478,7 @@ export default function HomePage() {
           aria-labelledby="solutions-heading"
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
+          <ScrollReveal>
           <div className="mb-12">
             <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
               What We Do
@@ -411,7 +489,7 @@ export default function HomePage() {
             >
               Six Ways We Create Value
             </h2>
-            <p className="mt-4 text-zinc-400 max-w-2xl text-base leading-relaxed">
+            <p className="mt-4 text-zinc-400 max-w-2xl text-base leading-relaxed line-clamp-2">
               From AI strategy to cloud engineering, our capabilities span the full technology lifecycle.
             </p>
           </div>
@@ -509,13 +587,20 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+          </ScrollReveal>
         </section>
 
         {/* ── WHY ZAMNEXUS ─────────────────────────────────────────────────── */}
         <section
           aria-labelledby="why-heading"
-          className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
+          className="relative isolate overflow-hidden max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
+          <div
+            ref={whyBlobRef}
+            className="absolute -top-10 -left-16 w-72 h-72 rounded-full bg-zinc-500/5 blur-3xl pointer-events-none"
+            aria-hidden="true"
+          />
+          <ScrollReveal className="relative z-10">
           <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
@@ -527,6 +612,9 @@ export default function HomePage() {
               >
                 Business Understanding Meets Technology Expertise
               </h2>
+              <p className="mt-3 text-zinc-400 text-base leading-relaxed max-w-xl line-clamp-2">
+                Six reasons enterprise teams choose ZamNexus over a generic dev shop.
+              </p>
             </div>
             <Link
               href="/About"
@@ -536,34 +624,41 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
             {whyPoints.map((point, idx) => (
-              <div
-                key={point.title}
-                className="group p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-xl"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="step-number text-sm" aria-hidden="true">
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
-                  <h3 className="text-base font-bold text-white group-hover:text-[#D0FF71] transition-colors">
+              <ScrollReveal key={point.title} delay={idx * 100} className="h-full">
+                <div
+                  className="glass-capability-card h-full"
+                  style={{ "--card-accent": point.accent } as CSSProperties}
+                >
+                  <div className="glass-capability-icon">
+                    <WhyPointIcon icon={point.icon} />
+                  </div>
+                  <h3 className="glass-capability-title">
                     {point.title}
                   </h3>
+                  <p className="glass-capability-desc">
+                    {point.description}
+                  </p>
                 </div>
-                <p className="text-sm text-zinc-400 leading-relaxed">
-                  {point.description}
-                </p>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
+          </ScrollReveal>
         </section>
 
         {/* ── FROM IDEA TO INTELLIGENT SOLUTION — DELIVERY PROCESS ──────────── */}
         <section
           aria-labelledby="process-heading"
-          className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
+          className="relative isolate overflow-hidden max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
-          <div className="mb-12">
+          <div
+            ref={timelineBlobRef}
+            className="absolute top-1/3 -right-16 w-72 h-72 rounded-full bg-zinc-500/5 blur-3xl pointer-events-none"
+            aria-hidden="true"
+          />
+          <ScrollReveal className="relative z-10">
+          <div className="mb-16">
             <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
               How We Deliver
             </span>
@@ -573,34 +668,12 @@ export default function HomePage() {
             >
               From Idea to Intelligent Solution
             </h2>
-            <p className="mt-4 text-zinc-400 max-w-2xl text-base leading-relaxed">
+            <p className="mt-4 text-zinc-400 max-w-2xl text-base leading-relaxed line-clamp-2">
               A proven six-step approach that underpins everything we build.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {deliverySteps.map((step) => (
-              <div
-                key={step.number}
-                className="group relative p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/60 transition-all duration-300 overflow-hidden"
-              >
-                {/* Decorative large background number */}
-                <span
-                  className="absolute top-4 right-5 text-6xl font-extrabold font-mono text-zinc-800/40 select-none pointer-events-none group-hover:text-[#D0FF71]/10 transition-colors"
-                  aria-hidden="true"
-                >
-                  {step.number}
-                </span>
-                <div className="relative z-10">
-                  <div className="step-number mb-5" aria-hidden="true">
-                    {step.number}
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3">{step.label}</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{step.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <DeliveryTimeline steps={deliverySteps} />
 
           <div className="mt-10 text-center">
             <Link
@@ -611,6 +684,7 @@ export default function HomePage() {
               <span aria-hidden="true">→</span>
             </Link>
           </div>
+          </ScrollReveal>
         </section>
 
         {/* ── TECHNOLOGIES WE WORK WITH ─────────────────────────────────────── */}
@@ -618,6 +692,7 @@ export default function HomePage() {
           aria-labelledby="tech-heading"
           className="py-20 border-t border-zinc-800/60 overflow-hidden"
         >
+          <ScrollReveal>
           {/* Section header — constrained width */}
           <div className="max-w-6xl mx-auto px-6 mb-12">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -631,7 +706,7 @@ export default function HomePage() {
                 >
                   Technologies We Work With
                 </h2>
-                <p className="mt-3 text-zinc-400 text-base max-w-xl leading-relaxed">
+                <p className="mt-3 text-zinc-400 text-base max-w-xl leading-relaxed line-clamp-2">
                   A curated ecosystem of cloud, AI, and enterprise platforms that power every solution we deliver.
                 </p>
               </div>
@@ -692,6 +767,7 @@ export default function HomePage() {
               </div>
             );
           })()}
+          </ScrollReveal>
         </section>
 
         {/* ── INDUSTRIES TEASER ────────────────────────────────────────────── */}
@@ -699,6 +775,7 @@ export default function HomePage() {
           aria-labelledby="industries-heading"
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
+          <ScrollReveal>
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
             <div>
               <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
@@ -710,6 +787,9 @@ export default function HomePage() {
               >
                 Solutions Adapted to Your Industry
               </h2>
+              <p className="mt-3 text-zinc-400 text-base leading-relaxed max-w-xl line-clamp-2">
+                Nine sectors, one delivery standard — the same rigour wherever we build.
+              </p>
             </div>
             <Link
               href="/Industries"
@@ -720,24 +800,26 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {industries.map((industry) => (
-              <Link
-                key={industry.name}
-                href={industry.href}
-                className="group flex items-center justify-between px-6 py-4 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300"
-              >
-                <span className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">
-                  {industry.name}
-                </span>
-                <span
-                  className="text-zinc-600 group-hover:text-[#D0FF71] group-hover:translate-x-1 transition-all duration-200"
-                  aria-hidden="true"
+            {industries.map((industry, idx) => (
+              <ScrollReveal key={industry.name} variant="left" delay={idx * 60} threshold={0.4}>
+                <Link
+                  href={industry.href}
+                  className="group flex items-center justify-between px-6 py-4 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300"
                 >
-                  →
-                </span>
-              </Link>
+                  <span className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">
+                    {industry.name}
+                  </span>
+                  <span
+                    className="text-zinc-600 group-hover:text-[#D0FF71] group-hover:translate-x-1 transition-all duration-200"
+                    aria-hidden="true"
+                  >
+                    →
+                  </span>
+                </Link>
+              </ScrollReveal>
             ))}
           </div>
+          </ScrollReveal>
         </section>
 
         {/* ── THE FUTURE IS CONNECTED — VISION ─────────────────────────────── */}
@@ -745,9 +827,10 @@ export default function HomePage() {
           aria-labelledby="vision-heading"
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
-          <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden">
+          <ScrollReveal className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden">
             {/* Decorative lime glow blob */}
             <div
+              ref={visionBlobRef}
               className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#D0FF71]/5 blur-3xl pointer-events-none"
               aria-hidden="true"
             />
@@ -775,20 +858,23 @@ export default function HomePage() {
                 build technology that doesn&apos;t just process information — it helps organisations
                 respond, automate, decide and move forward, responsibly and at pace.
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                  <span>Start a Conversation</span>
-                  <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-                </Link>
+              <div className="mt-8 flex flex-wrap items-start gap-6">
+                <div className="flex flex-col items-center gap-2">
+                  <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
+                    <span>Start a Conversation</span>
+                    <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
+                  </Link>
+                  <span className="text-xs text-zinc-500 font-mono">No commitment · 30-min call</span>
+                </div>
                 <Link
                   href="/Solutions"
-                  className="text-sm font-semibold text-zinc-400 hover:text-white transition-colors"
+                  className="text-sm font-semibold text-zinc-400 hover:text-white transition-colors mt-4"
                 >
                   Explore our solutions →
                 </Link>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </section>
 
         {/* ── READY TO TRANSFORM — BOTTOM CTA ──────────────────────────────── */}
@@ -796,7 +882,7 @@ export default function HomePage() {
           aria-labelledby="cta-heading"
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
-          <div className="text-center max-w-3xl mx-auto space-y-6">
+          <ScrollReveal className="text-center max-w-3xl mx-auto space-y-6">
             <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
               Ready to Transform Your Business?
             </span>
@@ -806,24 +892,29 @@ export default function HomePage() {
             >
               Let&apos;s connect your ideas, technology and intelligence.
             </h2>
-            <p className="text-zinc-400 text-base leading-relaxed max-w-xl mx-auto">
-              Whether you are exploring agentic AI, building a SaaS product, developing cloud-native
-              systems, modernising your business applications or automating complex processes,
-              ZamNexus is ready to help.
+            <p className="text-zinc-400 text-base leading-relaxed max-w-xl mx-auto line-clamp-2">
+              Whether you are exploring agentic AI, building a SaaS product or automating complex
+              processes — ZamNexus is ready to help.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                <span>Contact ZamNexus</span>
-                <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-              </Link>
-              <Link
-                href="/Services"
-                className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300"
-              >
-                View our services →
-              </Link>
+            <div className="flex flex-wrap items-start justify-center gap-6 pt-2">
+              <div className="flex flex-col items-center gap-2">
+                <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
+                  <span>Contact ZamNexus</span>
+                  <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
+                </Link>
+                <span className="text-xs text-zinc-500 font-mono">No commitment · 30-min call</span>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <Link
+                  href="/Services"
+                  className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300"
+                >
+                  View our services →
+                </Link>
+                <span className="text-xs text-zinc-500 font-mono">See what we build</span>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         </section>
 
       </main>

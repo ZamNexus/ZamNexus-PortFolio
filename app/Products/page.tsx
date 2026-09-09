@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AnimatedStat from "@/components/AnimatedStat";
 
 export const metadata: Metadata = {
   title: "Products — ZamNexus | ZNXERP · ZNXePOS · ZNXEdu · ZNXCare",
@@ -22,6 +25,7 @@ const products = [
     code: "ZNXERP",
     name: "Enterprise Resource Planning",
     tagline: "Run every part of your business on one intelligent platform.",
+    logo: "/product-logos/znxerp.png",
     stat: "5",
     statLabel: "Enterprise clients",
     modules: ["Finance", "HR", "Procurement", "Inventory", "Production", "Sales", "QC", "MIS"],
@@ -34,10 +38,11 @@ const products = [
     code: "ZNXePOS",
     name: "Point of Sale",
     tagline: "Complete visibility of your business, in a single click.",
+    logo: "/product-logos/znxepos.png",
     stat: "750+",
     statLabel: "Businesses running live",
     modules: ["Sales", "Stock", "Purchasing", "Accounts", "Banking", "Reports"],
-    accent: "#7dd3fc",
+    accent: "#f59e0b",
     index: "02",
     href: "/Products/znxepos",
   },
@@ -46,10 +51,11 @@ const products = [
     code: "ZNXEdu",
     name: "Education System Manager",
     tagline: "One system for every campus, classroom and conversation.",
+    logo: "/product-logos/znxedu.png",
     stat: "∞",
     statLabel: "Campuses. One system.",
     modules: ["Admissions", "Fees", "Attendance", "Exams", "Timetables", "Library", "Hostel"],
-    accent: "#c4b5fd",
+    accent: "#a78bfa",
     index: "03",
     href: "/Products/znxedu",
   },
@@ -58,10 +64,11 @@ const products = [
     code: "ZNXCare",
     name: "Patient Management Solution",
     tagline: "The right information, for the right decision, at the right time.",
-    stat: "0",
-    statLabel: "Decisions left uninformed",
+    logo: "/product-logos/znxcare.png",
+    stat: "5",
+    statLabel: "Projects sold to clients",
     modules: ["Registration", "Admissions", "Billing", "Laboratory", "Pharmacy", "X-Ray", "Dashboard"],
-    accent: "#6ee7b7",
+    accent: "#34d399",
     index: "04",
     href: "/Products/znxcare",
   },
@@ -92,9 +99,9 @@ export default function ProductsPage() {
               each part of your business runs.
             </span>
           </h1>
-          <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-            Four purpose-built platforms. One unified intelligence. Whichever
-            team you&apos;re equipping — every system is designed for that exact job.
+          <p className="mt-6 text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed line-clamp-2">
+            Four purpose-built platforms. One unified intelligence — whichever
+            team you&apos;re equipping.
           </p>
 
           {/* Product pill navigation */}
@@ -104,7 +111,7 @@ export default function ProductsPage() {
                 key={p.id}
                 href={p.href}
                 className="group px-5 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/60 text-sm font-bold text-zinc-300 hover:text-white hover:border-[#D0FF71]/50 transition-all duration-200 font-mono"
-                style={{ "--pill-accent": p.accent } as React.CSSProperties}
+                style={{ "--pill-accent": p.accent } as CSSProperties}
               >
                 <span
                   className="inline-block w-2 h-2 rounded-full mr-2 transition-colors duration-200"
@@ -117,90 +124,77 @@ export default function ProductsPage() {
           </div>
         </section>
 
-        {/* ── PRODUCT CARDS — full-bleed editorial ─────────────────────────── */}
+        {/* ── PRODUCT CARDS — glassmorphism grid, equal height ─────────────── */}
         <section
           aria-labelledby="product-list-heading"
-          className="max-w-6xl mx-auto px-6 pb-20 space-y-6"
+          className="max-w-6xl mx-auto px-6 pb-20"
         >
           <h2 id="product-list-heading" className="sr-only">Our Four Products</h2>
 
-          {products.map((product) => (
-            <Link
-              key={product.id}
-              href={product.href}
-              aria-label={`${product.code} — ${product.name}`}
-              className="group block rounded-3xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900/60 hover:border-zinc-700 transition-all duration-300 overflow-hidden"
-            >
-              <div className="p-8 sm:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-
-                {/* Index + Code */}
-                <div className="lg:col-span-3 flex flex-col gap-2">
-                  <div className="text-[10px] font-mono text-zinc-600 mb-1">{product.index} /04</div>
-                  <div
-                    className="text-4xl sm:text-5xl font-extrabold font-mono tracking-tight transition-colors duration-300"
-                    style={{ color: product.accent }}
-                  >
-                    {product.code}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+            {products.map((product) => (
+              <Link
+                key={product.id}
+                href={product.href}
+                aria-label={`${product.code} — ${product.name}`}
+                className="group glass-capability-card h-full"
+                style={{ "--card-accent": product.accent } as CSSProperties}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="glass-capability-icon glass-capability-icon--logo">
+                    <Image
+                      src={product.logo}
+                      alt={`${product.code} logo`}
+                      width={220}
+                      height={72}
+                      className="h-10 w-auto object-contain"
+                    />
                   </div>
-                  <div className="text-xs font-mono uppercase tracking-widest text-zinc-500 mt-1">
-                    {product.name}
-                  </div>
+                  <span className="text-[10px] font-mono text-zinc-600">{product.index} /04</span>
                 </div>
 
-                {/* Tagline + Modules */}
-                <div className="lg:col-span-6 space-y-5">
-                  <p className="text-xl sm:text-2xl font-bold text-white leading-snug group-hover:text-zinc-100 transition-colors">
-                    {product.tagline}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {product.modules.map((mod, modIdx) => (
-                      <span
-                        key={`${product.id}-${mod}-${modIdx}`}
-                        className="px-3 py-1 rounded-lg text-xs font-mono font-medium border transition-all duration-200"
-                        style={{
-                          background: `${product.accent}10`,
-                          borderColor: `${product.accent}25`,
-                          color: `${product.accent}cc`,
-                        }}
-                      >
-                        {mod}
-                      </span>
-                    ))}
-                  </div>
+                <div className="text-xs font-mono uppercase tracking-widest text-zinc-500 mb-3">
+                  {product.name}
                 </div>
 
-                {/* Stat + Arrow */}
-                <div className="lg:col-span-3 flex flex-col items-start lg:items-end gap-4">
-                  <div className="text-right">
-                    <div
-                      className="text-5xl sm:text-6xl font-extrabold font-mono"
-                      style={{ color: product.accent }}
+                <h3 className="glass-capability-title text-xl">
+                  {product.tagline}
+                </h3>
+
+                <div className="flex flex-wrap gap-2 mt-4 mb-6">
+                  {product.modules.map((mod, modIdx) => (
+                    <span
+                      key={`${product.id}-${mod}-${modIdx}`}
+                      className="px-3 py-1 rounded-lg text-xs font-mono font-medium border transition-all duration-200"
+                      style={{
+                        background: `${product.accent}10`,
+                        borderColor: `${product.accent}25`,
+                        color: `${product.accent}cc`,
+                      }}
                     >
-                      {product.stat}
-                    </div>
-                    <div className="text-xs font-mono text-zinc-500 mt-1 max-w-[120px] lg:text-right">
+                      {mod}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-auto flex items-end justify-between pt-4 border-t border-zinc-800/60">
+                  <div>
+                    <AnimatedStat value={product.stat} accent={product.accent} className="!text-2xl" />
+                    <div className="text-xs font-mono text-zinc-500 mt-1">
                       {product.statLabel}
                     </div>
                   </div>
                   <div
-                    className="w-10 h-10 rounded-full border flex items-center justify-center text-lg transition-all duration-300 group-hover:scale-110 group-hover:border-current"
+                    className="w-10 h-10 rounded-full border flex items-center justify-center text-lg transition-all duration-300 group-hover:scale-110"
                     style={{ borderColor: `${product.accent}40`, color: product.accent }}
                     aria-hidden="true"
                   >
                     →
                   </div>
                 </div>
-
-              </div>
-
-              {/* Bottom accent line */}
-              <div
-                className="h-0.5 w-0 group-hover:w-full transition-all duration-500 ease-out"
-                style={{ background: `linear-gradient(to right, ${product.accent}00, ${product.accent}, ${product.accent}00)` }}
-                aria-hidden="true"
-              />
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </section>
 
         {/* ── SOCIAL PROOF STRIP ───────────────────────────────────────────── */}
@@ -247,19 +241,21 @@ export default function ProductsPage() {
               >
                 The same intelligence behind every product.
               </h2>
-              <p className="mt-5 text-zinc-400 text-base sm:text-lg leading-relaxed">
-                ZNXERP, ZNXePOS, ZNXEdu and ZNXCare all share the same reliability,
-                real-time data architecture and support model. Different jobs — one trusted
-                platform family built by ZamNexus.
+              <p className="mt-5 text-zinc-400 text-base sm:text-lg leading-relaxed line-clamp-2">
+                ZNXERP, ZNXePOS, ZNXEdu and ZNXCare share the same reliability and
+                support model. Different jobs, one trusted platform family.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                  <span>Talk to Our Team</span>
-                  <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-                </Link>
+              <div className="mt-8 flex flex-wrap items-start gap-6">
+                <div className="flex flex-col items-center gap-2">
+                  <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
+                    <span>Talk to Our Team</span>
+                    <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
+                  </Link>
+                  <span className="text-xs text-zinc-500 font-mono">No commitment · 30-min call</span>
+                </div>
                 <Link
                   href="/Solutions"
-                  className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300"
+                  className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300 mt-0"
                 >
                   Explore Solutions →
                 </Link>

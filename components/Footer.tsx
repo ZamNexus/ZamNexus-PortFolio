@@ -1,59 +1,87 @@
 import Image from "next/image";
 import Link from "next/link";
 
+interface TechPartner {
+  name: string;
+}
+
+const techPartners: TechPartner[] = [
+  { name: "AWS" },
+  { name: "Salesforce" },
+  { name: "Microsoft" },
+  { name: "Azure" },
+];
+
 export default function Footer() {
   return (
-    <footer className="border-t border-zinc-800/80 bg-[#090b10] text-zinc-400 py-16 px-6 relative z-10">
+    <footer className="bg-[#050608] text-zinc-400 pt-16 px-6 relative z-10">
       <div className="max-w-6xl mx-auto">
-        {/* Pre-footer CTA Banner */}
-        <div className="rounded-3xl bg-gradient-to-b from-zinc-900/90 to-zinc-950 border border-zinc-800 p-8 sm:p-14 mb-16 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="text-center md:text-left space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
-              Ready to Transform Your Business?
+        {/* ── PRE-FOOTER CTA — gradient banner ─────────────────────────────── */}
+        <div className="relative isolate overflow-hidden rounded-3xl border border-zinc-800 bg-gradient-to-br from-[var(--accent)]/20 via-[#8B5CF6]/12 to-zinc-950 p-8 sm:p-16 mb-16 text-center">
+          <div className="noise-overlay" aria-hidden="true" />
+          <div className="relative z-10 max-w-2xl mx-auto">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+              Let&apos;s Talk
             </span>
-            <h3 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Let&apos;s connect your ideas,<br className="hidden sm:block" /> technology and intelligence.
+            <h3 className="mt-3 text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+              Ready to connect intelligence?
             </h3>
-            <p className="text-zinc-400 text-base max-w-md">
-              Whether you are exploring AI, building a SaaS product, developing cloud-native systems or automating complex processes — ZamNexus is ready to help.
+            <p className="mt-4 text-zinc-400 text-base sm:text-lg max-w-lg mx-auto leading-relaxed line-clamp-2">
+              Tell us what you&apos;re building — we&apos;ll show you how AI, automation
+              and connected systems get you there faster.
             </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <Link href="/Contact" className="liquid-lime-btn text-base py-3.5 px-8">
+                <span>Book a Call</span>
+                <span className="arrow-icon w-8 h-8 text-sm">→</span>
+              </Link>
+              <Link
+                href="/Services"
+                className="px-7 py-3.5 rounded-full bg-transparent hover:bg-zinc-800/50 text-zinc-200 border border-zinc-700 hover:border-zinc-500 font-semibold text-sm transition-all duration-300"
+              >
+                Explore Services
+              </Link>
+            </div>
           </div>
-          <div className="flex-shrink-0">
-            <Link href="/Contact" className="liquid-lime-btn text-base py-3.5 px-8">
-              <span>Start a Conversation</span>
-              <span className="arrow-icon w-8 h-8 text-sm">→</span>
-            </Link>
+        </div>
+
+        {/* ── TECH PARTNER STRIP — muted, brightens on hover ───────────────── */}
+        <div className="mb-16 pb-16 border-b border-zinc-800/60">
+          <div className="text-center text-[10px] font-mono uppercase tracking-widest text-zinc-600 mb-6">
+            Built On Enterprise-Grade Technology
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+            {techPartners.map((partner) => (
+              <span
+                key={partner.name}
+                className="text-lg sm:text-xl font-bold tracking-tight text-zinc-600 grayscale opacity-60 hover:opacity-100 hover:text-white transition-all duration-300 cursor-default select-none"
+              >
+                {partner.name}
+              </span>
+            ))}
           </div>
         </div>
 
         {/* Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
-          {/* Brand Info */}
-          <div className="col-span-2 space-y-4">
-            <Link href="/" className="flex items-center gap-3.5 group" aria-label="ZamNexus Home">
-              <div className="h-12 px-3 py-1 rounded-2xl bg-white flex items-center justify-center shadow-xl shadow-[#D0FF71]/20 border border-white/30 group-hover:scale-105 transition-all duration-300">
-                <Image
-                  src="/logo_znx.png"
-                  alt="ZamNexus Logo"
-                  width={70}
-                  height={47}
-                  className="h-9 w-auto object-contain"
-                />
-              </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-2xl font-bold tracking-tight text-white group-hover:text-zinc-100 transition-colors">
-                  ZamNexus<span className="text-[#D0FF71]">.</span>
-                </span>
-                <span className="text-[8px] font-mono text-zinc-500 tracking-wider mt-0.5">
-                  A ZAMOOQ LIMITED BRAND
-                </span>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+          {/* Brand Info — large, prominent left column */}
+          <div className="lg:col-span-5 space-y-5">
+            <Link href="/" className="inline-flex items-center group transition-transform duration-300 hover:scale-105" aria-label="ZamNexus Home">
+              <Image
+                src="/znx_logo_clean.png"
+                alt="ZamNexus Logo"
+                width={280}
+                height={145}
+                className="h-16 sm:h-20 md:h-24 w-auto object-contain drop-shadow-[0_0_16px_rgba(208,255,113,0.3)] group-hover:drop-shadow-[0_0_26px_rgba(208,255,113,0.65)] transition-all duration-300"
+              />
             </Link>
-            <p className="text-sm text-zinc-400 leading-relaxed max-w-sm">
-              Connecting Intelligence. Enabling Action. We design and deliver intelligent solutions powered by AI, cloud-native engineering, SaaS, automation and modern business applications.
+            <p className="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-md">
+              We design and deliver intelligent enterprise solutions powered by AI,
+              cloud-native engineering, SaaS, automation and modern business applications.
             </p>
           </div>
 
+          <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Solutions & Services */}
           <div>
             <h4 className="text-xs font-mono uppercase tracking-widest text-white font-bold mb-4">
@@ -194,10 +222,11 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+          </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-zinc-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4">
+        <div className="border-t border-zinc-800/80 pt-8 pb-10 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4">
           <div>
             © {new Date().getFullYear()} ZamNexus, a technology brand of Zamooq Limited. All rights reserved.
           </div>
