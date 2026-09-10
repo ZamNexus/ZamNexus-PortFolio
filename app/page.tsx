@@ -1,14 +1,18 @@
 "use client";
 
-import { useState, type CSSProperties, type MouseEvent } from "react";
+import { useState, useRef, useEffect, type CSSProperties, type MouseEvent } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useSpring,
+  useInView,
+} from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ParticleNetwork from "@/components/ParticleNetwork";
-import AnimatedStat from "@/components/AnimatedStat";
-import ScrollReveal from "@/components/ScrollReveal";
-import DeliveryTimeline from "@/components/DeliveryTimeline";
-import { useParallax } from "@/hooks/useParallax";
 
 // ─── Type Definitions ────────────────────────────────────────────────────────
 
@@ -27,14 +31,28 @@ interface Solution {
   title: string;
   description: string;
   capabilities: string[];
+  accent: string;
+  telemetry: string;
 }
 
-type WhyIcon = "briefcase" | "spark" | "building" | "cloud" | "shield" | "trending";
+interface ProductEngineItem {
+  id: string;
+  code: string;
+  name: string;
+  tagline: string;
+  description: string;
+  stat: string;
+  statLabel: string;
+  accent: string;
+  logo: string;
+  href: string;
+  modules: string[];
+}
 
 interface WhyPoint {
   title: string;
   description: string;
-  icon: WhyIcon;
+  icon: string;
   accent: string;
 }
 
@@ -44,33 +62,66 @@ interface DeliveryStep {
   description: string;
 }
 
-interface TechGroup {
-  label: string;
-  items: string[];
-}
-
-type IndustryIconKey =
-  | "finance"
-  | "briefcase"
-  | "building"
-  | "cart"
-  | "book"
-  | "health"
-  | "government"
-  | "heart"
-  | "code";
-
-interface Industry {
-  name: string;
-  href: string;
-  icon: IndustryIconKey;
-  /** Optional label surfaced on featured tiles */
-  headline?: string;
-  /** Featured layout: "wide" spans 2 cols, "hero" spans full width */
-  featured?: "wide" | "hero";
-}
-
 // ─── Static Data ─────────────────────────────────────────────────────────────
+
+const flagshipProducts: ProductEngineItem[] = [
+  {
+    id: "znxerp",
+    code: "ZNXERP",
+    name: "Enterprise Resource Planning",
+    tagline: "Run every part of your business on one intelligent platform.",
+    description:
+      "A complete enterprise core designed for mid-to-large enterprises. Integrates supply chain, manufacturing floor execution, real-time ledgers, and multi-entity consolidation.",
+    stat: "5+",
+    statLabel: "Industrial Plants",
+    accent: "#3B82F6",
+    logo: "/product-logos/znxerp.png",
+    href: "/Products/znxerp",
+    modules: ["Finance & Ledgers", "Supply Chain", "MES Shopfloor", "MIS Analytics"],
+  },
+  {
+    id: "znxepos",
+    code: "ZNXePOS",
+    name: "Point of Sale & Retail Intelligence",
+    tagline: "Complete visibility of your business, in a single click.",
+    description:
+      "Engineered for high-volume retail chains and supermarkets. Delivers millisecond barcode scanning, multi-till synchronization, and offline-first reliability.",
+    stat: "750+",
+    statLabel: "Live Retail Tills",
+    accent: "#F59E0B",
+    logo: "/product-logos/znxepos.png",
+    href: "/Products/znxepos",
+    modules: ["Cloud & Offline POS", "Multi-Till Sync", "Real-Time Stock", "Sales Telemetry"],
+  },
+  {
+    id: "znxedu",
+    code: "ZNXEdu",
+    name: "Multi-Campus Education Management",
+    tagline: "One system for every campus, classroom and conversation.",
+    description:
+      "Unified operational backbone for school networks and colleges. Connects student admissions, automated fee billing, biometrics, grading, and parent portals.",
+    stat: "∞",
+    statLabel: "Infinite Campuses",
+    accent: "#8B5CF6",
+    logo: "/product-logos/znxedu.png",
+    href: "/Products/znxedu",
+    modules: ["Student Admissions", "Automated Fees", "Biometrics", "Parent Mobile App"],
+  },
+  {
+    id: "znxcare",
+    code: "ZNXCare",
+    name: "Patient & Hospital Management Solution",
+    tagline: "The right information, for the right decision, at the right time.",
+    description:
+      "Purpose-built clinical platform for hospitals and diagnostic labs. Integrates patient EHR, triage, laboratory auto-analyzers, and OPD/IPD billing.",
+    stat: "5+",
+    statLabel: "Specialist Hospitals",
+    accent: "#10B981",
+    logo: "/product-logos/znxcare.png",
+    href: "/Products/znxcare",
+    modules: ["Clinical EHR", "Automated Lab LIS", "IPD/OPD Billing", "Hospital Pharmacy"],
+  },
+];
 
 const solutions: Solution[] = [
   {
@@ -79,15 +130,17 @@ const solutions: Solution[] = [
     tag: "AI & ML",
     title: "AI & Intelligent Solutions",
     description:
-      "Practical Artificial Intelligence that gets things done, not AI that just talks about it. From copilots and autonomous AI agents to document intelligence and governed, responsible automation.",
+      "Practical Artificial Intelligence that gets things done. From custom copilots and autonomous AI agents to document intelligence and governed, responsible automation.",
     capabilities: [
       "AI Assistants & Copilots",
       "Autonomous AI Agents",
-      "Generative AI",
+      "Generative AI Solutions",
       "Responsible & Governed AI",
       "Knowledge & Document Intelligence",
       "AI Strategy & Architecture",
     ],
+    accent: "#8B5CF6",
+    telemetry: "Production AI copilot RAG latency < 350ms",
   },
   {
     id: "saas",
@@ -95,13 +148,17 @@ const solutions: Solution[] = [
     tag: "SAAS PRODUCTS",
     title: "SaaS Product Development",
     description:
-      "We design and build scalable, multi-tenant SaaS products — from early concept to enterprise-ready platform — with security, API-first architecture and growth built in from day one.",
+      "We design and build scalable, multi-tenant SaaS products — from early concept to enterprise-ready platform — with security, API-first architecture, and growth built in.",
     capabilities: [
       "Product Strategy & Architecture",
-      "Multi-Tenant Applications",
+      "Multi-Tenant Backends",
       "Customer & Partner Portals",
       "API-First Platforms",
+      "Subscription & Billing Integrations",
+      "Performance Engineering",
     ],
+    accent: "#06B6D4",
+    telemetry: "Zero-downtime multi-tenant tenant isolation",
   },
   {
     id: "cloud",
@@ -109,13 +166,17 @@ const solutions: Solution[] = [
     tag: "CLOUD & DEVOPS",
     title: "Cloud-Native & Serverless Engineering",
     description:
-      "Modern, event-driven backend systems built with Node.js, TypeScript and AWS serverless architecture — resilient, cost-efficient and designed to adapt as your business grows.",
+      "Modern, event-driven backend systems built with Node.js, TypeScript and AWS serverless architecture — resilient, cost-efficient, and designed to scale.",
     capabilities: [
       "Cloud-Native Backend Development",
-      "Event-Driven Systems",
-      "Infrastructure-as-Code",
-      "CI/CD Automation",
+      "Event-Driven Microservices",
+      "Infrastructure-as-Code (Terraform)",
+      "Automated CI/CD Pipelines",
+      "AWS Serverless Architecture",
+      "High-Availability Engineering",
     ],
+    accent: "#6366F1",
+    telemetry: "99.99% verified infrastructure SLA uptime",
   },
   {
     id: "automation",
@@ -123,13 +184,17 @@ const solutions: Solution[] = [
     tag: "AUTOMATION",
     title: "Intelligent Automation",
     description:
-      "We connect applications, remove manual work and build workflows that combine traditional automation with AI agents that can act on your behalf — freeing your teams for higher-value work.",
+      "We connect applications, eliminate manual transcription, and orchestrate workflows that combine traditional automation with autonomous AI agents.",
     capabilities: [
       "Workflow Automation",
       "Intelligent Process Automation",
       "AI-Enhanced Workflows",
       "Event-Driven Automation",
+      "Agentic Decision Making",
+      "Operational Orchestration",
     ],
+    accent: "#F59E0B",
+    telemetry: "-84% manual workflow execution cycle",
   },
   {
     id: "microsoft",
@@ -137,13 +202,17 @@ const solutions: Solution[] = [
     tag: "MICROSOFT",
     title: "Microsoft Business Solutions",
     description:
-      "Consulting, architecture and delivery across Dynamics 365, Power Platform, Azure and Microsoft Copilot — helping you get more from the Microsoft ecosystem you already run on.",
+      "Consulting, architecture and delivery across Dynamics 365, Power Platform, Azure and Microsoft Copilot — helping you get more from the ecosystem you already invest in.",
     capabilities: [
-      "Dynamics 365",
-      "Power Platform",
-      "Microsoft Copilot",
+      "Dynamics 365 Enterprise",
+      "Power Platform & Dataverse",
+      "Microsoft Copilot Studio",
       "Azure Integration Services",
+      "Dataverse & BI Analytics",
+      "Enterprise Automation",
     ],
+    accent: "#0EA5E9",
+    telemetry: "Full Dataverse sync with sub-second parity",
   },
   {
     id: "salesforce",
@@ -151,943 +220,882 @@ const solutions: Solution[] = [
     tag: "SALESFORCE",
     title: "Salesforce Solutions",
     description:
-      "Implementation, architecture, integration and AI — built around your business and your growth ambitions, not just the platform.",
+      "Implementation, architecture, integration and AI — built around your business processes and your growth ambitions, not just standard platform features.",
     capabilities: [
-      "Salesforce Consulting",
+      "Salesforce Consulting & Strategy",
       "Solution Architecture",
-      "CRM Optimisation",
-      "AI & Data Solutions",
+      "Sales & Service Cloud CRM",
+      "Einstein AI & Agentforce",
+      "MuleSoft Integration",
+      "Customer 360 Data Cloud",
     ],
+    accent: "#10B981",
+    telemetry: "Autonomous Agentforce case resolution active",
   },
 ];
 
 const whyPoints: WhyPoint[] = [
   {
-    title: "Business-Focused",
-    description:
-      "We start with your business challenges, opportunities and goals — not just the technology.",
-    icon: "briefcase",
+    title: "Business-Focused Engineering",
+    description: "We start with your commercial challenges, opportunities, and goals — never technology for technology's sake.",
+    icon: "🎯",
     accent: "#F59E0B",
   },
   {
-    title: "Intelligence-Driven",
-    description:
-      "We help you use AI, automation and real-time data to make smarter decisions and act faster.",
-    icon: "spark",
+    title: "Intelligence-Driven Systems",
+    description: "We embed AI, automation, and real-time data feeds directly into operations to help your teams act faster and decide smarter.",
+    icon: "🧠",
     accent: "#8B5CF6",
   },
   {
-    title: "Enterprise Experience",
-    description:
-      "Proven delivery of complex enterprise applications, integrations and technology programmes.",
-    icon: "building",
+    title: "15+ Years Enterprise Rigor",
+    description: "Established in 2009 by Zamooq Limited, our delivery track record spans enterprise applications, ledgers, and critical infrastructure.",
+    icon: "🏛️",
     accent: "#2563EB",
   },
   {
-    title: "Cloud-Native Thinking",
-    description:
-      "Systems designed to be secure, resilient, scalable and ready to evolve.",
-    icon: "cloud",
+    title: "Cloud-Native & Serverless",
+    description: "Systems designed to be secure, resilient, infinitely scalable, and immediately adaptable as your market evolves.",
+    icon: "⚡",
     accent: "#14B8A6",
   },
   {
-    title: "Secure & Responsible by Design",
-    description:
-      "Security, governance and responsible AI practice built in from the start, not bolted on afterwards.",
-    icon: "shield",
+    title: "Security & Governance by Design",
+    description: "Security, compliance (HIPAA, GDPR, ISO), and responsible AI practice built in from day one of code.",
+    icon: "🛡️",
     accent: "#F43F5E",
   },
   {
-    title: "Built to Scale",
-    description:
-      "Solutions designed to grow with your organisation and adapt to changing business needs.",
-    icon: "trending",
+    title: "Decade-Scale Partnership",
+    description: "We provide ongoing architectural stewardship, quarterly upgrades, and sub-15 minute emergency critical SLAs.",
+    icon: "🤝",
     accent: "#10B981",
   },
 ];
 
 const deliverySteps: DeliveryStep[] = [
-  {
-    number: "01",
-    label: "Discover",
-    description:
-      "We understand your business, challenges, technology landscape and opportunities.",
-  },
-  {
-    number: "02",
-    label: "Design",
-    description:
-      "We define the right strategy, architecture and technology approach for your solution.",
-  },
-  {
-    number: "03",
-    label: "Build",
-    description:
-      "We design, develop and configure secure, scalable and intelligent solutions.",
-  },
-  {
-    number: "04",
-    label: "Connect",
-    description:
-      "We integrate your applications, APIs, systems and data to create a connected technology ecosystem.",
-  },
-  {
-    number: "05",
-    label: "Automate",
-    description:
-      "We introduce automation and AI agents to improve efficiency and enable faster action.",
-  },
-  {
-    number: "06",
-    label: "Evolve",
-    description:
-      "We continuously improve and evolve your technology as your organisation and opportunities grow.",
-  },
+  { number: "01", label: "Discover", description: "We map your commercial bottlenecks, technology landscape, and data models." },
+  { number: "02", label: "Design", description: "We architect secure, scalable solutions designed to connect systems and enable intelligence." },
+  { number: "03", label: "Build", description: "We develop and configure using rapid agile delivery — keeping cycles short and quality uncompromised." },
+  { number: "04", label: "Connect", description: "We integrate applications, APIs, and data into a unified, synchronized technology mesh." },
+  { number: "05", label: "Automate", description: "We deploy autonomous AI agents and automated workflows to eliminate repetitive labor." },
+  { number: "06", label: "Evolve", description: "We continuously monitor telemetry and evolve your systems as your market demands change." },
 ];
 
-const techGroups: TechGroup[] = [
-  {
-    label: "Artificial Intelligence",
-    items: [
-      "AI Agents",
-      "Generative AI",
-      "Copilots",
-      "AI Governance",
-      "Intelligent Automation",
-      "Knowledge Solutions",
-    ],
-  },
-  {
-    label: "Cloud & Engineering",
-    items: [
-      "AWS",
-      "Serverless",
-      "Node.js",
-      "TypeScript",
-      "APIs",
-      "Event-Driven Architecture",
-      "Infrastructure-as-Code",
-      "CI/CD",
-    ],
-  },
-  {
-    label: "Microsoft",
-    items: [
-      "Dynamics 365",
-      "Power Platform",
-      "Azure",
-      "Dataverse",
-      "Power Apps",
-      "Power Automate",
-      "Copilot",
-    ],
-  },
-  {
-    label: "Salesforce",
-    items: [
-      "Sales Cloud",
-      "Service Cloud",
-      "Automation",
-      "Integration",
-      "Data Solutions",
-    ],
-  },
+const industriesList = [
+  { name: "Financial Services", icon: "💳", accent: "#10B981", desc: "Regulated fintech, ledgers & real-time risk scoring." },
+  { name: "Professional Services", icon: "💼", accent: "#F59E0B", desc: "Client portals, billing automation & document intelligence." },
+  { name: "Property & Facilities", icon: "🏢", accent: "#14B8A6", desc: "Building IoT diagnostics, maintenance & lease workflows." },
+  { name: "Public Sector", icon: "🏛️", accent: "#0EA5E9", desc: "Citizen portals, case intake & strict sovereign governance." },
+  { name: "Education", icon: "🎓", accent: "#8B5CF6", desc: "Campus management, fee reconciliation & student portals." },
+  { name: "Healthcare", icon: "🏥", accent: "#F43F5E", desc: "Clinical EHR, lab auto-analyzers & hospital pharmacy FIFO." },
+  { name: "Retail & E-Commerce", icon: "🛍️", accent: "#F97316", desc: "Offline-first POS, multi-till sync & live store analytics." },
+  { name: "Technology & SaaS", icon: "☁️", accent: "#6366F1", desc: "Multi-tenant architecture, serverless APIs & AI copilots." },
 ];
 
-const industries: Industry[] = [
-  {
-    name: "Financial Services",
-    href: "/Industries",
-    icon: "finance",
-    headline: "Regulated fintech, risk & real-time reporting.",
-    featured: "wide",
-  },
-  { name: "Professional Services", href: "/Industries", icon: "briefcase" },
-  { name: "Property & Facilities Management", href: "/Industries", icon: "building" },
-  { name: "Retail & E-Commerce", href: "/Industries", icon: "cart" },
-  { name: "Education", href: "/Industries", icon: "book" },
-  { name: "Healthcare", href: "/Industries", icon: "health" },
-  { name: "Public Sector", href: "/Industries", icon: "government" },
-  { name: "Non-Profit Organisations", href: "/Industries", icon: "heart" },
-  {
-    name: "Technology & SaaS",
-    href: "/Industries",
-    icon: "code",
-    headline: "Ship faster. Scale smarter. Cloud-native from day one.",
-    featured: "hero",
-  },
+const clientMarquee = [
+  "Grays Pharmaceutical",
+  "Lotus Pharmaceuticals",
+  "Panacea Pharmaceuticals",
+  "Khyber Textile Mills",
+  "National Tariff Commission",
+  "750+ Live Retail Outlets",
+  "Regional Education Trust",
+  "Specialist Diagnostic Network",
 ];
 
-// ─── Icons ───────────────────────────────────────────────────────────────────
+// ─── Hydration-Safe Counter ──────────────────────────────────────────────────
 
-const whyIconPaths: Record<WhyIcon, string> = {
-  briefcase:
-    "M3 7h18v13H3V7Z M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M3 12h18",
-  spark: "M13 2 4 14h6l-1 8 9-12h-6l1-8Z",
-  building:
-    "M4 3h16v18H4V3Z M9 21v-4h6v4 M9 8h1.5 M13.5 8H15 M9 12h1.5 M13.5 12H15 M9 16h1.5 M13.5 16H15",
-  cloud:
-    "M6 18h11a4 4 0 0 0 .5-7.97A6 6 0 0 0 5.5 11 4 4 0 0 0 6 18Z",
-  shield: "M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z M9 12l2 2 4-4",
-  trending: "M3 17l6-6 4 4 8-8 M17 7h4v4",
-};
+function AnimatedStat({ value, suffix = "" }: { value: string; suffix?: string }) {
+  const [display, setDisplay] = useState(value);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: false, margin: "-40px" });
 
-interface WhyPointIconProps {
-  icon: WhyIcon;
+  useEffect(() => {
+    const rawNum = parseInt(value.replace(/[^0-9]/g, ""), 10);
+    if (isNaN(rawNum) || !inView) return;
+
+    const duration = 1200;
+    const startTime = performance.now();
+    const hasPlus = value.includes("+");
+    const hasPct = value.includes("%");
+
+    const animate = (time: number) => {
+      const elapsed = time - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(eased * rawNum);
+
+      setDisplay(`${current}${hasPlus ? "+" : hasPct ? "%" : ""}`);
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setDisplay(value);
+      }
+    };
+
+    const animId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animId);
+  }, [inView, value]);
+
+  return <span ref={ref}>{display}{suffix}</span>;
 }
 
-function WhyPointIcon({ icon }: WhyPointIconProps) {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d={whyIconPaths[icon]} />
-    </svg>
-  );
-}
+// ─── 3D Magnetic Gyroscope Tilt Card ─────────────────────────────────────────
 
-// ─── Tech Bento — per-category accent + icon ─────────────────────────────────
+function GyroCard({
+  children,
+  className = "",
+  accent = "#3B82F6",
+}: {
+  children: React.ReactNode;
+  className?: string;
+  accent?: string;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+  const [coords, setCoords] = useState<{ x: number; y: number } | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
-interface TechCategoryMeta {
-  accent: string;
-  icon: "ai" | "cloud" | "microsoft" | "salesforce";
-}
-
-/** Order matches the `techGroups` array. */
-const techCategoryMeta: TechCategoryMeta[] = [
-  { accent: "#A78BFA", icon: "ai" },         // Artificial Intelligence — violet
-  { accent: "#F59E0B", icon: "cloud" },      // Cloud & Engineering — amber
-  { accent: "#0EA5E9", icon: "microsoft" },  // Microsoft — sky
-  { accent: "#10B981", icon: "salesforce" }, // Salesforce — emerald
-];
-
-function TechCategoryIcon({ icon }: { icon: TechCategoryMeta["icon"] }) {
-  const common = {
-    width: 28,
-    height: 28,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.6,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-    "aria-hidden": true,
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setCoords({ x, y });
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rX = ((y - centerY) / centerY) * -6;
+    const rY = ((x - centerX) / centerX) * 6;
+    setRotateX(rX);
+    setRotateY(rY);
   };
-  switch (icon) {
-    case "ai":
-      // Neural node — central circle with 4 connected nodes
-      return (
-        <svg {...common}>
-          <circle cx="12" cy="12" r="3" />
-          <circle cx="5" cy="6" r="1.6" />
-          <circle cx="19" cy="6" r="1.6" />
-          <circle cx="5" cy="18" r="1.6" />
-          <circle cx="19" cy="18" r="1.6" />
-          <path d="M6.5 7 L10 10 M17.5 7 L14 10 M6.5 17 L10 14 M17.5 17 L14 14" />
-        </svg>
-      );
-    case "cloud":
-      // Cloud with upload arrow
-      return (
-        <svg {...common}>
-          <path d="M6 18h11a4 4 0 0 0 .5-7.97A6 6 0 0 0 5.5 11 A4 4 0 0 0 6 18Z" />
-          <path d="M12 14v-4 M9.5 12l2.5-2.5 2.5 2.5" />
-        </svg>
-      );
-    case "microsoft":
-      // The unmistakable four-square Microsoft mark
-      return (
-        <svg {...common}>
-          <rect x="3" y="3" width="8" height="8" />
-          <rect x="13" y="3" width="8" height="8" />
-          <rect x="3" y="13" width="8" height="8" />
-          <rect x="13" y="13" width="8" height="8" />
-        </svg>
-      );
-    case "salesforce":
-      // Cloud shape with a subtle checkmark — CRM/service icon
-      return (
-        <svg {...common}>
-          <path d="M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 6 11 A3 3 0 0 0 6 17Z" />
-          <path d="M9.5 13.5l2 2 3-4" />
-        </svg>
-      );
-  }
-}
 
-// ─── Industry Icons ──────────────────────────────────────────────────────────
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setCoords(null);
+    setRotateX(0);
+    setRotateY(0);
+  };
 
-const industryIconPaths: Record<IndustryIconKey, string> = {
-  // Bar chart — financial services
-  finance: "M4 20h16 M7 20V11 M11 20V6 M15 20v-8 M19 20V4",
-  // Briefcase — professional services
-  briefcase: "M3 7h18v13H3V7Z M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M3 12h18",
-  // Building — property & facilities
-  building:
-    "M4 3h16v18H4V3Z M9 21v-4h6v4 M9 8h1.5 M13.5 8H15 M9 12h1.5 M13.5 12H15 M9 16h1.5 M13.5 16H15",
-  // Shopping cart — retail & e-commerce
-  cart: "M2 4h3l2.6 10.4a2 2 0 0 0 2 1.6h9.2a2 2 0 0 0 2-1.6L23 7H6 M9 20a1 1 0 100-2 1 1 0 000 2Z M17 20a1 1 0 100-2 1 1 0 000 2Z",
-  // Open book — education
-  book: "M4 4h6a2 2 0 0 1 2 2v14 M20 4h-6a2 2 0 0 0-2 2v14 M4 4v14h6 M20 4v14h-6",
-  // Medical cross — healthcare
-  health: "M9 3h6v6h6v6h-6v6H9v-6H3V9h6z",
-  // Capitol / pillared building — public sector
-  government: "M3 21h18 M5 21V10 M9 21V10 M15 21V10 M19 21V10 M12 3l10 6H2z",
-  // Heart — non-profit
-  heart: "M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z",
-  // Code brackets — technology & SaaS
-  code: "M8 8l-4 4 4 4 M16 8l4 4-4 4 M14 4l-4 16",
-};
-
-function IndustryIcon({ icon }: { icon: IndustryIconKey }) {
   return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      animate={{
+        rotateX: isHovered ? rotateX : 0,
+        rotateY: isHovered ? rotateY : 0,
+        scale: isHovered ? 1.015 : 1,
+      }}
+      transition={{ type: "spring", stiffness: 240, damping: 22 }}
+      style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+      className={`relative overflow-hidden rounded-3xl border border-zinc-800/80 bg-zinc-900/40 hover:bg-zinc-900/60 backdrop-blur-md shadow-2xl transition-all ${className}`}
     >
-      <path d={industryIconPaths[icon]} />
-    </svg>
+      {/* Cursor Spotlight */}
+      <div
+        className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-0"
+        style={{
+          opacity: coords ? 1 : 0,
+          background: coords
+            ? `radial-gradient(400px circle at ${coords.x}px ${coords.y}px, ${accent}22, transparent 70%)`
+            : "none",
+        }}
+        aria-hidden="true"
+      />
+      {children}
+    </motion.div>
   );
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// ─── Main Home Page Component ────────────────────────────────────────────────
 
 export default function HomePage() {
-  const [activeSolution, setActiveSolution] = useState<SolutionCategory>("ai");
+  const [activeSolutionId, setActiveSolutionId] = useState<SolutionCategory>("ai");
 
-  const activeSolutionData = solutions.find((s) => s.id === activeSolution)!;
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
 
-  // Subtle 20px parallax on decorative background blobs
-  const whyBlobRef = useParallax<HTMLDivElement>(0.1, 20);
-  const timelineBlobRef = useParallax<HTMLDivElement>(-0.08, 20);
-  const visionBlobRef = useParallax<HTMLDivElement>(0.12, 20);
+  const activeSolution =
+    solutions.find((s) => s.id === activeSolutionId) || solutions[0];
 
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-hidden">
-      {/* Background editorial grid */}
-      <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
+    <div
+      suppressHydrationWarning
+      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-hidden"
+    >
+      {/* Top Scroll Progress Indicator */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-blue-500 via-violet-500 via-amber-500 to-emerald-500 origin-left z-50 pointer-events-none"
+        style={{ scaleX }}
+      />
 
-      {/* Floating Capsule Navbar */}
+      {/* Cyber Background Mesh */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+        <ParticleNetwork />
+        <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="home-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+              <path d="M 48 0 L 0 0 0 48" fill="none" stroke="white" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#home-grid)" />
+        </svg>
+
+        {/* Ambient Halo Glows */}
+        <div className="absolute top-[12%] left-[5%] w-[650px] h-[650px] rounded-full bg-blue-600/[0.05] blur-[180px] pointer-events-none" />
+        <div className="absolute top-[35%] right-[5%] w-[650px] h-[650px] rounded-full bg-violet-600/[0.05] blur-[180px] pointer-events-none" />
+        <div className="absolute bottom-[20%] left-[8%] w-[650px] h-[650px] rounded-full bg-emerald-600/[0.04] blur-[180px] pointer-events-none" />
+      </div>
+
       <Navbar />
 
       <main className="relative z-10">
 
-        {/* ── HERO ──────────────────────────────────────────────────────────── */}
+        {/* ── HERO: THE NEURAL NEXUS ENGINE ─────────────────────────────────── */}
         <section
-          aria-labelledby="hero-heading"
-          className="relative isolate overflow-hidden max-w-6xl mx-auto px-6 pt-44 pb-24 text-center flex flex-col items-center"
+          aria-labelledby="home-hero-heading"
+          className="max-w-7xl mx-auto px-6 pt-40 pb-20 text-center flex flex-col items-center"
         >
-          {/* Floating gradient orb — behind everything */}
-          <div className="hero-orb" aria-hidden="true" />
-
-          {/* Particle network — neural-net background */}
-          <ParticleNetwork />
-
-          {/* Grain texture for depth */}
-          <div className="noise-overlay" aria-hidden="true" />
-
-          {/* Status badge — staggered word reveal on load */}
-          <div className="relative z-10 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/90 text-xs font-mono font-medium text-zinc-300 mb-8 backdrop-blur-xl shadow-xl shadow-black/40">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-hover)] animate-pulse shadow-[0_0_8px_var(--accent-hover)]" aria-hidden="true" />
-            <span className="font-semibold tracking-wide text-[var(--accent-hover)]">
-              {"Connecting Intelligence. Enabling Action.".split(" ").map((word, i) => (
-                <span
-                  key={`${word}-${i}`}
-                  className="tagline-word"
-                  style={{ animationDelay: `${i * 80}ms` }}
-                >
-                  {word}
-                  {i < 4 ? " " : ""}
-                </span>
-              ))}
-            </span>
-          </div>
-
-          {/* H1 — single per page */}
-          <h1
-            id="hero-heading"
-            className="relative z-10 text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight max-w-4xl text-balance leading-[1.08] text-white"
+          {/* Top Category Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 18, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl shadow-lg"
           >
-            We Build AI Systems That Work.{" "}
-            <span className="typewriter-text">Not Demos.</span>
-          </h1>
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-hover)] animate-pulse" />
+            Connecting Intelligence · Enabling Action
+          </motion.div>
 
-          <p className="relative z-10 mt-7 text-lg sm:text-xl text-zinc-400 max-w-2xl leading-relaxed text-balance">
-            ZamNexus helps organisations simplify complex processes, connect
-            fragmented systems and unlock the value of their data — using
-            Artificial Intelligence, agentic automation, cloud-native
-            engineering and modern business applications.
-          </p>
+          {/* Heading */}
+          <motion.h1
+            id="home-hero-heading"
+            initial={{ opacity: 0, y: 35 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
+          >
+            Engineering mission-critical systems for{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-400 via-violet-400 to-emerald-400">
+              the autonomous enterprise.
+            </span>
+          </motion.h1>
 
-          {/* CTAs — each with a secondary micro-copy line */}
-          <div className="relative z-10 mt-10 flex flex-wrap items-start justify-center gap-6">
-            <div className="flex flex-col items-center gap-2">
-              <Link href="/Solutions" className="liquid-lime-btn text-base py-4 px-8">
-                <span>Explore Our Solutions</span>
-                <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-              </Link>
-              <span className="text-xs text-zinc-500 font-mono">6 capabilities · one team</span>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <Link
-                href="/Contact"
-                className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300"
-              >
-                Talk to Us →
-              </Link>
-              <span className="text-xs text-zinc-500 font-mono">No commitment · 30-min call</span>
-            </div>
-          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 text-base sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed"
+          >
+            ZamNexus synthesizes 15+ years of enterprise architecture with artificial intelligence,
+            cloud-native engineering, and four purpose-built proprietary SaaS engines.
+          </motion.p>
 
-          {/* Stat bar — counts up on viewport entry */}
-          <div className="relative z-10 mt-16 w-full max-w-3xl grid grid-cols-3 gap-px rounded-2xl overflow-hidden border border-zinc-800/60 bg-zinc-800/20">
+          {/* Hero CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+            className="mt-10 flex flex-wrap items-center justify-center gap-4"
+          >
+            <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
+              <span>Start an Engagement</span>
+              <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
+            </Link>
+            <Link
+              href="/Products"
+              className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300"
+            >
+              Explore Flagship Products →
+            </Link>
+          </motion.div>
+
+          {/* System Telemetry HUD */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.45 }}
+            className="mt-16 w-full max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-800/20 backdrop-blur-md shadow-2xl"
+          >
             {[
-              { value: "15+", label: "Years Experience" },
-              { value: "6", label: "Core Capabilities" },
-              { value: "9", label: "Industries Served" },
+              { val: "15+", label: "Years Enterprise Heritage" },
+              { val: "750+", label: "Live Retail Registers" },
+              { val: "5+", label: "Industrial Plants" },
+              { val: "99.99%", label: "Verified Core Uptime" },
             ].map((stat) => (
-              <div key={stat.label} className="bg-zinc-900/40 px-6 py-5 text-center">
-                <AnimatedStat
-                  value={stat.value}
-                  accent="#ffffff"
-                  className="!text-2xl sm:!text-3xl"
-                />
-                <div className="text-xs font-mono uppercase tracking-widest text-zinc-500 mt-1">
+              <div key={stat.label} className="bg-zinc-900/40 px-5 py-4 text-center group hover:bg-zinc-800/40 transition-colors">
+                <div className="text-xl sm:text-2xl font-bold font-mono text-white group-hover:text-[var(--accent-hover)] transition-colors">
+                  <AnimatedStat value={stat.val} />
+                </div>
+                <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 mt-1">
                   {stat.label}
                 </div>
               </div>
             ))}
-          </div>
+          </motion.div>
         </section>
 
-        {/* ── TECHNOLOGY THAT CONNECTS EVERYTHING ───────────────────────────── */}
+        {/* ── FLAGSHIP PRODUCTS 3D GYROSCOPE SHOWCASE ──────────────────────── */}
         <section
-          aria-labelledby="connects-heading"
-          className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
+          aria-labelledby="flagship-products-heading"
+          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
         >
-          <ScrollReveal className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-                Our Purpose
+          {/* Live Connected Enterprise Workflow Highway */}
+          <div className="mb-14 p-5 sm:p-6 rounded-3xl bg-zinc-950/80 border border-zinc-800/90 shadow-2xl relative overflow-hidden">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-800/70 pb-3.5 mb-5">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full animate-ping bg-[var(--accent-hover)]" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+                  ZamNexus Unified Enterprise Highway // Live Telemetry Stream
+                </span>
+              </div>
+              <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Zero-Downtime Mesh Synced
               </span>
-              <h2
-                id="connects-heading"
-                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
-              >
-                Technology That Connects Everything
-              </h2>
             </div>
-            <div className="space-y-5 text-zinc-400 text-base leading-relaxed">
-              <p>
-                Modern organisations run on a growing web of systems, applications, data sources and
-                digital platforms — and increasingly, on AI agents that act within them. ZamNexus brings
-                it all together.
-              </p>
-              <p>
-                We combine business expertise, enterprise technology, cloud engineering and Artificial
-                Intelligence to build connected solutions that improve efficiency, automate processes and
-                support faster, better decisions — in real time, not just in hindsight.
-              </p>
-              <p>
-                Whether you are modernising legacy systems, building a cloud-native platform, launching
-                a SaaS product, automating business processes or putting AI agents to work in your
-                organisation, we help turn ideas into practical, scalable solutions.
-              </p>
-            </div>
-          </ScrollReveal>
-        </section>
 
-        {/* ── WHAT WE DO — INTERACTIVE SOLUTION EXPLORER ────────────────────── */}
-        <section
-          aria-labelledby="solutions-heading"
-          className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
-        >
-          <ScrollReveal>
-          <div className="mb-12">
+            {/* Visual 4-Core Workflow Stream with Moving Energy Packets */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 relative z-10">
+              {[
+                { code: "ZNXERP", step: "01. Industrial MES", stat: "99.2% Yield", accent: "#3B82F6" },
+                { code: "ZNXePOS", step: "02. Retail Tills", stat: "0.08s Scan", accent: "#F59E0B" },
+                { code: "ZNXEdu", step: "03. Campus Ops", stat: "1.2s Alerts", accent: "#8B5CF6" },
+                { code: "ZNXCare", step: "04. Hospital EHR", stat: "0 Error Dispense", accent: "#10B981" },
+              ].map((node, i) => (
+                <div
+                  key={node.code}
+                  className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col justify-between"
+                  style={{ borderLeftWidth: "3px", borderLeftColor: node.accent }}
+                >
+                  <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 mb-1">
+                    <span className="font-bold text-white">{node.code}</span>
+                    <span style={{ color: node.accent }}>{node.stat}</span>
+                  </div>
+                  <div className="text-xs font-mono text-zinc-300 font-semibold">{node.step}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Glowing Pipeline Connector Beam */}
+            <div className="hidden lg:block relative mt-4 h-[2px] bg-zinc-800 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full rounded-full"
+                style={{
+                  background: "linear-gradient(90deg, #3B82F6, #F59E0B, #8B5CF6, #10B981)",
+                  boxShadow: "0 0 12px #3B82F6",
+                }}
+                animate={{
+                  x: ["-100%", "100%"],
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 3,
+                  ease: "linear",
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-              What We Do
+              Proprietary Technology Cores
             </span>
             <h2
-              id="solutions-heading"
-              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3"
+              id="flagship-products-heading"
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
             >
-              Six Ways We Create Value
+              Four Purpose-Built Enterprise Engines
             </h2>
-            <p className="mt-4 text-zinc-400 max-w-2xl text-base leading-relaxed line-clamp-2">
-              From AI strategy to cloud engineering, our capabilities span the full technology lifecycle.
+            <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
+              Tailored industrial cores engineered with real-time ledgers, offline edge resilience, and unified AI copilots.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-0 lg:rounded-3xl lg:overflow-hidden lg:border lg:border-zinc-800">
-            {/* Tab selector */}
-            <nav
-              aria-label="Solution categories"
-              className="lg:border-r lg:border-zinc-800 flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible gap-1 lg:gap-0 pb-2 lg:pb-0"
-            >
-              {solutions.map((sol) => {
-                const isActive = activeSolution === sol.id;
-                return (
-                  <button
-                    key={sol.id}
-                    id={`solution-tab-${sol.id}`}
-                    aria-selected={isActive}
-                    role="tab"
-                    onClick={() => setActiveSolution(sol.id)}
-                    className={`relative flex-shrink-0 lg:flex-shrink text-left px-6 py-5 transition-all duration-300 border-b border-zinc-800/60 last:border-b-0 group ${
-                      isActive
-                        ? "bg-gradient-to-r from-[var(--accent)]/12 via-[var(--accent)]/5 to-transparent"
-                        : "hover:bg-zinc-900/60"
-                    }`}
-                  >
-                    {/* Animated left indicator bar — glows in accent color */}
-                    <span
-                      aria-hidden="true"
-                      className={`absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-[var(--accent-hover)] shadow-[0_0_10px_var(--accent-glow)] transition-all duration-300 origin-center ${
-                        isActive ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
-                      }`}
-                    />
-                    <div className="relative flex items-center gap-3">
-                      {/* Icon with soft glow halo when active */}
-                      <span
-                        className={`relative text-xl font-mono transition-all duration-300 ${
-                          isActive
-                            ? "text-[var(--accent-hover)] solution-icon-active"
-                            : "text-zinc-600 group-hover:text-zinc-400"
-                        }`}
-                        aria-hidden="true"
-                      >
-                        {sol.icon}
-                      </span>
-                      <div>
-                        <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-0.5">
-                          {sol.tag}
-                        </div>
-                        <div
-                          className={`text-sm font-semibold leading-snug transition-colors ${
-                            isActive
-                              ? "text-white"
-                              : "text-zinc-400 group-hover:text-zinc-200"
-                          }`}
-                        >
-                          {sol.title}
-                        </div>
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {flagshipProducts.map((prod) => (
+              <GyroCard key={prod.id} accent={prod.accent} className="p-8 sm:p-10 flex flex-col justify-between group">
+                <div className="relative z-10">
+                  {/* Top Accent Gradient Line */}
+                  <div
+                    className="absolute -top-8 -left-8 -right-8 h-[2.5px]"
+                    style={{
+                      background: `linear-gradient(90deg, transparent, ${prod.accent}, transparent)`,
+                    }}
+                  />
+
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="p-2.5 rounded-2xl bg-zinc-950/80 border border-zinc-800 shadow">
+                      <Image
+                        src={prod.logo}
+                        alt={`${prod.code} Logo`}
+                        width={130}
+                        height={40}
+                        className="h-7 w-auto object-contain"
+                      />
                     </div>
-                  </button>
-                );
-              })}
-            </nav>
-
-            {/* Active solution detail panel — re-mounts + crossfades on tab switch */}
-            <div
-              key={activeSolution}
-              role="tabpanel"
-              aria-labelledby={`solution-tab-${activeSolution}`}
-              className="lg:col-span-2 p-8 sm:p-12 bg-zinc-900/30 solution-panel-enter"
-            >
-              <div className="space-y-6">
-                <div>
-                  <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-                    {activeSolutionData.tag}
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-white mt-2 leading-snug">
-                    {activeSolutionData.title}
-                  </h3>
-                  <p className="mt-4 text-zinc-400 text-base leading-relaxed">
-                    {activeSolutionData.description}
-                  </p>
-                </div>
-
-                <div>
-                  <div className="text-xs font-mono uppercase tracking-widest text-zinc-500 mb-3">
-                    Capabilities
+                    <span
+                      className="text-xs font-mono font-bold px-3 py-1 rounded-full border"
+                      style={{
+                        borderColor: `${prod.accent}50`,
+                        background: `${prod.accent}12`,
+                        color: prod.accent,
+                      }}
+                    >
+                      {prod.stat} {prod.statLabel}
+                    </span>
                   </div>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {activeSolutionData.capabilities.map((cap) => (
-                      <li key={cap} className="check-item">
-                        {cap}
-                      </li>
+
+                  <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-white transition-colors">
+                    {prod.name}
+                  </h3>
+                  <p className="text-xs font-mono mb-4" style={{ color: prod.accent }}>
+                    {prod.tagline}
+                  </p>
+                  <p className="text-sm text-zinc-400 leading-relaxed mb-6">
+                    {prod.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {prod.modules.map((mod) => (
+                      <span
+                        key={mod}
+                        className="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-zinc-950/70 border border-zinc-800 text-zinc-300"
+                      >
+                        {mod}
+                      </span>
                     ))}
-                  </ul>
+                  </div>
                 </div>
 
-                <div className="pt-2">
+                <div className="relative z-10 pt-4 border-t border-zinc-800/60 flex items-center justify-between">
                   <Link
-                    href="/Solutions"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent-hover)] hover:gap-3 hover:underline underline-offset-4 transition-all"
+                    href={prod.href}
+                    className="text-xs font-mono font-bold text-white hover:text-[var(--accent-hover)] transition-colors flex items-center gap-2"
                   >
-                    Explore {activeSolutionData.title}
-                    <span aria-hidden="true">→</span>
+                    <span>Explore {prod.code} Architecture</span>
+                    <span>→</span>
+                  </Link>
+                  <Link
+                    href="/Contact"
+                    className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors"
+                  >
+                    Request Demo
                   </Link>
                 </div>
-              </div>
-            </div>
-          </div>
-          </ScrollReveal>
-        </section>
-
-        {/* ── WHY ZAMNEXUS ─────────────────────────────────────────────────── */}
-        <section
-          aria-labelledby="why-heading"
-          className="relative isolate overflow-hidden max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
-        >
-          <div
-            ref={whyBlobRef}
-            className="absolute -top-10 -left-16 w-72 h-72 rounded-full bg-zinc-500/5 blur-3xl pointer-events-none"
-            aria-hidden="true"
-          />
-          <ScrollReveal className="relative z-10">
-          <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-                Why ZamNexus
-              </span>
-              <h2
-                id="why-heading"
-                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3"
-              >
-                Business Understanding Meets Technology Expertise
-              </h2>
-              <p className="mt-3 text-zinc-400 text-base leading-relaxed max-w-xl line-clamp-2">
-                Six reasons enterprise teams choose ZamNexus over a generic dev shop.
-              </p>
-            </div>
-            <Link
-              href="/About"
-              className="flex-shrink-0 text-sm font-semibold text-zinc-400 hover:text-[var(--accent-hover)] transition-colors"
-            >
-              About ZamNexus →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
-            {whyPoints.map((point, idx) => (
-              <ScrollReveal key={point.title} delay={idx * 100} className="h-full">
-                <div
-                  className="glass-capability-card h-full"
-                  style={{ "--card-accent": point.accent } as CSSProperties}
-                >
-                  <div className="glass-capability-icon">
-                    <WhyPointIcon icon={point.icon} />
-                  </div>
-                  <h3 className="glass-capability-title">
-                    {point.title}
-                  </h3>
-                  <p className="glass-capability-desc">
-                    {point.description}
-                  </p>
-                </div>
-              </ScrollReveal>
+              </GyroCard>
             ))}
           </div>
-          </ScrollReveal>
         </section>
 
-        {/* ── FROM IDEA TO INTELLIGENT SOLUTION — DELIVERY PROCESS ──────────── */}
+        {/* ── INTERACTIVE SOLUTIONS ENGINE (TABBED PROGRESSIVE MATRIX) ─────── */}
         <section
-          aria-labelledby="process-heading"
-          className="relative isolate overflow-hidden max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
+          aria-labelledby="solutions-matrix-heading"
+          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
         >
-          <div
-            ref={timelineBlobRef}
-            className="absolute top-1/3 -right-16 w-72 h-72 rounded-full bg-zinc-500/5 blur-3xl pointer-events-none"
-            aria-hidden="true"
-          />
-          <ScrollReveal className="relative z-10">
-          <div className="mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-              How We Deliver
+              Engineering Disciplines
             </span>
             <h2
-              id="process-heading"
-              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3"
+              id="solutions-matrix-heading"
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
             >
-              From Idea to Intelligent Solution
+              The Intelligent Solutions Engine
             </h2>
-            <p className="mt-4 text-zinc-400 max-w-2xl text-base leading-relaxed line-clamp-2">
-              A proven six-step approach that underpins everything we build.
+            <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
+              Click through our specialized technology practices to inspect live capability profiles, architectures, and metrics.
             </p>
           </div>
 
-          <DeliveryTimeline steps={deliverySteps} />
-
-          <div className="mt-10 text-center">
-            <Link
-              href="/Services"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 hover:text-[var(--accent-hover)] transition-colors"
-            >
-              View our full services approach
-              <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-          </ScrollReveal>
-        </section>
-
-        {/* ── TECHNOLOGIES WE WORK WITH ─────────────────────────────────────── */}
-        <section
-          aria-labelledby="tech-heading"
-          className="py-20 border-t border-zinc-800/60 overflow-hidden"
-        >
-          <div className="max-w-6xl mx-auto px-6">
-            <ScrollReveal>
-              {/* Section header */}
-              <div className="mb-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                  <div>
-                    <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-                      Our Technology Stack
-                    </span>
-                    <h2
-                      id="tech-heading"
-                      className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-3"
-                    >
-                      Technologies We Work With
-                    </h2>
-                    <p className="mt-3 text-zinc-400 text-base max-w-xl leading-relaxed line-clamp-2">
-                      A curated ecosystem of cloud, AI, and enterprise platforms that power every solution we deliver.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent-hover)] opacity-60" />
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--accent-hover)]" />
-                    </span>
-                    <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
-                      Continuously Expanding
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* ── 2×2 CATEGORY BENTO — one card per capability family ── */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
-              {techGroups.map((group, idx) => {
-                const meta = techCategoryMeta[idx];
-                return (
-                  <ScrollReveal key={group.label} delay={idx * 80} className="h-full">
-                    <div
-                      className="tech-bento-card"
-                      style={{ "--card-accent": meta.accent } as CSSProperties}
-                    >
-                      <div className="tech-bento-header">
-                        <div className="tech-bento-icon">
-                          <TechCategoryIcon icon={meta.icon} />
-                        </div>
-                        <div>
-                          <h3 className="tech-bento-title">{group.label}</h3>
-                          <p className="tech-bento-count">
-                            {group.items.length} technologies
-                          </p>
-                        </div>
-                      </div>
-                      <div className="tech-bento-chips">
-                        {group.items.map((item) => (
-                          <span key={item} className="tech-bento-chip">
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </ScrollReveal>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* ── INDUSTRIES TEASER ────────────────────────────────────────────── */}
-        <section
-          aria-labelledby="industries-heading"
-          className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
-        >
-          <ScrollReveal>
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-                Industries We Support
-              </span>
-              <h2
-                id="industries-heading"
-                className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-3"
-              >
-                Solutions Adapted to Your Industry
-              </h2>
-              <p className="mt-3 text-zinc-400 text-base leading-relaxed max-w-xl line-clamp-2">
-                Nine sectors, one delivery standard — the same rigour wherever we build.
-              </p>
-            </div>
-            <Link
-              href="/Industries"
-              className="flex-shrink-0 text-sm font-semibold text-zinc-400 hover:text-[var(--accent-hover)] transition-colors"
-            >
-              Explore all industries →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-[minmax(88px,auto)]">
-            {industries.map((industry, idx) => {
-              const wideClass =
-                industry.featured === "hero"
-                  ? "sm:col-span-2 lg:col-span-3 industry-tile--hero"
-                  : industry.featured === "wide"
-                    ? "lg:col-span-2 industry-tile--wide"
-                    : "";
+          {/* Interactive Category Switcher Tabs */}
+          <div className="flex flex-wrap justify-center gap-2 mb-12">
+            {solutions.map((sol) => {
+              const isSelected = sol.id === activeSolutionId;
               return (
-                <ScrollReveal
-                  key={industry.name}
-                  variant="up"
-                  delay={idx * 60}
-                  threshold={0.15}
-                  className={`h-full ${wideClass}`}
+                <button
+                  key={sol.id}
+                  onClick={() => setActiveSolutionId(sol.id)}
+                  className={`px-4 py-2.5 rounded-full text-xs font-mono font-bold transition-all duration-300 flex items-center gap-2.5 cursor-pointer relative ${
+                    isSelected
+                      ? "bg-zinc-800 text-white border border-zinc-700 shadow-xl"
+                      : "bg-zinc-900/50 hover:bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800/80"
+                  }`}
                 >
-                  <Link
-                    href={industry.href}
-                    className={`industry-tile h-full ${industry.featured ? "industry-tile--featured" : ""}`}
-                    onMouseMove={(e: MouseEvent<HTMLAnchorElement>) => {
-                      const target = e.currentTarget;
-                      const rect = target.getBoundingClientRect();
-                      target.style.setProperty("--mx", `${e.clientX - rect.left}px`);
-                      target.style.setProperty("--my", `${e.clientY - rect.top}px`);
-                    }}
-                  >
-                    {/* Ambient corner mesh — only on featured tiles */}
-                    {industry.featured && (
-                      <span className="industry-tile-mesh" aria-hidden="true" />
-                    )}
-
-                    <span className="industry-tile-icon">
-                      <IndustryIcon icon={industry.icon} />
-                    </span>
-                    <span className="industry-tile-body">
-                      <span className="industry-tile-copy">
-                        <span className="industry-tile-name">{industry.name}</span>
-                        {industry.headline && (
-                          <span className="industry-tile-headline">
-                            {industry.headline}
-                          </span>
-                        )}
-                      </span>
-                      <span className="industry-tile-arrow" aria-hidden="true">
-                        →
-                      </span>
-                    </span>
-                  </Link>
-                </ScrollReveal>
+                  <span style={{ color: sol.accent }}>{sol.icon}</span>
+                  <span>{sol.title.split(" ")[0]} {sol.title.split(" ")[1] || ""}</span>
+                  {isSelected && (
+                    <motion.div
+                      layoutId="solution-tab-pill"
+                      className="absolute inset-0 rounded-full border-2 pointer-events-none"
+                      style={{ borderColor: sol.accent }}
+                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                    />
+                  )}
+                </button>
               );
             })}
           </div>
-          </ScrollReveal>
-        </section>
 
-        {/* ── THE FUTURE IS CONNECTED — VISION ─────────────────────────────── */}
-        <section
-          aria-labelledby="vision-heading"
-          className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
-        >
-          <ScrollReveal className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden">
-            {/* Decorative accent glow blob */}
-            <div
-              ref={visionBlobRef}
-              className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[var(--accent)]/8 blur-3xl pointer-events-none"
-              aria-hidden="true"
-            />
-            <div className="relative z-10 max-w-3xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-                Our Vision
-              </span>
-              <h2
-                id="vision-heading"
-                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-4 leading-tight"
-              >
-                The Future Is Connected.{" "}
-                <span className="text-[var(--accent-hover)]">Intelligent.</span>{" "}
-                Actionable.
-              </h2>
-              <p className="mt-6 text-zinc-400 text-base sm:text-lg leading-relaxed">
-                Artificial Intelligence and cloud technology are changing how organisations operate —
-                and the shift from AI that answers questions to AI that takes action is only
-                accelerating. ZamNexus helps businesses move beyond disconnected systems, manual
-                processes and isolated data, towards a future where applications, data, automation
-                and intelligence work together.
-              </p>
-              <p className="mt-4 text-zinc-400 text-base sm:text-lg leading-relaxed">
-                We believe intelligence only creates value when it enables action. That&apos;s why we
-                build technology that doesn&apos;t just process information — it helps organisations
-                respond, automate, decide and move forward, responsibly and at pace.
-              </p>
-              <div className="mt-8 flex flex-wrap items-start gap-6">
-                <div className="flex flex-col items-center gap-2">
-                  <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                    <span>Start a Conversation</span>
-                    <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
+          {/* Active Solution Stage with AnimatePresence */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSolution.id}
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -18 }}
+              transition={{ duration: 0.35 }}
+              className="p-8 sm:p-14 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 backdrop-blur-md shadow-2xl relative overflow-hidden"
+              style={{ borderLeftWidth: "3px", borderLeftColor: activeSolution.accent }}
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                <div className="lg:col-span-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-2xl" style={{ color: activeSolution.accent }}>
+                      {activeSolution.icon}
+                    </span>
+                    <span
+                      className="text-xs font-mono font-bold uppercase tracking-widest"
+                      style={{ color: activeSolution.accent }}
+                    >
+                      {activeSolution.tag}
+                    </span>
+                  </div>
+
+                  <h3 className="text-2xl sm:text-4xl font-extrabold text-white mb-4">
+                    {activeSolution.title}
+                  </h3>
+                  <p className="text-sm sm:text-base text-zinc-300 leading-relaxed mb-8">
+                    {activeSolution.description}
+                  </p>
+
+                  <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 mb-8 flex items-center justify-between text-xs font-mono">
+                    <span className="text-zinc-500">Benchmark Telemetry:</span>
+                    <span className="font-semibold text-white flex items-center gap-2" style={{ color: activeSolution.accent }}>
+                      <span>⚡</span>
+                      {activeSolution.telemetry}
+                    </span>
+                  </div>
+
+                  <Link href="/Solutions" className="liquid-lime-btn text-xs sm:text-sm py-3 px-6 inline-flex">
+                    <span>Explore Solution Blueprints</span>
+                    <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
                   </Link>
-                  <span className="text-xs text-zinc-500 font-mono">No commitment · 30-min call</span>
                 </div>
-                <Link
-                  href="/Solutions"
-                  className="text-sm font-semibold text-zinc-400 hover:text-white transition-colors mt-4"
-                >
-                  Explore our solutions →
-                </Link>
+
+                <div className="lg:col-span-6">
+                  <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 mb-4 border-b border-zinc-800/60 pb-3">
+                    Key Solution Capabilities ({activeSolution.capabilities.length})
+                  </div>
+                  <div className="space-y-3">
+                    {activeSolution.capabilities.map((cap, i) => (
+                      <motion.div
+                        key={cap}
+                        whileHover={{ x: 6, borderColor: activeSolution.accent }}
+                        className="flex items-center justify-between p-3.5 rounded-2xl border border-zinc-800/80 bg-zinc-950/50 text-xs sm:text-sm text-zinc-300 hover:text-white transition-all duration-200"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span
+                            className="w-2 h-2 rounded-full flex-shrink-0"
+                            style={{ background: activeSolution.accent }}
+                          />
+                          <span className="font-medium">{cap}</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-zinc-600">0{i + 1}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          </ScrollReveal>
+            </motion.div>
+          </AnimatePresence>
         </section>
 
-        {/* ── READY TO TRANSFORM — BOTTOM CTA ──────────────────────────────── */}
+        {/* ── CROSS-ENGINE INTEGRATION BLUEPRINT (SVG SIGNAL PIPELINES) ───── */}
         <section
-          aria-labelledby="cta-heading"
-          className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
+          aria-labelledby="blueprint-heading"
+          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
         >
-          <ScrollReveal className="text-center max-w-3xl mx-auto space-y-6">
+          <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-              Ready to Transform Your Business?
+              Architectural Cohesion
             </span>
             <h2
-              id="cta-heading"
-              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white"
+              id="blueprint-heading"
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
             >
-              Let&apos;s connect your ideas, technology and intelligence.
+              The Unified Integration Blueprint
             </h2>
-            <p className="text-zinc-400 text-base leading-relaxed max-w-xl mx-auto line-clamp-2">
-              Whether you are exploring agentic AI, building a SaaS product or automating complex
-              processes — ZamNexus is ready to help.
+            <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
+              How ZamNexus connects proprietary engines, commercial CRMs, and autonomous AI copilots into one continuous data nervous system.
             </p>
-            <div className="flex flex-wrap items-start justify-center gap-6 pt-2">
-              <div className="flex flex-col items-center gap-2">
-                <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                  <span>Contact ZamNexus</span>
-                  <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-                </Link>
-                <span className="text-xs text-zinc-500 font-mono">No commitment · 30-min call</span>
+          </div>
+
+          <div className="p-8 sm:p-12 rounded-3xl bg-zinc-950/80 border border-zinc-800/90 shadow-2xl relative overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center items-center">
+              <div className="p-6 rounded-2xl bg-zinc-900/60 border border-blue-500/40">
+                <div className="text-2xl mb-2">⚙️</div>
+                <div className="font-bold text-white text-sm">Industrial &amp; Retail Core</div>
+                <div className="text-xs font-mono text-blue-400 mt-1">ZNXERP + ZNXePOS</div>
+                <div className="text-[11px] font-mono text-zinc-400 mt-3">Ledger Entries · SKU Barcodes · Tills</div>
               </div>
-              <div className="flex flex-col items-center gap-2">
-                <Link
-                  href="/Services"
-                  className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300"
-                >
-                  View our services →
-                </Link>
-                <span className="text-xs text-zinc-500 font-mono">See what we build</span>
+
+              <div className="p-6 rounded-2xl bg-gradient-to-b from-zinc-900 to-zinc-950 border border-emerald-500/50 shadow-2xl">
+                <div className="text-2xl mb-2">🧠</div>
+                <div className="font-bold text-white text-sm">ZamNexus Reasoning Mesh</div>
+                <div className="text-xs font-mono text-emerald-400 mt-1">● Sub-Second Event Broker</div>
+                <div className="text-[11px] font-mono text-zinc-300 mt-3 bg-zinc-950 p-2 rounded-lg border border-zinc-800">
+                  Zero-Copy Data Lakehouse · Autonomous RAG · SSO
+                </div>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-zinc-900/60 border border-violet-500/40">
+                <div className="text-2xl mb-2">⊞</div>
+                <div className="font-bold text-white text-sm">Enterprise CRMs &amp; Cloud</div>
+                <div className="text-xs font-mono text-violet-400 mt-1">Microsoft &amp; Salesforce</div>
+                <div className="text-[11px] font-mono text-zinc-400 mt-3">Copilot Studio · Agentforce · Azure</div>
               </div>
             </div>
-          </ScrollReveal>
+          </div>
+        </section>
+
+        {/* ── CONNECTED DELIVERY TIMELINE (DISCOVER TO EVOLVE) ─────────────── */}
+        <section
+          aria-labelledby="delivery-heading"
+          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
+        >
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+              Methodology
+            </span>
+            <h2
+              id="delivery-heading"
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
+            >
+              From Discovery to Continuous Evolution
+            </h2>
+            <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
+              A disciplined, six-step engineering delivery roadmap designed to eliminate risk and ensure immediate production velocity.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {deliverySteps.map((step) => (
+              <motion.div
+                key={step.number}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-40px" }}
+                transition={{ duration: 0.4 }}
+                whileHover={{ y: -4 }}
+                className="p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 relative overflow-hidden shadow-lg group flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="w-10 h-10 rounded-xl bg-zinc-950/80 border border-zinc-800 text-xs font-mono font-bold text-[var(--accent-hover)] flex items-center justify-center">
+                      {step.number}
+                    </span>
+                    <span className="text-[10px] font-mono text-zinc-600">PHASE 0{step.number.slice(-1)}</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-white transition-colors">
+                    {step.label}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── 8-INDUSTRY SECTOR BENTO GRID ─────────────────────────────────── */}
+        <section
+          aria-labelledby="industries-grid-heading"
+          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
+        >
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+              Sector Mastery
+            </span>
+            <h2
+              id="industries-grid-heading"
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
+            >
+              Intelligent Solutions by Sector
+            </h2>
+            <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
+              Every vertical brings unique operational workflows and regulatory mandates. Explore how we engineer solutions tailored to your sector.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {industriesList.map((ind) => (
+              <Link
+                key={ind.name}
+                href="/Industries"
+                className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 hover:bg-zinc-900/70 hover:border-zinc-600 transition-all duration-300 flex flex-col justify-between group shadow-md"
+              >
+                <div>
+                  <div className="text-2xl mb-3 p-2 rounded-xl bg-zinc-950/80 border border-zinc-800 w-fit">
+                    {ind.icon}
+                  </div>
+                  <h3 className="text-sm font-bold text-white mb-1 group-hover:text-white transition-colors">
+                    {ind.name}
+                  </h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    {ind.desc}
+                  </p>
+                </div>
+                <div className="mt-4 pt-3 border-t border-zinc-800/60 text-[10px] font-mono text-zinc-500 group-hover:text-[var(--accent-hover)] transition-colors">
+                  Explore Vertical →
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ── WHY ZAMNEXUS: THE 6 STRATEGIC MOATS ───────────────────────────── */}
+        <section
+          aria-labelledby="why-heading"
+          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
+        >
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+              The Strategic Moat
+            </span>
+            <h2
+              id="why-heading"
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
+            >
+              Why Enterprises Partner with ZamNexus
+            </h2>
+            <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
+              We combine deep polyglot engineering with business empathy to guarantee measurable platform outcomes.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {whyPoints.map((point) => (
+              <motion.div
+                key={point.title}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-40px" }}
+                transition={{ duration: 0.4 }}
+                whileHover={{ y: -6, borderColor: point.accent }}
+                className="p-8 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 relative overflow-hidden shadow-xl flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="text-3xl mb-4 p-3 rounded-2xl bg-zinc-950/80 border border-zinc-800 w-fit">
+                    {point.icon}
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-white transition-colors">
+                    {point.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                    {point.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── CLIENT TRUST MARQUEE ─────────────────────────────────────────── */}
+        <section
+          aria-labelledby="home-marquee-heading"
+          className="border-t border-zinc-800/60 border-b border-zinc-800/60 py-14 overflow-hidden relative bg-zinc-950/40 backdrop-blur-sm"
+        >
+          <div className="max-w-6xl mx-auto px-6 text-center mb-6">
+            <span className="text-xs font-mono uppercase tracking-widest text-zinc-500 font-bold">
+              Trusted By Regulated Enterprises &amp; High-Volume Retail
+            </span>
+            <h2 id="home-marquee-heading" className="sr-only">Verified Enterprise Clients</h2>
+          </div>
+
+          <div className="flex overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
+            <motion.div
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+              className="flex items-center gap-12 whitespace-nowrap flex-shrink-0"
+            >
+              {[...clientMarquee, ...clientMarquee].map((client, idx) => (
+                <div
+                  key={`${client}-${idx}`}
+                  className="flex items-center gap-3 text-sm sm:text-base font-mono font-semibold text-zinc-400 hover:text-white transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-hover)]" />
+                  <span>{client}</span>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── HIGH-CONVERSION BOTTOM CTA ───────────────────────────────────── */}
+        <section
+          aria-labelledby="home-cta-heading"
+          className="max-w-7xl mx-auto px-6 py-24"
+        >
+          <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12">
+            <div className="max-w-xl">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+                Deploy with Total Confidence
+              </span>
+              <h2
+                id="home-cta-heading"
+                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
+              >
+                Let&apos;s build what&apos;s next for your business.
+              </h2>
+              <p className="mt-4 text-zinc-400 text-base sm:text-lg leading-relaxed">
+                Whether you need a dedicated enterprise product deployment, an autonomous AI copilot integration,
+                or complete cloud-native modern engineering — our senior architects are ready to partner with you.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
+                  <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
+                    <span>Schedule Executive Briefing</span>
+                    <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
+                  </Link>
+                </motion.div>
+                <Link
+                  href="/Solutions"
+                  className="px-7 py-4 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 font-semibold text-sm transition-colors"
+                >
+                  Explore Solutions Architecture →
+                </Link>
+              </div>
+            </div>
+
+            {/* SLA Badge Panel */}
+            <div className="w-full lg:w-80 p-6 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-4">
+              <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 font-bold border-b border-zinc-800/60 pb-3">
+                ZamNexus Deployment SLA
+              </div>
+              {[
+                { title: "Direct Principal Architect Pairing", sub: "Zero junior gatekeepers" },
+                { title: "Penny-Perfect Ledger Guarantee", sub: "Parallel ledger reconciliation" },
+                { title: "Sub-15min Emergency SLA", sub: "24/7 dedicated enterprise TAM" },
+              ].map((item) => (
+                <div key={item.title} className="flex items-start gap-3 text-xs">
+                  <span className="text-emerald-400 font-bold">✓</span>
+                  <div>
+                    <div className="font-semibold text-zinc-200">{item.title}</div>
+                    <div className="text-zinc-500 text-[11px] font-mono">{item.sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
       </main>
