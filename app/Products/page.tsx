@@ -29,7 +29,7 @@ const products = [
     stat: "5",
     statLabel: "Enterprise clients",
     modules: ["Finance", "HR", "Procurement", "Inventory", "Production", "Sales", "QC", "MIS"],
-    accent: "#D0FF71",
+    accent: "var(--accent-hover)",
     index: "01",
     href: "/Products/znxerp",
   },
@@ -76,7 +76,7 @@ const products = [
 
 export default function ProductsPage() {
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
       <Navbar />
 
@@ -87,7 +87,7 @@ export default function ProductsPage() {
           aria-labelledby="products-hero-heading"
           className="max-w-6xl mx-auto px-6 pt-44 pb-16 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl">
             ZamNexus Product Suite
           </div>
           <h1
@@ -95,7 +95,7 @@ export default function ProductsPage() {
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Systems built for how{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#D0FF71] to-emerald-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--accent-hover)] to-violet-400">
               each part of your business runs.
             </span>
           </h1>
@@ -110,7 +110,7 @@ export default function ProductsPage() {
               <Link
                 key={p.id}
                 href={p.href}
-                className="group px-5 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/60 text-sm font-bold text-zinc-300 hover:text-white hover:border-[#D0FF71]/50 transition-all duration-200 font-mono"
+                className="group px-5 py-2.5 rounded-full border border-zinc-800 bg-zinc-900/60 text-sm font-bold text-zinc-300 hover:text-white hover:border-[var(--accent-hover)]/50 transition-all duration-200 font-mono"
                 style={{ "--pill-accent": p.accent } as CSSProperties}
               >
                 <span
@@ -230,9 +230,9 @@ export default function ProductsPage() {
           className="max-w-6xl mx-auto px-6 py-20"
         >
           <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#D0FF71]/5 blur-3xl pointer-events-none" aria-hidden="true" />
+            <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[var(--accent-hover)]/5 blur-3xl pointer-events-none" aria-hidden="true" />
             <div className="relative z-10 max-w-3xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 One Suite. All Your Operations.
               </span>
               <h2

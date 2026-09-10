@@ -489,6 +489,670 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* ══════════════════════════════════════════════════════════════
+   Classic Nav — full-width bar links + CTA
+   ══════════════════════════════════════════════════════════════ */
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 18px;
+  font-size: 15.5px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--foreground-muted);
+  transition: color 0.25s var(--ease-out);
+}
+
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-link--active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.nav-link-text {
+  position: relative;
+  padding-bottom: 6px;
+}
+
+/* Small accent dot that fades in next to a hovered link — extra character */
+.nav-link-text::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--accent-hover);
+  box-shadow: 0 0 8px var(--accent-glow);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.4);
+  transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.nav-link:hover .nav-link-text::before,
+.nav-link--active .nav-link-text::before {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+/* ── Nav item wrapper — needed for dropdown positioning ── */
+.nav-item {
+  position: relative;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── Chevron icon on links with dropdowns ── */
+.nav-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  color: currentColor;
+  opacity: 0.6;
+  transition: transform 0.25s var(--ease-out), opacity 0.25s var(--ease-out);
+}
+
+.nav-link:hover .nav-chevron {
+  opacity: 1;
+}
+
+.nav-chevron--open {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* ── DROPDOWN PANEL ── */
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% - 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  min-width: 280px;
+  padding-top: 16px; /* invisible bridge for cursor */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.22s var(--ease-out),
+    transform 0.28s var(--ease-out),
+    visibility 0s linear 0.28s;
+  z-index: 60;
+}
+
+.nav-dropdown--open {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 0.22s var(--ease-out),
+    transform 0.28s var(--ease-out),
+    visibility 0s;
+}
+
+/* Two-column wide variant for large lists (e.g. Industries) */
+.nav-dropdown--wide {
+  min-width: 460px;
+}
+
+.nav-dropdown-inner {
+  padding: 8px;
+  border-radius: 16px;
+  background: rgba(10, 15, 30, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 24px 48px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(37, 99, 235, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-dropdown-inner--grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 4px;
+  padding: 10px;
+}
+
+.nav-dropdown-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--foreground);
+  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out);
+}
+
+.nav-dropdown-item:hover,
+.nav-dropdown-item:focus-visible {
+  background: color-mix(in srgb, var(--accent) 12%, rgba(255, 255, 255, 0.02));
+  color: #ffffff;
+  outline: none;
+}
+
+.nav-dropdown-item-label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+}
+
+.nav-dropdown-item-desc {
+  font-size: 12.5px;
+  color: var(--foreground-muted);
+  line-height: 1.35;
+}
+
+.nav-dropdown-item:hover .nav-dropdown-item-desc {
+  color: #cbd5e1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-chevron,
+  .nav-dropdown,
+  .nav-dropdown-item {
+    transition: none;
+  }
+}
+
+/* ── Morphing indicator — a single physical bar that slides between links ── */
+.nav-indicator {
+  position: absolute;
+  bottom: 22px;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent-hover);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 55%, transparent);
+  transition:
+    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s var(--ease-out);
+  pointer-events: none;
+  will-change: transform, width;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link,
+  .nav-link-text::before,
+  .nav-indicator {
+    transition: none;
+  }
+}
+
+/* ── CTA — outline button that fills on hover ── */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  background: transparent;
+  color: var(--accent-hover);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  transition:
+    background-color 0.3s var(--ease-out),
+    color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out),
+    box-shadow 0.3s var(--ease-out);
+}
+
+.nav-cta:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.nav-cta-arrow {
+  display: inline-block;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.nav-cta:hover .nav-cta-arrow {
+  transform: translateX(3px);
+}
+
+.nav-cta--compact {
+  padding: 6px 12px;
+  font-size: 11.5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-cta,
+  .nav-cta-arrow {
+    transition: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Industry Tile — mouse-tracked spotlight + icon
+   ══════════════════════════════════════════════════════════════ */
+.industry-tile {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  border-radius: 18px;
+  background: rgba(24, 24, 27, 0.4);
+  border: 1px solid rgba(63, 63, 70, 0.5);
+  color: #d4d4d8;
+  transition:
+    border-color 0.35s var(--ease-out),
+    background-color 0.35s var(--ease-out),
+    transform 0.35s var(--ease-out);
+}
+
+/* Cursor-tracked spotlight glow */
+.industry-tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    260px circle at var(--mx) var(--my),
+    color-mix(in srgb, var(--accent) 22%, transparent) 0%,
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-out);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.industry-tile:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: rgba(24, 24, 27, 0.65);
+  transform: translateY(-3px);
+}
+
+.industry-tile:hover::before {
+  opacity: 1;
+}
+
+.industry-tile-icon {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(24, 24, 27, 0.6);
+  border: 1px solid rgba(63, 63, 70, 0.6);
+  color: var(--foreground-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    background-color 0.35s var(--ease-out),
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out);
+}
+
+.industry-tile:hover .industry-tile-icon {
+  color: var(--accent-hover);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, rgba(24, 24, 27, 0.6));
+  transform: scale(1.08) rotate(-3deg);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.industry-tile-body {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.industry-tile-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #d4d4d8;
+  transition: color 0.35s var(--ease-out);
+}
+
+.industry-tile:hover .industry-tile-name {
+  color: #ffffff;
+}
+
+.industry-tile-arrow {
+  flex-shrink: 0;
+  color: #52525b;
+  transition: color 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+}
+
+.industry-tile:hover .industry-tile-arrow {
+  color: var(--accent-hover);
+  transform: translateX(4px);
+}
+
+/* ── Copy stack (name + optional headline) — new for featured tiles ── */
+.industry-tile-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.industry-tile-headline {
+  font-size: 12.5px;
+  color: var(--foreground-muted);
+  line-height: 1.4;
+  transition: color 0.35s var(--ease-out);
+}
+
+.industry-tile:hover .industry-tile-headline {
+  color: var(--foreground);
+}
+
+/* ── Featured variants — visual weight for anchor tiles ── */
+.industry-tile--featured {
+  padding: 26px 28px;
+}
+
+.industry-tile--featured .industry-tile-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.industry-tile--featured .industry-tile-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.industry-tile--hero {
+  min-height: 140px;
+}
+
+.industry-tile--hero .industry-tile {
+  padding: 32px 36px;
+}
+
+.industry-tile--hero .industry-tile-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+}
+
+.industry-tile--hero .industry-tile-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.industry-tile--hero .industry-tile-headline {
+  font-size: 14px;
+  color: var(--foreground-muted);
+}
+
+/* Ambient mesh gradient on featured tiles — subtle depth */
+.industry-tile-mesh {
+  position: absolute;
+  inset: -20% -10% auto auto;
+  width: 55%;
+  height: 130%;
+  background:
+    radial-gradient(circle at 70% 30%, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 55%),
+    radial-gradient(circle at 30% 70%, rgba(139, 92, 246, 0.16) 0%, transparent 55%);
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 0;
+  animation: industry-mesh-drift 14s ease-in-out infinite alternate;
+}
+
+@keyframes industry-mesh-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-6%, 4%) scale(1.08); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .industry-tile,
+  .industry-tile::before,
+  .industry-tile-icon,
+  .industry-tile-name,
+  .industry-tile-headline,
+  .industry-tile-arrow {
+    transition: none;
+  }
+  .industry-tile:hover {
+    transform: none;
+  }
+  .industry-tile:hover .industry-tile-icon {
+    transform: none;
+  }
+  .industry-tile-mesh {
+    animation: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Tech Bento Card — categorized capability grid
+   Set --card-accent inline per card for per-category hue.
+   ══════════════════════════════════════════════════════════════ */
+.tech-bento-card {
+  --card-accent: #3B82F6;
+  position: relative;
+  height: 100%;
+  padding: 28px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.65) 0%, rgba(15, 17, 23, 0.85) 100%);
+  border: 1px solid rgba(63, 63, 70, 0.5);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    transform 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+
+/* Ambient diagonal shine — sweeps once every ~7s, tinted with card accent */
+.tech-bento-card::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10%;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    color-mix(in srgb, var(--card-accent) 22%, transparent) 50%,
+    transparent 58%
+  );
+  pointer-events: none;
+  transform: translateX(-100%);
+  animation: bento-shine 7s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes bento-shine {
+  0%   { transform: translateX(-100%); }
+  55%  { transform: translateX(120%); }
+  100% { transform: translateX(120%); }
+}
+
+.tech-bento-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--card-accent) 55%, transparent);
+  box-shadow:
+    0 24px 60px -20px rgba(0, 0, 0, 0.7),
+    0 0 42px -8px color-mix(in srgb, var(--card-accent) 45%, transparent);
+}
+
+.tech-bento-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.tech-bento-icon {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--card-accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--card-accent) 35%, transparent);
+  color: var(--card-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.tech-bento-card:hover .tech-bento-icon {
+  box-shadow: 0 0 26px color-mix(in srgb, var(--card-accent) 65%, transparent);
+  transform: scale(1.05) rotate(-4deg);
+}
+
+.tech-bento-title {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.tech-bento-count {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--foreground-muted);
+  margin: 6px 0 0;
+}
+
+.tech-bento-chips {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tech-bento-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(24, 24, 27, 0.55);
+  border: 1px solid rgba(63, 63, 70, 0.55);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #d4d4d8;
+  transition: all 0.25s var(--ease-out);
+  cursor: default;
+}
+
+.tech-bento-card:hover .tech-bento-chip {
+  border-color: color-mix(in srgb, var(--card-accent) 30%, rgba(63, 63, 70, 0.55));
+  color: #ffffff;
+}
+
+.tech-bento-chip:hover {
+  background: color-mix(in srgb, var(--card-accent) 16%, rgba(24, 24, 27, 0.55));
+  border-color: var(--card-accent);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-bento-card::before {
+    animation: none;
+    display: none;
+  }
+  .tech-bento-card,
+  .tech-bento-icon,
+  .tech-bento-chip {
+    transition: none;
+  }
+  .tech-bento-card:hover {
+    transform: none;
+  }
+  .tech-bento-card:hover .tech-bento-icon {
+    transform: none;
+  }
+}
+
+/* ——————————————————————————————————————
+   Solution Explorer — Active Tab Icon Halo + Panel Crossfade
+   —————————————————————————————————————— */
+.solution-icon-active {
+  filter: drop-shadow(0 0 6px var(--accent-glow));
+  animation: solution-icon-spin 12s linear infinite;
+  display: inline-block;
+}
+
+.solution-icon-active::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  z-index: -1;
+  animation: solution-icon-halo 3s ease-in-out infinite;
+}
+
+@keyframes solution-icon-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes solution-icon-halo {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.15); }
+}
+
+.solution-panel-enter {
+  animation: solution-panel-in 0.45s var(--ease-out);
+}
+
+@keyframes solution-panel-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solution-icon-active {
+    animation: none;
+    filter: none;
+  }
+  .solution-icon-active::before {
+    animation: none;
+  }
+  .solution-panel-enter {
+    animation: none;
+  }
+}
+
 /* ——————————————————————————————————————
    CTA Gentle Pulse — draws the eye once every 4s
    —————————————————————————————————————— */

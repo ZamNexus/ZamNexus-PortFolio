@@ -198,7 +198,7 @@ const crossCapabilities: CrossCapability[] = [
 
 export default function IndustriesPage() {
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
       <Navbar />
 
@@ -209,7 +209,7 @@ export default function IndustriesPage() {
           aria-labelledby="industries-hero-heading"
           className="max-w-6xl mx-auto px-6 pt-44 pb-20 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl">
             Connecting Technology to Industry Needs
           </div>
           <h1
@@ -217,7 +217,7 @@ export default function IndustriesPage() {
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Intelligent solutions designed{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#D0FF71] to-emerald-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--accent-hover)] to-violet-400">
               around your world.
             </span>
           </h1>
@@ -243,15 +243,15 @@ export default function IndustriesPage() {
                 id={ind.id}
                 className={`group p-8 sm:p-12 rounded-3xl border transition-all duration-300 shadow-2xl ${
                   i % 2 === 0
-                    ? "bg-zinc-900/40 border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70"
-                    : "bg-zinc-900/25 border-zinc-800/60 hover:border-[#D0FF71]/40 hover:bg-zinc-900/50"
+                    ? "bg-zinc-900/40 border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70"
+                    : "bg-zinc-900/25 border-zinc-800/60 hover:border-[var(--accent-hover)]/40 hover:bg-zinc-900/50"
                 }`}
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="step-number text-sm group-hover:bg-[#D0FF71] group-hover:text-black transition-all duration-300" aria-hidden="true">
+                  <span className="step-number text-sm group-hover:bg-[var(--accent-hover)] group-hover:text-black transition-all duration-300" aria-hidden="true">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+                  <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                     {ind.tag}
                   </span>
                 </div>
@@ -259,7 +259,7 @@ export default function IndustriesPage() {
                 <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                   {ind.title}
                 </h3>
-                <p className="text-sm text-[#D0FF71]/80 font-medium mb-4">
+                <p className="text-sm text-[var(--accent-hover)]/80 font-medium mb-4">
                   {ind.subtitle}
                 </p>
                 <p className="text-zinc-400 text-base leading-relaxed mb-6 max-w-3xl">
@@ -283,7 +283,7 @@ export default function IndustriesPage() {
                 <div className="mt-6 pt-6 border-t border-zinc-800/60">
                   <Link
                     href="/Contact"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[#D0FF71] hover:underline underline-offset-4 transition-all"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent-hover)] hover:underline underline-offset-4 transition-all"
                   >
                     Discuss {ind.title} Solutions
                     <span aria-hidden="true">→</span>
@@ -300,7 +300,7 @@ export default function IndustriesPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Technology Capabilities
             </span>
             <h2
@@ -318,13 +318,13 @@ export default function IndustriesPage() {
             {crossCapabilities.map((cap, idx) => (
               <div
                 key={cap.title}
-                className="group p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-xl"
+                className="group p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-xl"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="step-number text-sm" aria-hidden="true">
                     {String(idx + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="text-sm font-bold text-white group-hover:text-[#D0FF71] transition-colors leading-snug">
+                  <h3 className="text-sm font-bold text-white group-hover:text-[var(--accent-hover)] transition-colors leading-snug">
                     {cap.title}
                   </h3>
                 </div>
@@ -340,7 +340,7 @@ export default function IndustriesPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Your Industry. Your Challenges. Your Solution.
             </span>
             <h2

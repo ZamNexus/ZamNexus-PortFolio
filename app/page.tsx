@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useState, type CSSProperties, type MouseEvent } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -49,9 +49,25 @@ interface TechGroup {
   items: string[];
 }
 
+type IndustryIconKey =
+  | "finance"
+  | "briefcase"
+  | "building"
+  | "cart"
+  | "book"
+  | "health"
+  | "government"
+  | "heart"
+  | "code";
+
 interface Industry {
   name: string;
   href: string;
+  icon: IndustryIconKey;
+  /** Optional label surfaced on featured tiles */
+  headline?: string;
+  /** Featured layout: "wide" spans 2 cols, "hero" spans full width */
+  featured?: "wide" | "hero";
 }
 
 // ─── Static Data ─────────────────────────────────────────────────────────────
@@ -279,15 +295,27 @@ const techGroups: TechGroup[] = [
 ];
 
 const industries: Industry[] = [
-  { name: "Financial Services", href: "/Industries" },
-  { name: "Professional Services", href: "/Industries" },
-  { name: "Property & Facilities Management", href: "/Industries" },
-  { name: "Retail & E-Commerce", href: "/Industries" },
-  { name: "Education", href: "/Industries" },
-  { name: "Healthcare", href: "/Industries" },
-  { name: "Public Sector", href: "/Industries" },
-  { name: "Non-Profit Organisations", href: "/Industries" },
-  { name: "Technology & SaaS", href: "/Industries" },
+  {
+    name: "Financial Services",
+    href: "/Industries",
+    icon: "finance",
+    headline: "Regulated fintech, risk & real-time reporting.",
+    featured: "wide",
+  },
+  { name: "Professional Services", href: "/Industries", icon: "briefcase" },
+  { name: "Property & Facilities Management", href: "/Industries", icon: "building" },
+  { name: "Retail & E-Commerce", href: "/Industries", icon: "cart" },
+  { name: "Education", href: "/Industries", icon: "book" },
+  { name: "Healthcare", href: "/Industries", icon: "health" },
+  { name: "Public Sector", href: "/Industries", icon: "government" },
+  { name: "Non-Profit Organisations", href: "/Industries", icon: "heart" },
+  {
+    name: "Technology & SaaS",
+    href: "/Industries",
+    icon: "code",
+    headline: "Ship faster. Scale smarter. Cloud-native from day one.",
+    featured: "hero",
+  },
 ];
 
 // ─── Icons ───────────────────────────────────────────────────────────────────
@@ -326,6 +354,117 @@ function WhyPointIcon({ icon }: WhyPointIconProps) {
   );
 }
 
+// ─── Tech Bento — per-category accent + icon ─────────────────────────────────
+
+interface TechCategoryMeta {
+  accent: string;
+  icon: "ai" | "cloud" | "microsoft" | "salesforce";
+}
+
+/** Order matches the `techGroups` array. */
+const techCategoryMeta: TechCategoryMeta[] = [
+  { accent: "#A78BFA", icon: "ai" },         // Artificial Intelligence — violet
+  { accent: "#F59E0B", icon: "cloud" },      // Cloud & Engineering — amber
+  { accent: "#0EA5E9", icon: "microsoft" },  // Microsoft — sky
+  { accent: "#10B981", icon: "salesforce" }, // Salesforce — emerald
+];
+
+function TechCategoryIcon({ icon }: { icon: TechCategoryMeta["icon"] }) {
+  const common = {
+    width: 28,
+    height: 28,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+  switch (icon) {
+    case "ai":
+      // Neural node — central circle with 4 connected nodes
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="3" />
+          <circle cx="5" cy="6" r="1.6" />
+          <circle cx="19" cy="6" r="1.6" />
+          <circle cx="5" cy="18" r="1.6" />
+          <circle cx="19" cy="18" r="1.6" />
+          <path d="M6.5 7 L10 10 M17.5 7 L14 10 M6.5 17 L10 14 M17.5 17 L14 14" />
+        </svg>
+      );
+    case "cloud":
+      // Cloud with upload arrow
+      return (
+        <svg {...common}>
+          <path d="M6 18h11a4 4 0 0 0 .5-7.97A6 6 0 0 0 5.5 11 A4 4 0 0 0 6 18Z" />
+          <path d="M12 14v-4 M9.5 12l2.5-2.5 2.5 2.5" />
+        </svg>
+      );
+    case "microsoft":
+      // The unmistakable four-square Microsoft mark
+      return (
+        <svg {...common}>
+          <rect x="3" y="3" width="8" height="8" />
+          <rect x="13" y="3" width="8" height="8" />
+          <rect x="3" y="13" width="8" height="8" />
+          <rect x="13" y="13" width="8" height="8" />
+        </svg>
+      );
+    case "salesforce":
+      // Cloud shape with a subtle checkmark — CRM/service icon
+      return (
+        <svg {...common}>
+          <path d="M6 17h11a3.5 3.5 0 0 0 .5-6.97A5 5 0 0 0 6 11 A3 3 0 0 0 6 17Z" />
+          <path d="M9.5 13.5l2 2 3-4" />
+        </svg>
+      );
+  }
+}
+
+// ─── Industry Icons ──────────────────────────────────────────────────────────
+
+const industryIconPaths: Record<IndustryIconKey, string> = {
+  // Bar chart — financial services
+  finance: "M4 20h16 M7 20V11 M11 20V6 M15 20v-8 M19 20V4",
+  // Briefcase — professional services
+  briefcase: "M3 7h18v13H3V7Z M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M3 12h18",
+  // Building — property & facilities
+  building:
+    "M4 3h16v18H4V3Z M9 21v-4h6v4 M9 8h1.5 M13.5 8H15 M9 12h1.5 M13.5 12H15 M9 16h1.5 M13.5 16H15",
+  // Shopping cart — retail & e-commerce
+  cart: "M2 4h3l2.6 10.4a2 2 0 0 0 2 1.6h9.2a2 2 0 0 0 2-1.6L23 7H6 M9 20a1 1 0 100-2 1 1 0 000 2Z M17 20a1 1 0 100-2 1 1 0 000 2Z",
+  // Open book — education
+  book: "M4 4h6a2 2 0 0 1 2 2v14 M20 4h-6a2 2 0 0 0-2 2v14 M4 4v14h6 M20 4v14h-6",
+  // Medical cross — healthcare
+  health: "M9 3h6v6h6v6h-6v6H9v-6H3V9h6z",
+  // Capitol / pillared building — public sector
+  government: "M3 21h18 M5 21V10 M9 21V10 M15 21V10 M19 21V10 M12 3l10 6H2z",
+  // Heart — non-profit
+  heart: "M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z",
+  // Code brackets — technology & SaaS
+  code: "M8 8l-4 4 4 4 M16 8l4 4-4 4 M14 4l-4 16",
+};
+
+function IndustryIcon({ icon }: { icon: IndustryIconKey }) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={industryIconPaths[icon]} />
+    </svg>
+  );
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
@@ -339,7 +478,7 @@ export default function HomePage() {
   const visionBlobRef = useParallax<HTMLDivElement>(0.12, 20);
 
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black overflow-x-hidden">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-hidden">
       {/* Background editorial grid */}
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
 
@@ -443,7 +582,7 @@ export default function HomePage() {
         >
           <ScrollReveal className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Our Purpose
               </span>
               <h2
@@ -480,7 +619,7 @@ export default function HomePage() {
         >
           <ScrollReveal>
           <div className="mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               What We Do
             </span>
             <h2
@@ -500,58 +639,70 @@ export default function HomePage() {
               aria-label="Solution categories"
               className="lg:border-r lg:border-zinc-800 flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible gap-1 lg:gap-0 pb-2 lg:pb-0"
             >
-              {solutions.map((sol) => (
-                <button
-                  key={sol.id}
-                  id={`solution-tab-${sol.id}`}
-                  aria-selected={activeSolution === sol.id}
-                  role="tab"
-                  onClick={() => setActiveSolution(sol.id)}
-                  className={`flex-shrink-0 lg:flex-shrink text-left px-6 py-5 transition-all duration-200 border-b border-zinc-800/60 last:border-b-0 group ${
-                    activeSolution === sol.id
-                      ? "bg-[#D0FF71]/8 border-l-2 border-l-[#D0FF71]"
-                      : "hover:bg-zinc-900/60"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
+              {solutions.map((sol) => {
+                const isActive = activeSolution === sol.id;
+                return (
+                  <button
+                    key={sol.id}
+                    id={`solution-tab-${sol.id}`}
+                    aria-selected={isActive}
+                    role="tab"
+                    onClick={() => setActiveSolution(sol.id)}
+                    className={`relative flex-shrink-0 lg:flex-shrink text-left px-6 py-5 transition-all duration-300 border-b border-zinc-800/60 last:border-b-0 group ${
+                      isActive
+                        ? "bg-gradient-to-r from-[var(--accent)]/12 via-[var(--accent)]/5 to-transparent"
+                        : "hover:bg-zinc-900/60"
+                    }`}
+                  >
+                    {/* Animated left indicator bar — glows in accent color */}
                     <span
-                      className={`text-xl font-mono transition-colors ${
-                        activeSolution === sol.id
-                          ? "text-[#D0FF71]"
-                          : "text-zinc-600 group-hover:text-zinc-400"
-                      }`}
                       aria-hidden="true"
-                    >
-                      {sol.icon}
-                    </span>
-                    <div>
-                      <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-0.5">
-                        {sol.tag}
-                      </div>
-                      <div
-                        className={`text-sm font-semibold leading-snug transition-colors ${
-                          activeSolution === sol.id
-                            ? "text-white"
-                            : "text-zinc-400 group-hover:text-zinc-200"
+                      className={`absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-[var(--accent-hover)] shadow-[0_0_10px_var(--accent-glow)] transition-all duration-300 origin-center ${
+                        isActive ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0"
+                      }`}
+                    />
+                    <div className="relative flex items-center gap-3">
+                      {/* Icon with soft glow halo when active */}
+                      <span
+                        className={`relative text-xl font-mono transition-all duration-300 ${
+                          isActive
+                            ? "text-[var(--accent-hover)] solution-icon-active"
+                            : "text-zinc-600 group-hover:text-zinc-400"
                         }`}
+                        aria-hidden="true"
                       >
-                        {sol.title}
+                        {sol.icon}
+                      </span>
+                      <div>
+                        <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-0.5">
+                          {sol.tag}
+                        </div>
+                        <div
+                          className={`text-sm font-semibold leading-snug transition-colors ${
+                            isActive
+                              ? "text-white"
+                              : "text-zinc-400 group-hover:text-zinc-200"
+                          }`}
+                        >
+                          {sol.title}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </nav>
 
-            {/* Active solution detail panel */}
+            {/* Active solution detail panel — re-mounts + crossfades on tab switch */}
             <div
+              key={activeSolution}
               role="tabpanel"
               aria-labelledby={`solution-tab-${activeSolution}`}
-              className="lg:col-span-2 p-8 sm:p-12 bg-zinc-900/30"
+              className="lg:col-span-2 p-8 sm:p-12 bg-zinc-900/30 solution-panel-enter"
             >
               <div className="space-y-6">
                 <div>
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+                  <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                     {activeSolutionData.tag}
                   </span>
                   <h3 className="text-2xl sm:text-3xl font-bold text-white mt-2 leading-snug">
@@ -578,7 +729,7 @@ export default function HomePage() {
                 <div className="pt-2">
                   <Link
                     href="/Solutions"
-                    className="inline-flex items-center gap-2 text-sm font-semibold text-[#D0FF71] hover:underline underline-offset-4 transition-all"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent-hover)] hover:gap-3 hover:underline underline-offset-4 transition-all"
                   >
                     Explore {activeSolutionData.title}
                     <span aria-hidden="true">→</span>
@@ -603,7 +754,7 @@ export default function HomePage() {
           <ScrollReveal className="relative z-10">
           <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Why ZamNexus
               </span>
               <h2
@@ -618,7 +769,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/About"
-              className="flex-shrink-0 text-sm font-semibold text-zinc-400 hover:text-[#D0FF71] transition-colors"
+              className="flex-shrink-0 text-sm font-semibold text-zinc-400 hover:text-[var(--accent-hover)] transition-colors"
             >
               About ZamNexus →
             </Link>
@@ -659,7 +810,7 @@ export default function HomePage() {
           />
           <ScrollReveal className="relative z-10">
           <div className="mb-16">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               How We Deliver
             </span>
             <h2
@@ -678,7 +829,7 @@ export default function HomePage() {
           <div className="mt-10 text-center">
             <Link
               href="/Services"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 hover:text-[#D0FF71] transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 hover:text-[var(--accent-hover)] transition-colors"
             >
               View our full services approach
               <span aria-hidden="true">→</span>
@@ -692,82 +843,72 @@ export default function HomePage() {
           aria-labelledby="tech-heading"
           className="py-20 border-t border-zinc-800/60 overflow-hidden"
         >
-          <ScrollReveal>
-          {/* Section header — constrained width */}
-          <div className="max-w-6xl mx-auto px-6 mb-12">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div>
-                <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
-                  Our Technology Stack
-                </span>
-                <h2
-                  id="tech-heading"
-                  className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-3"
-                >
-                  Technologies We Work With
-                </h2>
-                <p className="mt-3 text-zinc-400 text-base max-w-xl leading-relaxed line-clamp-2">
-                  A curated ecosystem of cloud, AI, and enterprise platforms that power every solution we deliver.
-                </p>
+          <div className="max-w-6xl mx-auto px-6">
+            <ScrollReveal>
+              {/* Section header */}
+              <div className="mb-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                  <div>
+                    <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+                      Our Technology Stack
+                    </span>
+                    <h2
+                      id="tech-heading"
+                      className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-3"
+                    >
+                      Technologies We Work With
+                    </h2>
+                    <p className="mt-3 text-zinc-400 text-base max-w-xl leading-relaxed line-clamp-2">
+                      A curated ecosystem of cloud, AI, and enterprise platforms that power every solution we deliver.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent-hover)] opacity-60" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[var(--accent-hover)]" />
+                    </span>
+                    <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
+                      Continuously Expanding
+                    </span>
+                  </div>
+                </div>
               </div>
-              {/* Live indicator */}
-              <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D0FF71] opacity-60" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#D0FF71]" />
-                </span>
-                <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
-                  Continuously Expanding
-                </span>
-              </div>
+            </ScrollReveal>
+
+            {/* ── 2×2 CATEGORY BENTO — one card per capability family ── */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+              {techGroups.map((group, idx) => {
+                const meta = techCategoryMeta[idx];
+                return (
+                  <ScrollReveal key={group.label} delay={idx * 80} className="h-full">
+                    <div
+                      className="tech-bento-card"
+                      style={{ "--card-accent": meta.accent } as CSSProperties}
+                    >
+                      <div className="tech-bento-header">
+                        <div className="tech-bento-icon">
+                          <TechCategoryIcon icon={meta.icon} />
+                        </div>
+                        <div>
+                          <h3 className="tech-bento-title">{group.label}</h3>
+                          <p className="tech-bento-count">
+                            {group.items.length} technologies
+                          </p>
+                        </div>
+                      </div>
+                      <div className="tech-bento-chips">
+                        {group.items.map((item) => (
+                          <span key={item} className="tech-bento-chip">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                );
+              })}
             </div>
           </div>
-
-          {/* ── Row 1 — Marquee RTL (AI + Cloud) ── */}
-          {(() => {
-            const row1: { tech: string; category: string }[] = [
-              ...techGroups[0].items.map((t) => ({ tech: t, category: techGroups[0].label })),
-              ...techGroups[1].items.map((t) => ({ tech: t, category: techGroups[1].label })),
-            ];
-            const row1Loop = [...row1, ...row1];
-            return (
-              <div className="marquee-fade-mask mb-4">
-                <div className="animate-marquee flex" style={{ gap: "16px" }}>
-                  {row1Loop.map((item, idx) => (
-                    <div key={`r1-${idx}`} className="marquee-tech-card" style={{ marginRight: "16px" }}>
-                      <span className="tech-category-label">{item.category}</span>
-                      <span className="tech-name">{item.tech}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* ── Row 2 — Marquee RTL reversed (Microsoft + Salesforce) ── */}
-          {(() => {
-            const row2: { tech: string; category: string }[] = [
-              ...techGroups[2].items.map((t) => ({ tech: t, category: techGroups[2].label })),
-              ...techGroups[3].items.map((t) => ({ tech: t, category: techGroups[3].label })),
-            ];
-            const row2Loop = [...row2, ...row2];
-            return (
-              <div className="marquee-fade-mask">
-                <div
-                  className="animate-marquee-row2 flex"
-                  style={{ gap: "16px", animationDirection: "reverse" }}
-                >
-                  {row2Loop.map((item, idx) => (
-                    <div key={`r2-${idx}`} className="marquee-tech-card" style={{ marginRight: "16px" }}>
-                      <span className="tech-category-label">{item.category}</span>
-                      <span className="tech-name">{item.tech}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })()}
-          </ScrollReveal>
         </section>
 
         {/* ── INDUSTRIES TEASER ────────────────────────────────────────────── */}
@@ -778,7 +919,7 @@ export default function HomePage() {
           <ScrollReveal>
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
             <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Industries We Support
               </span>
               <h2
@@ -793,31 +934,63 @@ export default function HomePage() {
             </div>
             <Link
               href="/Industries"
-              className="flex-shrink-0 text-sm font-semibold text-zinc-400 hover:text-[#D0FF71] transition-colors"
+              className="flex-shrink-0 text-sm font-semibold text-zinc-400 hover:text-[var(--accent-hover)] transition-colors"
             >
               Explore all industries →
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {industries.map((industry, idx) => (
-              <ScrollReveal key={industry.name} variant="left" delay={idx * 60} threshold={0.4}>
-                <Link
-                  href={industry.href}
-                  className="group flex items-center justify-between px-6 py-4 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300"
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-[minmax(88px,auto)]">
+            {industries.map((industry, idx) => {
+              const wideClass =
+                industry.featured === "hero"
+                  ? "sm:col-span-2 lg:col-span-3 industry-tile--hero"
+                  : industry.featured === "wide"
+                    ? "lg:col-span-2 industry-tile--wide"
+                    : "";
+              return (
+                <ScrollReveal
+                  key={industry.name}
+                  variant="up"
+                  delay={idx * 60}
+                  threshold={0.15}
+                  className={`h-full ${wideClass}`}
                 >
-                  <span className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">
-                    {industry.name}
-                  </span>
-                  <span
-                    className="text-zinc-600 group-hover:text-[#D0FF71] group-hover:translate-x-1 transition-all duration-200"
-                    aria-hidden="true"
+                  <Link
+                    href={industry.href}
+                    className={`industry-tile h-full ${industry.featured ? "industry-tile--featured" : ""}`}
+                    onMouseMove={(e: MouseEvent<HTMLAnchorElement>) => {
+                      const target = e.currentTarget;
+                      const rect = target.getBoundingClientRect();
+                      target.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+                      target.style.setProperty("--my", `${e.clientY - rect.top}px`);
+                    }}
                   >
-                    →
-                  </span>
-                </Link>
-              </ScrollReveal>
-            ))}
+                    {/* Ambient corner mesh — only on featured tiles */}
+                    {industry.featured && (
+                      <span className="industry-tile-mesh" aria-hidden="true" />
+                    )}
+
+                    <span className="industry-tile-icon">
+                      <IndustryIcon icon={industry.icon} />
+                    </span>
+                    <span className="industry-tile-body">
+                      <span className="industry-tile-copy">
+                        <span className="industry-tile-name">{industry.name}</span>
+                        {industry.headline && (
+                          <span className="industry-tile-headline">
+                            {industry.headline}
+                          </span>
+                        )}
+                      </span>
+                      <span className="industry-tile-arrow" aria-hidden="true">
+                        →
+                      </span>
+                    </span>
+                  </Link>
+                </ScrollReveal>
+              );
+            })}
           </div>
           </ScrollReveal>
         </section>
@@ -828,14 +1001,14 @@ export default function HomePage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <ScrollReveal className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden">
-            {/* Decorative lime glow blob */}
+            {/* Decorative accent glow blob */}
             <div
               ref={visionBlobRef}
-              className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#D0FF71]/5 blur-3xl pointer-events-none"
+              className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[var(--accent)]/8 blur-3xl pointer-events-none"
               aria-hidden="true"
             />
             <div className="relative z-10 max-w-3xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Our Vision
               </span>
               <h2
@@ -843,7 +1016,7 @@ export default function HomePage() {
                 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-4 leading-tight"
               >
                 The Future Is Connected.{" "}
-                <span className="text-[#D0FF71]">Intelligent.</span>{" "}
+                <span className="text-[var(--accent-hover)]">Intelligent.</span>{" "}
                 Actionable.
               </h2>
               <p className="mt-6 text-zinc-400 text-base sm:text-lg leading-relaxed">
@@ -883,7 +1056,7 @@ export default function HomePage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <ScrollReveal className="text-center max-w-3xl mx-auto space-y-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Ready to Transform Your Business?
             </span>
             <h2

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
 };
 
-const ACCENT = "#D0FF71";
+const ACCENT = "var(--accent-hover)";
 
 const modules = [
   { icon: "💰", label: "Finance & Accounting", desc: "Real-time P&L, ledgers and financial reporting across every entity." },
@@ -39,7 +39,7 @@ const clients = [
 
 export default function ZNXERPPage() {
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
       <Navbar />
 
@@ -60,7 +60,7 @@ export default function ZNXERPPage() {
                   ← Products
                 </Link>
                 <span className="text-zinc-700">/</span>
-                <span className="text-xs font-mono text-[#D0FF71] font-bold">ZNXERP</span>
+                <span className="text-xs font-mono text-[var(--accent-hover)] font-bold">ZNXERP</span>
               </div>
 
               <div
@@ -114,10 +114,10 @@ export default function ZNXERPPage() {
             {modules.map((mod) => (
               <div
                 key={mod.label}
-                className="group p-6 rounded-3xl border border-zinc-800 bg-zinc-900/40 hover:border-[#D0FF71]/40 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1"
+                className="group p-6 rounded-3xl border border-zinc-800 bg-zinc-900/40 hover:border-[var(--accent-hover)]/40 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="text-3xl mb-3" aria-hidden="true">{mod.icon}</div>
-                <h3 className="text-sm font-bold text-white mb-2 group-hover:text-[#D0FF71] transition-colors">
+                <h3 className="text-sm font-bold text-white mb-2 group-hover:text-[var(--accent-hover)] transition-colors">
                   {mod.label}
                 </h3>
                 <p className="text-xs text-zinc-500 leading-relaxed">{mod.desc}</p>
@@ -172,7 +172,7 @@ export default function ZNXERPPage() {
             {clients.map((client, idx) => (
               <div
                 key={client}
-                className="flex items-center gap-4 p-5 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:border-[#D0FF71]/30 transition-all duration-300"
+                className="flex items-center gap-4 p-5 rounded-2xl border border-zinc-800 bg-zinc-900/30 hover:border-[var(--accent-hover)]/30 transition-all duration-300"
               >
                 <span
                   className="text-xs font-mono font-bold flex-shrink-0"

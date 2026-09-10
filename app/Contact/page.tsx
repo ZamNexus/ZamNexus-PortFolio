@@ -50,7 +50,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
       <Navbar />
 
@@ -61,7 +61,7 @@ export default function ContactPage() {
           aria-labelledby="contact-hero-heading"
           className="max-w-6xl mx-auto px-6 pt-44 pb-16 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl">
             Get In Touch
           </div>
           <h1
@@ -69,7 +69,7 @@ export default function ContactPage() {
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Start a conversation with{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#D0FF71] to-emerald-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--accent-hover)] to-violet-400">
               ZamNexus.
             </span>
           </h1>
@@ -96,7 +96,7 @@ export default function ContactPage() {
                   <div className="text-xs font-mono text-zinc-500 uppercase mb-1">Email</div>
                   <a
                     href="mailto:contact@zamooq.com"
-                    className="text-base font-semibold text-[#D0FF71] hover:underline"
+                    className="text-base font-semibold text-[var(--accent-hover)] hover:underline"
                   >
                     contact@zamooq.com
                   </a>
@@ -138,7 +138,7 @@ export default function ContactPage() {
                   <a
                     key={label}
                     href={`/${label}`}
-                    className="tech-pill hover:border-[#D0FF71]/40 hover:text-[#D0FF71]"
+                    className="tech-pill hover:border-[var(--accent-hover)]/40 hover:text-[var(--accent-hover)]"
                   >
                     {label}
                   </a>
@@ -152,7 +152,7 @@ export default function ContactPage() {
             <div className="p-8 sm:p-12 rounded-3xl bg-zinc-900/70 border border-zinc-800 shadow-2xl">
               {submitted ? (
                 <div className="text-center py-16 space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-[#D0FF71]/20 border border-[#D0FF71] text-[#D0FF71] flex items-center justify-center text-2xl mx-auto">
+                  <div className="w-16 h-16 rounded-full bg-[var(--accent-hover)]/20 border border-[var(--accent-hover)] text-[var(--accent-hover)] flex items-center justify-center text-2xl mx-auto">
                     ✓
                   </div>
                   <h3 className="text-2xl font-bold text-white">Message Received!</h3>
@@ -162,7 +162,7 @@ export default function ContactPage() {
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="mt-4 text-xs font-mono text-[#D0FF71] underline cursor-pointer"
+                    className="mt-4 text-xs font-mono text-[var(--accent-hover)] underline cursor-pointer"
                   >
                     Send another message
                   </button>
@@ -185,7 +185,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={handleChange}
                         placeholder="Jane Smith"
-                        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-[#D0FF71] transition-colors text-sm"
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-[var(--accent-hover)] transition-colors text-sm"
                       />
                     </div>
 
@@ -204,7 +204,7 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="jane@company.com"
-                        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-[#D0FF71] transition-colors text-sm"
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-[var(--accent-hover)] transition-colors text-sm"
                       />
                     </div>
                   </div>
@@ -224,7 +224,7 @@ export default function ContactPage() {
                         value={formData.company}
                         onChange={handleChange}
                         placeholder="Acme Ltd"
-                        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-[#D0FF71] transition-colors text-sm"
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-[var(--accent-hover)] transition-colors text-sm"
                       />
                     </div>
 
@@ -240,7 +240,7 @@ export default function ContactPage() {
                         name="service"
                         value={formData.service}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white focus:outline-none focus:border-[#D0FF71] transition-colors text-sm"
+                        className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white focus:outline-none focus:border-[var(--accent-hover)] transition-colors text-sm"
                       >
                         {serviceOptions.map((opt) => (
                           <option key={opt} value={opt}>
@@ -266,7 +266,7 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={handleChange}
                       placeholder="Briefly describe your challenge, objectives or timeline..."
-                      className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-[#D0FF71] transition-colors text-sm"
+                      className="w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-[var(--accent-hover)] transition-colors text-sm"
                     />
                   </div>
 

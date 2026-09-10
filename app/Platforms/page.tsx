@@ -87,7 +87,7 @@ const platformServices: PlatformService[] = [
 
 export default function PlatformsPage() {
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
       <Navbar />
 
@@ -98,7 +98,7 @@ export default function PlatformsPage() {
           aria-labelledby="platforms-hero-heading"
           className="max-w-6xl mx-auto px-6 pt-44 pb-20 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl">
             Connecting Platforms. Enabling Intelligent Business.
           </div>
           <h1
@@ -106,7 +106,7 @@ export default function PlatformsPage() {
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Enterprise platforms that{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#D0FF71] to-emerald-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--accent-hover)] to-violet-400">
               power your business.
             </span>
           </h1>
@@ -125,7 +125,7 @@ export default function PlatformsPage() {
           <article className="rounded-3xl bg-zinc-900/40 border border-zinc-800 p-8 sm:p-14 shadow-2xl">
             <div className="flex items-center gap-3 mb-6">
               <span className="step-number">⊞</span>
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Microsoft Solutions
               </span>
             </div>
@@ -158,7 +158,7 @@ export default function PlatformsPage() {
 
             {/* What we help you achieve */}
             <div className="p-6 sm:p-8 rounded-2xl bg-zinc-950/60 border border-zinc-800/60">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-[#D0FF71] font-bold mb-4">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold mb-4">
                 What We Help You Achieve
               </div>
               <ul className="space-y-3">
@@ -173,7 +173,7 @@ export default function PlatformsPage() {
             <div className="mt-8">
               <Link
                 href="/Contact"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#D0FF71] hover:underline underline-offset-4 transition-all"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent-hover)] hover:underline underline-offset-4 transition-all"
               >
                 Discuss Microsoft Solutions
                 <span aria-hidden="true">→</span>
@@ -190,7 +190,7 @@ export default function PlatformsPage() {
           <article className="rounded-3xl bg-zinc-900/30 border border-zinc-800/60 p-8 sm:p-14 shadow-2xl">
             <div className="flex items-center gap-3 mb-6">
               <span className="step-number">⊙</span>
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Salesforce Solutions
               </span>
             </div>
@@ -223,7 +223,7 @@ export default function PlatformsPage() {
 
             {/* What we help you achieve */}
             <div className="p-6 sm:p-8 rounded-2xl bg-zinc-950/60 border border-zinc-800/60">
-              <div className="text-[10px] font-mono uppercase tracking-widest text-[#D0FF71] font-bold mb-4">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold mb-4">
                 What We Help You Achieve
               </div>
               <ul className="space-y-3">
@@ -238,7 +238,7 @@ export default function PlatformsPage() {
             <div className="mt-8">
               <Link
                 href="/Contact"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#D0FF71] hover:underline underline-offset-4 transition-all"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent-hover)] hover:underline underline-offset-4 transition-all"
               >
                 Discuss Salesforce Solutions
                 <span aria-hidden="true">→</span>
@@ -254,7 +254,7 @@ export default function PlatformsPage() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
             <div className="lg:sticky lg:top-32">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Platform Services
               </span>
               <h2
@@ -274,9 +274,9 @@ export default function PlatformsPage() {
               {platformServices.map((srv, idx) => (
                 <div
                   key={srv.name}
-                  className="group flex items-center gap-3 p-4 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300"
+                  className="group flex items-center gap-3 p-4 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70 transition-all duration-300"
                 >
-                  <span className="text-xs font-mono text-zinc-600 font-bold group-hover:text-[#D0FF71] transition-colors">
+                  <span className="text-xs font-mono text-zinc-600 font-bold group-hover:text-[var(--accent-hover)] transition-colors">
                     {String(idx + 1).padStart(2, "0")}
                   </span>
                   <span className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">
@@ -295,11 +295,11 @@ export default function PlatformsPage() {
         >
           <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden">
             <div
-              className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#D0FF71]/5 blur-3xl pointer-events-none"
+              className="absolute top-0 right-0 w-96 h-96 rounded-full bg-[var(--accent-hover)]/5 blur-3xl pointer-events-none"
               aria-hidden="true"
             />
             <div className="relative z-10 max-w-3xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Our Approach
               </span>
               <h2
@@ -307,7 +307,7 @@ export default function PlatformsPage() {
                 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-4 leading-tight"
               >
                 Business First. Platform Enabled.{" "}
-                <span className="text-[#D0FF71]">Intelligence Driven.</span>
+                <span className="text-[var(--accent-hover)]">Intelligence Driven.</span>
               </h2>
               <p className="mt-6 text-zinc-400 text-base sm:text-lg leading-relaxed">
                 We don&apos;t just implement platforms — we connect them to your business strategy,
@@ -324,7 +324,7 @@ export default function PlatformsPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Why ZamNexus
             </span>
             <h2
@@ -345,13 +345,13 @@ export default function PlatformsPage() {
             ].map((item, idx) => (
               <div
                 key={item.title}
-                className="group p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-xl"
+                className="group p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-xl"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="step-number text-sm" aria-hidden="true">
                     {String(idx + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="text-base font-bold text-white group-hover:text-[#D0FF71] transition-colors">
+                  <h3 className="text-base font-bold text-white group-hover:text-[var(--accent-hover)] transition-colors">
                     {item.title}
                   </h3>
                 </div>
@@ -367,7 +367,7 @@ export default function PlatformsPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Ready to Transform Your Platforms?
             </span>
             <h2

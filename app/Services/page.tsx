@@ -223,7 +223,7 @@ const whyPoints: WhyDifferentiator[] = [
 
 export default function ServicesPage() {
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
       <Navbar />
 
@@ -234,7 +234,7 @@ export default function ServicesPage() {
           aria-labelledby="services-hero-heading"
           className="max-w-6xl mx-auto px-6 pt-44 pb-20 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl">
             Full-Lifecycle Engineering Services
           </div>
           <h1
@@ -242,7 +242,7 @@ export default function ServicesPage() {
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Technology expertise to build{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#D0FF71] to-emerald-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--accent-hover)] to-violet-400">
               what&apos;s next.
             </span>
           </h1>
@@ -272,15 +272,15 @@ export default function ServicesPage() {
             {services.map((srv) => (
               <article
                 key={srv.id}
-                className="group p-8 sm:p-12 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300 shadow-2xl"
+                className="group p-8 sm:p-12 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70 transition-all duration-300 shadow-2xl"
               >
                 <div className="flex flex-col lg:flex-row items-start gap-8">
                   {/* Left: index + tag */}
                   <div className="flex-shrink-0 flex lg:flex-col items-center lg:items-start gap-4 lg:gap-3 lg:pt-1">
-                    <div className="step-number group-hover:bg-[#D0FF71] group-hover:text-black group-hover:shadow-[0_0_20px_rgba(208,255,113,0.3)] transition-all duration-300">
+                    <div className="step-number group-hover:bg-[var(--accent-hover)] group-hover:text-black group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all duration-300">
                       {srv.index}
                     </div>
-                    <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+                    <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                       {srv.tag}
                     </span>
                   </div>
@@ -312,7 +312,7 @@ export default function ServicesPage() {
                     <div className="mt-6 pt-6 border-t border-zinc-800/60">
                       <Link
                         href="/Contact"
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-[#D0FF71] hover:underline underline-offset-4 transition-all"
+                        className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent-hover)] hover:underline underline-offset-4 transition-all"
                       >
                         Discuss {srv.title}
                         <span aria-hidden="true">→</span>
@@ -331,7 +331,7 @@ export default function ServicesPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               How We Deliver
             </span>
             <h2
@@ -350,10 +350,10 @@ export default function ServicesPage() {
             {processSteps.map((step) => (
               <div
                 key={step.number}
-                className="group relative p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/60 transition-all duration-300 overflow-hidden"
+                className="group relative p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/60 transition-all duration-300 overflow-hidden"
               >
                 <span
-                  className="absolute top-4 right-5 text-6xl font-extrabold font-mono text-zinc-800/40 select-none pointer-events-none group-hover:text-[#D0FF71]/10 transition-colors"
+                  className="absolute top-4 right-5 text-6xl font-extrabold font-mono text-zinc-800/40 select-none pointer-events-none group-hover:text-[var(--accent-hover)]/10 transition-colors"
                   aria-hidden="true"
                 >
                   {step.number}
@@ -376,7 +376,7 @@ export default function ServicesPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Why ZamNexus
             </span>
             <h2
@@ -394,13 +394,13 @@ export default function ServicesPage() {
             {whyPoints.map((point, idx) => (
               <div
                 key={point.title}
-                className="group p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-xl"
+                className="group p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-xl"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="step-number text-sm" aria-hidden="true">
                     {String(idx + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="text-base font-bold text-white group-hover:text-[#D0FF71] transition-colors">
+                  <h3 className="text-base font-bold text-white group-hover:text-[var(--accent-hover)] transition-colors">
                     {point.title}
                   </h3>
                 </div>
@@ -418,7 +418,7 @@ export default function ServicesPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Ready to Get Started?
             </span>
             <h2

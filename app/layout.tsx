@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Sora, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -37,30 +38,33 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`${inter.variable} ${sora.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const observer = new MutationObserver(function(mutations) {
-                  for (let i = 0; i < mutations.length; i++) {
-                    const m = mutations[i];
-                    if (m.type === 'attributes' && m.attributeName === 'bis_skin_checked') {
-                      m.target.removeAttribute('bis_skin_checked');
-                    }
-                  }
-                });
-                observer.observe(document.documentElement, {
-                  attributes: true,
-                  subtree: true,
-                  attributeFilter: ['bis_skin_checked']
-                });
-              } catch(e) {}
-            `,
-          }}
-        />
-      </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
+        {/*
+          Strips attributes injected by common browser extensions
+          (Bitdefender's `bis_skin_checked`, Grammarly, LastPass, etc.) before
+          React hydrates, so hydration doesn't fail on the added attribute.
+          `strategy="beforeInteractive"` guarantees this runs before hydration.
+        */}
+        <Script id="strip-extension-attrs" strategy="beforeInteractive">
+          {`
+            try {
+              var stripAttrs = ['bis_skin_checked', 'bis_register', 'data-new-gr-c-s-check-loaded', 'data-gr-ext-installed'];
+              var observer = new MutationObserver(function(mutations) {
+                for (var i = 0; i < mutations.length; i++) {
+                  var m = mutations[i];
+                  if (m.type === 'attributes' && stripAttrs.indexOf(m.attributeName) !== -1) {
+                    m.target.removeAttribute(m.attributeName);
+                  }
+                }
+              });
+              observer.observe(document.documentElement, {
+                attributes: true,
+                subtree: true,
+                attributeFilter: stripAttrs
+              });
+            } catch (e) {}
+          `}
+        </Script>
         {children}
       </body>
     </html>
