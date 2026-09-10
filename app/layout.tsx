@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, Sora, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -38,33 +37,58 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
       className={`${inter.variable} ${sora.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body suppressHydrationWarning className="min-h-full flex flex-col">
+      <head>
         {/*
-          Strips attributes injected by common browser extensions
-          (Bitdefender's `bis_skin_checked`, Grammarly, LastPass, etc.) before
-          React hydrates, so hydration doesn't fail on the added attribute.
-          `strategy="beforeInteractive"` guarantees this runs before hydration.
+          Synchronously intercepts and blocks browser extension attributes
+          (Bitdefender's `bis_skin_checked`, Grammarly, etc.) BEFORE React hydrates,
+          preventing the "A tree hydrated but some attributes didn't match" error.
         */}
-        <Script id="strip-extension-attrs" strategy="beforeInteractive">
-          {`
-            try {
-              var stripAttrs = ['bis_skin_checked', 'bis_register', 'data-new-gr-c-s-check-loaded', 'data-gr-ext-installed'];
-              var observer = new MutationObserver(function(mutations) {
-                for (var i = 0; i < mutations.length; i++) {
-                  var m = mutations[i];
-                  if (m.type === 'attributes' && stripAttrs.indexOf(m.attributeName) !== -1) {
-                    m.target.removeAttribute(m.attributeName);
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var blocked = ['bis_skin_checked', 'bis_register', 'data-new-gr-c-s-check-loaded', 'data-gr-ext-installed'];
+                  var origSet = Element.prototype.setAttribute;
+                  Element.prototype.setAttribute = function(name, val) {
+                    if (blocked.indexOf(name) !== -1 || (typeof name === 'string' && name.indexOf('data-gr-') === 0)) return;
+                    return origSet.apply(this, arguments);
+                  };
+                  var origSetNode = Element.prototype.setAttributeNode;
+                  if (origSetNode) {
+                    Element.prototype.setAttributeNode = function(attr) {
+                      if (attr && (blocked.indexOf(attr.name) !== -1 || (typeof attr.name === 'string' && attr.name.indexOf('data-gr-') === 0))) return null;
+                      return origSetNode.apply(this, arguments);
+                    };
                   }
-                }
-              });
-              observer.observe(document.documentElement, {
-                attributes: true,
-                subtree: true,
-                attributeFilter: stripAttrs
-              });
-            } catch (e) {}
-          `}
-        </Script>
+                  blocked.forEach(function(b) {
+                    try {
+                      Object.defineProperty(Element.prototype, b, {
+                        get: function() { return undefined; },
+                        set: function() {},
+                        configurable: true
+                      });
+                    } catch(e) {}
+                  });
+                  var observer = new MutationObserver(function(mutations) {
+                    for (var i = 0; i < mutations.length; i++) {
+                      var m = mutations[i];
+                      if (m.type === 'attributes' && (blocked.indexOf(m.attributeName) !== -1 || (typeof m.attributeName === 'string' && m.attributeName.indexOf('data-gr-') === 0))) {
+                        m.target.removeAttribute(m.attributeName);
+                      }
+                    }
+                  });
+                  observer.observe(document.documentElement, {
+                    attributes: true,
+                    subtree: true
+                  });
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
         {children}
       </body>
     </html>

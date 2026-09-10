@@ -496,12 +496,19 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   height: 100%;
-  padding: 0 18px;
-  font-size: 15.5px;
+  padding: 0 13px;
+  font-size: 15px;
   font-weight: 500;
   letter-spacing: -0.015em;
   color: var(--foreground-muted);
   transition: color 0.25s var(--ease-out);
+}
+
+@media (min-width: 1280px) {
+  .nav-link {
+    padding: 0 17px;
+    font-size: 15.5px;
+  }
 }
 
 .nav-link:hover {
@@ -1491,4 +1498,350 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 11px;
   font-weight: 700;
   margin-top: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SERVICES PAGE — Premium Animated Styles
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Shimmer gradient text — continuous flowing highlight ── */
+.shimmer-text {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    var(--accent-hover) 25%,
+    #8B5CF6 50%,
+    var(--accent-hover) 75%,
+    #ffffff 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-flow 4s ease-in-out infinite;
+}
+
+@keyframes shimmer-flow {
+  0%   { background-position: 100% 50%; }
+  50%  { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* ── 3D Perspective container ── */
+.perspective-container {
+  perspective: 1200px;
+  perspective-origin: center;
+}
+
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+}
+
+/* ── Services expandable card ── */
+.services-expand-card {
+  --card-accent: var(--accent);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 24px;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 24, 39, 0.6) 0%,
+    rgba(10, 14, 23, 0.85) 100%
+  );
+  border: 1px solid rgba(63, 63, 70, 0.4);
+  transition:
+    border-color 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+
+.services-expand-card:hover {
+  border-color: color-mix(in srgb, var(--card-accent) 55%, transparent);
+  box-shadow:
+    0 28px 60px -20px rgba(0, 0, 0, 0.65),
+    0 0 50px -12px color-mix(in srgb, var(--card-accent) 40%, transparent);
+}
+
+/* Animated gradient top border — draws in on hover */
+.services-expand-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--card-accent), transparent);
+  transform: scaleX(0);
+  transition: transform 0.6s var(--ease-out);
+  z-index: 2;
+}
+
+.services-expand-card:hover::before,
+.services-expand-card[data-expanded="true"]::before {
+  transform: scaleX(1);
+}
+
+/* Ambient glow behind expanded cards */
+.services-expand-card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 60%;
+  height: 200%;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--card-accent) 12%, transparent) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-out);
+  z-index: 0;
+}
+
+.services-expand-card:hover::after,
+.services-expand-card[data-expanded="true"]::after {
+  opacity: 1;
+}
+
+/* ── Service number badge — animated border trace ── */
+.service-number-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(15, 23, 42, 0.7));
+  color: var(--accent-hover);
+  font-size: 16px;
+  font-weight: 800;
+  font-family: var(--font-geist-mono);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.service-number-badge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 30%,
+    var(--card-accent) 50%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-spin 4s linear infinite;
+}
+
+@keyframes border-spin {
+  to { --border-angle: 360deg; }
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ── Scroll progress bar — fixed top ── */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover), #8B5CF6);
+  box-shadow: 0 0 12px var(--accent-glow);
+  z-index: 100;
+  transform-origin: left;
+}
+
+/* ── Connected timeline path ── */
+.timeline-path {
+  stroke: var(--accent);
+  stroke-width: 2;
+  fill: none;
+  filter: drop-shadow(0 0 6px var(--accent-glow));
+}
+
+.timeline-node-ring {
+  fill: rgba(17, 24, 39, 1);
+  stroke: rgba(63, 63, 70, 0.6);
+  stroke-width: 2;
+  transition: all 0.5s var(--ease-out);
+}
+
+.timeline-node-ring[data-active="true"] {
+  fill: var(--accent);
+  stroke: var(--accent);
+  filter: drop-shadow(0 0 12px var(--accent-glow));
+}
+
+.timeline-node-inner {
+  fill: var(--foreground-muted);
+  font-family: var(--font-geist-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  transition: fill 0.5s var(--ease-out);
+}
+
+.timeline-node-ring[data-active="true"] + .timeline-node-inner,
+.timeline-node-ring[data-active="true"] ~ .timeline-node-inner {
+  fill: #ffffff;
+}
+
+/* ── Capability chip — cascading entrance ── */
+.capability-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: rgba(24, 24, 27, 0.5);
+  border: 1px solid rgba(63, 63, 70, 0.45);
+  font-size: 13px;
+  font-weight: 500;
+  color: #d4d4d8;
+  transition: all 0.25s var(--ease-out);
+  cursor: default;
+}
+
+.capability-chip:hover {
+  background: color-mix(in srgb, var(--accent) 14%, rgba(24, 24, 27, 0.5));
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.capability-chip::before {
+  content: "✦";
+  font-size: 10px;
+  color: var(--accent-hover);
+  opacity: 0.7;
+}
+
+/* ── Why card — mouse spotlight variant ── */
+.why-spotlight-card {
+  --mx: 50%;
+  --my: 50%;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 32px;
+  border-radius: 24px;
+  background: rgba(17, 24, 39, 0.55);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(63, 63, 70, 0.4);
+  transition:
+    border-color 0.4s var(--ease-out),
+    transform 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+
+.why-spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    300px circle at var(--mx) var(--my),
+    color-mix(in srgb, var(--card-accent) 18%, transparent) 0%,
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.why-spotlight-card:hover {
+  border-color: color-mix(in srgb, var(--card-accent) 50%, transparent);
+  transform: translateY(-6px);
+  box-shadow:
+    0 28px 56px -16px rgba(0, 0, 0, 0.6),
+    0 0 40px -8px color-mix(in srgb, var(--card-accent) 40%, transparent);
+}
+
+.why-spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* ── Floating orb for Services hero ── */
+.services-hero-orb {
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  margin-left: -400px;
+  width: 800px;
+  height: 800px;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(37, 99, 235, 0.35), transparent 55%),
+    radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.25), transparent 55%),
+    radial-gradient(circle at 50% 80%, rgba(20, 184, 166, 0.15), transparent 55%);
+  filter: blur(120px);
+  pointer-events: none;
+  animation: services-orb-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes services-orb-drift {
+  0%   { transform: translate(-4%, -3%) scale(1); }
+  33%  { transform: translate(6%, 3%) scale(1.06); }
+  66%  { transform: translate(-2%, 5%) scale(0.97); }
+  100% { transform: translate(4%, -4%) scale(1.03); }
+}
+
+/* ── Expanded card inner glow pulse ── */
+@keyframes inner-glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.8; }
+}
+
+.inner-glow-pulse {
+  animation: inner-glow-pulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-text { animation: none; background-position: 0 0; }
+  .services-hero-orb { animation: none; }
+  .service-number-badge::before { animation: none; }
+  .services-expand-card,
+  .services-expand-card::before,
+  .services-expand-card::after,
+  .why-spotlight-card,
+  .why-spotlight-card::before,
+  .capability-chip { transition: none; }
+  .inner-glow-pulse { animation: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SERVICES PAGE — Unique floating blob animations
+   ══════════════════════════════════════════════════════════════ */
+@keyframes svc-blob1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(40px, -30px) scale(1.1); }
+  100% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes svc-blob2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-50px, 30px) scale(1.08); }
+  100% { transform: translate(30px, -40px) scale(0.92); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-[svc-blob"] {
+    animation: none !important;
+  }
 }

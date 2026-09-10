@@ -84,11 +84,19 @@ const navLinks: NavItem[] = [
     ],
   },
   {
+    label: "Insights",
+    href: "/Insights",
+    dropdown: [
+      { label: "Engineering Research", href: "/Insights", description: "Architecture blueprints & post-mortems" },
+      { label: "Technical Case Studies", href: "/Insights", description: "Multi-store mesh & EHR automation" },
+      { label: "Executive Briefings", href: "/Insights", description: "Quarterly technology perspectives" },
+    ],
+  },
+  {
     label: "About",
     href: "/About",
     dropdown: [
       { label: "Our Story", href: "/About", description: "Who we are, why we build" },
-      { label: "Insights", href: "/Insights", description: "Perspectives from the team" },
       { label: "Contact", href: "/Contact", description: "Start a conversation" },
     ],
   },
@@ -160,7 +168,7 @@ export default function Navbar() {
 
   // ── Morphing indicator: measure the target link's text bounds ──
   const activeIdx = navLinks.findIndex((link) =>
-    link.href === "/Products" ? pathname.startsWith("/Products") : pathname === link.href
+    link.href !== "/" ? pathname.startsWith(link.href) : pathname === "/"
   );
 
   const measureIndicator = useCallback(() => {
@@ -285,7 +293,7 @@ export default function Navbar() {
               const hasDropdown = !!link.dropdown;
               return (
                 <div
-                  key={link.href}
+                  key={link.label}
                   className="nav-item"
                   onMouseEnter={() => openDropdown(idx)}
                 >
@@ -403,13 +411,13 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-5 sm:px-10 py-6 space-y-1">
               {navLinks.map((link) => {
                 const isActive =
-                  link.href === "/Products"
-                    ? pathname.startsWith("/Products")
-                    : pathname === link.href;
+                  link.href !== "/"
+                    ? pathname.startsWith(link.href)
+                    : pathname === "/";
                 const expanded = mobileExpanded === link.label;
                 const hasDropdown = !!link.dropdown;
                 return (
-                  <div key={link.href} className="border-b border-white/[0.04]">
+                  <div key={link.label} className="border-b border-white/[0.04]">
                     <div className="flex items-center justify-between">
                       <Link
                         href={link.href}
