@@ -72,7 +72,7 @@ export default function Footer() {
                 alt="ZamNexus Logo"
                 width={280}
                 height={145}
-                className="h-16 sm:h-20 md:h-24 w-auto object-contain drop-shadow-[0_0_16px_rgba(208,255,113,0.3)] group-hover:drop-shadow-[0_0_26px_rgba(208,255,113,0.65)] transition-all duration-300"
+                className="h-16 sm:h-20 md:h-24 w-auto object-contain drop-shadow-[0_0_16px_rgba(37,99,235,0.3)] group-hover:drop-shadow-[0_0_26px_rgba(37,99,235,0.65)] transition-all duration-300"
               />
             </Link>
             <p className="text-base sm:text-lg text-zinc-400 leading-relaxed max-w-md">
@@ -89,27 +89,27 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/Solutions" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
                   AI-Powered Business
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
                   SaaS Platforms
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
                   Cloud-Native Solutions
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
                   Intelligent Automation
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
                   Connected Enterprise
                 </Link>
               </li>
@@ -123,37 +123,37 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/Services" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Services" className="hover:text-[var(--accent-hover)] transition-colors">
                   Services
                 </Link>
               </li>
               <li>
-                <Link href="/Products" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Products" className="hover:text-[var(--accent-hover)] transition-colors">
                   Products
                 </Link>
               </li>
               <li>
-                <Link href="/Platforms" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
                   Platforms
                 </Link>
               </li>
               <li>
-                <Link href="/Industries" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Industries" className="hover:text-[var(--accent-hover)] transition-colors">
                   Industries
                 </Link>
               </li>
               <li>
-                <Link href="/Insights" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Insights" className="hover:text-[var(--accent-hover)] transition-colors">
                   Insights
                 </Link>
               </li>
               <li>
-                <Link href="/About" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/About" className="hover:text-[var(--accent-hover)] transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/Contact" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Contact" className="hover:text-[var(--accent-hover)] transition-colors">
                   Contact
                 </Link>
               </li>
@@ -167,7 +167,7 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/Products/znxerp" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Products/znxerp" className="hover:text-[var(--accent-hover)] transition-colors">
                   ZNXERP
                 </Link>
               </li>
@@ -196,27 +196,27 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/Services" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Services" className="hover:text-[var(--accent-hover)] transition-colors">
                   AI & Intelligent Solutions
                 </Link>
               </li>
               <li>
-                <Link href="/Services" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Services" className="hover:text-[var(--accent-hover)] transition-colors">
                   Cloud-Native Engineering
                 </Link>
               </li>
               <li>
-                <Link href="/Platforms" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
                   Microsoft Solutions
                 </Link>
               </li>
               <li>
-                <Link href="/Platforms" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
                   Salesforce Solutions
                 </Link>
               </li>
               <li>
-                <Link href="/Services" className="hover:text-[#D0FF71] transition-colors">
+                <Link href="/Services" className="hover:text-[var(--accent-hover)] transition-colors">
                   SaaS Development
                 </Link>
               </li>

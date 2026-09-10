@@ -18,7 +18,7 @@ interface FormData {
 
 export default function DemoRequestForm({
   productName,
-  accentColor = "#D0FF71",
+  accentColor = "var(--accent-hover)",
 }: DemoRequestFormProps) {
   const uid = useId();
   const [submitted, setSubmitted] = useState(false);
@@ -193,7 +193,7 @@ export default function DemoRequestForm({
       <button
         type="submit"
         id={`${uid}-submit`}
-        className="w-full py-4 rounded-full font-bold text-base text-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(208,255,113,0.35)]"
+        className="w-full py-4 rounded-full font-bold text-base text-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(37,99,235,0.35)]"
         style={{ background: accentColor }}
       >
         Request Your {productName} Demo →

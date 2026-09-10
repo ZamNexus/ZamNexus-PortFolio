@@ -71,7 +71,7 @@ const topicPreviews: TopicPreview[] = [
 
 export default function InsightsPage() {
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
       <Navbar />
 
@@ -82,7 +82,7 @@ export default function InsightsPage() {
           aria-labelledby="insights-hero-heading"
           className="max-w-6xl mx-auto px-6 pt-44 pb-20 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl">
             ZamNexus Insights
           </div>
           <h1
@@ -90,7 +90,7 @@ export default function InsightsPage() {
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Perspectives on{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#D0FF71] to-emerald-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--accent-hover)] to-violet-400">
               AI, cloud and connected technology.
             </span>
           </h1>
@@ -103,7 +103,7 @@ export default function InsightsPage() {
         {/* ── COMING SOON NOTICE ────────────────────────────────────────────── */}
         <section className="max-w-6xl mx-auto px-6 pb-12">
           <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 to-zinc-950 border border-zinc-800 p-10 sm:p-14 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#D0FF71]/10 border border-[#D0FF71]/20 text-xs font-mono font-bold text-[#D0FF71] mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--accent-hover)]/10 border border-[var(--accent-hover)]/20 text-xs font-mono font-bold text-[var(--accent-hover)] mb-6">
               COMING SOON
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-4">
@@ -129,7 +129,7 @@ export default function InsightsPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               What We&apos;re Writing About
             </span>
             <h2
@@ -144,15 +144,15 @@ export default function InsightsPage() {
             {topicPreviews.map((topic) => (
               <article
                 key={topic.title}
-                className="group p-8 sm:p-10 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-2xl"
+                className="group p-8 sm:p-10 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-2xl"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <span className="px-2.5 py-1 rounded bg-[#D0FF71]/10 text-[#D0FF71] border border-[#D0FF71]/20 text-xs font-mono font-bold uppercase">
+                  <span className="px-2.5 py-1 rounded bg-[var(--accent-hover)]/10 text-[var(--accent-hover)] border border-[var(--accent-hover)]/20 text-xs font-mono font-bold uppercase">
                     {topic.category}
                   </span>
                   <span className="text-xs font-mono text-zinc-600">Coming Soon</span>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 leading-snug group-hover:text-[#D0FF71] transition-colors">
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 leading-snug group-hover:text-[var(--accent-hover)] transition-colors">
                   {topic.title}
                 </h3>
                 <p className="text-sm text-zinc-400 leading-relaxed">

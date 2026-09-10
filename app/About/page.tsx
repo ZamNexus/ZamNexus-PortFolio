@@ -70,7 +70,7 @@ const approachPoints: ApproachPoint[] = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
       <Navbar />
 
@@ -81,7 +81,7 @@ export default function AboutPage() {
           aria-labelledby="about-hero-heading"
           className="max-w-6xl mx-auto px-6 pt-44 pb-20 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl">
             About ZamNexus
           </div>
           <h1
@@ -89,7 +89,7 @@ export default function AboutPage() {
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Connecting Intelligence.{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#D0FF71] to-emerald-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--accent-hover)] to-violet-400">
               Enabling Action.
             </span>
           </h1>
@@ -108,7 +108,7 @@ export default function AboutPage() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Our Heritage
               </span>
               <h2
@@ -146,7 +146,7 @@ export default function AboutPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               What We Do
             </span>
             <h2
@@ -165,13 +165,13 @@ export default function AboutPage() {
             {capabilities.map((cap, idx) => (
               <div
                 key={cap.title}
-                className="group p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-xl"
+                className="group p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70 transition-all duration-300 hover:-translate-y-1 shadow-xl"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="step-number text-sm" aria-hidden="true">
                     {String(idx + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="text-base font-bold text-white group-hover:text-[#D0FF71] transition-colors">
+                  <h3 className="text-base font-bold text-white group-hover:text-[var(--accent-hover)] transition-colors">
                     {cap.title}
                   </h3>
                 </div>
@@ -190,7 +190,7 @@ export default function AboutPage() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
             <div className="lg:sticky lg:top-32">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Our Approach
               </span>
               <h2
@@ -198,7 +198,7 @@ export default function AboutPage() {
                 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-3 leading-tight"
               >
                 Business First. Technology Enabled.{" "}
-                <span className="text-[#D0FF71]">Intelligence Driven.</span>
+                <span className="text-[var(--accent-hover)]">Intelligence Driven.</span>
               </h2>
               <p className="mt-5 text-zinc-400 text-base leading-relaxed">
                 Every engagement starts with understanding your business —
@@ -212,9 +212,9 @@ export default function AboutPage() {
               {approachPoints.map((point, idx) => (
                 <div
                   key={idx}
-                  className="group flex items-start gap-4 p-5 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300"
+                  className="group flex items-start gap-4 p-5 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70 transition-all duration-300"
                 >
-                  <span className="step-number flex-shrink-0 text-sm group-hover:bg-[#D0FF71] group-hover:text-black transition-all duration-300" aria-hidden="true">
+                  <span className="step-number flex-shrink-0 text-sm group-hover:bg-[var(--accent-hover)] group-hover:text-black transition-all duration-300" aria-hidden="true">
                     {String(idx + 1).padStart(2, "0")}
                   </span>
                   <p className="text-sm text-zinc-300 leading-relaxed pt-1">
@@ -235,11 +235,11 @@ export default function AboutPage() {
             {/* Vision */}
             <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 to-zinc-950 border border-zinc-800 p-10 sm:p-12 relative overflow-hidden">
               <div
-                className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[#D0FF71]/5 blur-3xl pointer-events-none"
+                className="absolute top-0 right-0 w-64 h-64 rounded-full bg-[var(--accent-hover)]/5 blur-3xl pointer-events-none"
                 aria-hidden="true"
               />
               <div className="relative z-10">
-                <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+                <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                   Our Vision
                 </span>
                 <h2
@@ -258,7 +258,7 @@ export default function AboutPage() {
 
             {/* Mission */}
             <div className="rounded-3xl bg-zinc-900/40 border border-zinc-800 p-10 sm:p-12">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Our Mission
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-3 leading-tight">
@@ -280,7 +280,7 @@ export default function AboutPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Backed by Experience. Built for the Future.
             </span>
             <h2

@@ -174,7 +174,7 @@ const differentiators: Differentiator[] = [
 
 export default function SolutionsPage() {
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#D0FF71] selection:text-black">
+    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
       <div className="fixed inset-0 bg-ziel-grid opacity-60 pointer-events-none z-0" aria-hidden="true" />
       <Navbar />
 
@@ -185,7 +185,7 @@ export default function SolutionsPage() {
           aria-labelledby="solutions-hero-heading"
           className="max-w-6xl mx-auto px-6 pt-44 pb-20 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[#D0FF71] mb-8 backdrop-blur-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl">
             Enterprise Cloud &amp; AI Solutions
           </div>
           <h1
@@ -193,7 +193,7 @@ export default function SolutionsPage() {
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Technology solutions designed{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#D0FF71] to-emerald-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--accent-hover)] to-violet-400">
               around your business.
             </span>
           </h1>
@@ -230,17 +230,17 @@ export default function SolutionsPage() {
                 key={sol.id}
                 className={`group p-8 sm:p-12 rounded-3xl border transition-all duration-300 shadow-2xl flex flex-col lg:flex-row items-start gap-10 ${
                   i % 2 === 0
-                    ? "bg-zinc-900/40 border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70"
-                    : "bg-zinc-900/25 border-zinc-800/60 hover:border-[#D0FF71]/40 hover:bg-zinc-900/50"
+                    ? "bg-zinc-900/40 border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70"
+                    : "bg-zinc-900/25 border-zinc-800/60 hover:border-[var(--accent-hover)]/40 hover:bg-zinc-900/50"
                 }`}
               >
                 {/* Left: number + icon */}
                 <div className="flex-shrink-0 flex flex-col items-center gap-3 pt-1">
-                  <div className="step-number group-hover:bg-[#D0FF71] group-hover:text-black group-hover:shadow-[0_0_20px_rgba(208,255,113,0.3)] transition-all duration-300">
+                  <div className="step-number group-hover:bg-[var(--accent-hover)] group-hover:text-black group-hover:shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all duration-300">
                     {sol.index}
                   </div>
                   <span
-                    className="text-2xl text-zinc-700 group-hover:text-[#D0FF71]/60 transition-colors hidden lg:block"
+                    className="text-2xl text-zinc-700 group-hover:text-[var(--accent-hover)]/60 transition-colors hidden lg:block"
                     aria-hidden="true"
                   >
                     {sol.icon}
@@ -250,7 +250,7 @@ export default function SolutionsPage() {
                 {/* Right: content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-3 mb-4">
-                    <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+                    <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                       {sol.tag}
                     </span>
                   </div>
@@ -279,7 +279,7 @@ export default function SolutionsPage() {
                   <div className="mt-6 pt-6 border-t border-zinc-800/60">
                     <Link
                       href="/Contact"
-                      className="inline-flex items-center gap-2 text-sm font-semibold text-[#D0FF71] hover:underline underline-offset-4 transition-all"
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent-hover)] hover:underline underline-offset-4 transition-all"
                     >
                       Discuss this solution
                       <span aria-hidden="true">→</span>
@@ -299,7 +299,7 @@ export default function SolutionsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             {/* Left: heading + intro */}
             <div className="lg:sticky lg:top-32">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 Why Choose ZamNexus
               </span>
               <h2
@@ -314,7 +314,7 @@ export default function SolutionsPage() {
                 expertise — to design solutions that create lasting value.
               </p>
               <div className="mt-8">
-                <Link href="/About" className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 hover:text-[#D0FF71] transition-colors">
+                <Link href="/About" className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-400 hover:text-[var(--accent-hover)] transition-colors">
                   About ZamNexus
                   <span aria-hidden="true">→</span>
                 </Link>
@@ -326,13 +326,13 @@ export default function SolutionsPage() {
               {differentiators.map((diff, idx) => (
                 <div
                   key={diff.title}
-                  className="group flex items-start gap-5 p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-[#D0FF71]/50 hover:bg-zinc-900/70 transition-all duration-300"
+                  className="group flex items-start gap-5 p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800 hover:border-[var(--accent-hover)]/50 hover:bg-zinc-900/70 transition-all duration-300"
                 >
-                  <div className="step-number flex-shrink-0 text-sm group-hover:bg-[#D0FF71] group-hover:text-black transition-all duration-300">
+                  <div className="step-number flex-shrink-0 text-sm group-hover:bg-[var(--accent-hover)] group-hover:text-black transition-all duration-300">
                     {String(idx + 1).padStart(2, "0")}
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-white mb-1.5 group-hover:text-[#D0FF71] transition-colors">
+                    <h3 className="text-base font-bold text-white mb-1.5 group-hover:text-[var(--accent-hover)] transition-colors">
                       {diff.title}
                     </h3>
                     <p className="text-sm text-zinc-400 leading-relaxed">
@@ -352,7 +352,7 @@ export default function SolutionsPage() {
         >
           <div className="rounded-3xl bg-gradient-to-br from-zinc-900/80 to-zinc-950 border border-zinc-800 p-10 sm:p-14 flex flex-col md:flex-row items-center justify-between gap-10">
             <div className="max-w-lg">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
                 How We Deliver
               </span>
               <h2
@@ -388,7 +388,7 @@ export default function SolutionsPage() {
           className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="text-center max-w-3xl mx-auto space-y-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-[#D0FF71] font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Ready to Get Started?
             </span>
             <h2
