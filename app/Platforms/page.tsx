@@ -10,6 +10,9 @@ import {
 } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FinalCTA from "@/components/FinalCTA";
+import PillTab from "@/components/PillTab";
+import { useHeroMotion } from "@/components/useHeroMotion";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -275,6 +278,7 @@ function AnimatedMetric({ value, suffix = "" }: { value: string; suffix?: string
 // ─── Main Platforms Page Component ───────────────────────────────────────────
 
 export default function PlatformsPage() {
+  const heroMotion = useHeroMotion();
   const [activeTab, setActiveTab] = useState<"microsoft" | "salesforce" | "integration">("microsoft");
 
   const { scrollYProgress } = useScroll();
@@ -323,9 +327,7 @@ export default function PlatformsPage() {
         >
           {/* Top Category Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 18, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            {...heroMotion.badge}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl shadow-lg"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
@@ -335,10 +337,8 @@ export default function PlatformsPage() {
           {/* Heading */}
           <motion.h1
             id="platforms-hero-heading"
-            initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
+            {...heroMotion.heading}
+            className="text-3xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08] break-words"
           >
             Maximizing the platforms you{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-cyan-400 to-blue-400">
@@ -347,9 +347,7 @@ export default function PlatformsPage() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.paragraph}
             className="mt-6 text-base sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed"
           >
             We don&apos;t just configure standard platform features. We engineer high-velocity, connected,
@@ -358,46 +356,32 @@ export default function PlatformsPage() {
 
           {/* Interactive 3-Way Ecosystem Switcher Dock */}
           <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35 }}
-            className="mt-12 flex flex-wrap justify-center gap-3 p-1.5 rounded-full bg-zinc-900/70 border border-zinc-800/80 backdrop-blur-xl shadow-2xl"
+            {...heroMotion.actions}
+            className="mt-12 flex flex-wrap justify-center gap-2 sm:gap-3 p-1.5 sm:p-2 rounded-2xl sm:rounded-full bg-zinc-900/70 border border-zinc-800/80 backdrop-blur-xl shadow-2xl"
           >
             {[
               { id: "microsoft", label: "Microsoft Ecosystem", icon: "⊞", color: "#0EA5E9", anchor: "#microsoft-ecosystem" },
               { id: "salesforce", label: "Salesforce Cloud", icon: "⊙", color: "#00A1E0", anchor: "#salesforce-ecosystem" },
               { id: "integration", label: "Cross-Platform Mesh", icon: "⚡", color: "#8B5CF6", anchor: "#integration-mesh" },
             ].map((tab) => (
-              <button
+              <PillTab
                 key={tab.id}
+                variant="pill"
+                isSelected={activeTab === tab.id}
                 onClick={() => {
                   setActiveTab(tab.id as any);
                   document.querySelector(tab.anchor)?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
-                className={`px-5 py-2.5 rounded-full text-xs font-mono font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
-                  activeTab === tab.id
-                    ? "bg-zinc-800 text-white shadow-lg border border-zinc-700"
-                    : "text-zinc-400 hover:text-white border border-transparent hover:bg-zinc-800/40"
-                }`}
-              >
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{
-                    background: tab.color,
-                    boxShadow: activeTab === tab.id ? `0 0 8px ${tab.color}` : "none",
-                  }}
-                />
-                <span>{tab.icon}</span>
-                <span>{tab.label}</span>
-              </button>
+                icon={<span style={{ color: tab.color }}>{tab.icon}</span>}
+                label={tab.label}
+                accent={tab.color}
+              />
             ))}
           </motion.div>
 
           {/* Telemetry HUD */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.45 }}
+            {...heroMotion.telemetry}
             className="mt-12 w-full max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-800/20 backdrop-blur-md shadow-2xl"
           >
             {[
@@ -952,66 +936,32 @@ export default function PlatformsPage() {
         </section>
 
         {/* ── HIGH-CONVERSION EXECUTIVE ADVISORY CTA ───────────────────────── */}
-        <section
-          aria-labelledby="platforms-cta-heading"
-          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
-        >
-          <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12">
-            <div className="max-w-xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
-                Platform Strategy &amp; Advisory
-              </span>
-              <h2
-                id="platforms-cta-heading"
-                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
-              >
-                Ready to elevate your platform architecture?
-              </h2>
-              <p className="mt-4 text-zinc-400 text-base sm:text-lg leading-relaxed">
-                Schedule a dedicated 30-minute architectural consultation with our principal platform engineers.
-                We&apos;ll evaluate your current Microsoft or Salesforce stack and outline immediate optimization pathways.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
-                  <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                    <span>Schedule Advisory Call</span>
-                    <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-                  </Link>
-                </motion.div>
-                <Link
-                  href="/Solutions"
-                  className="px-7 py-4 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 font-semibold text-sm transition-colors"
-                >
-                  Explore Solution Blueprints →
-                </Link>
-              </div>
-            </div>
-
-            {/* SLA Badge Panel */}
-            <div className="w-full lg:w-80 p-6 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-4">
-              <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 font-bold border-b border-zinc-800/60 pb-3">
-                Platform Engineering SLA
-              </div>
-              {[
-                { title: "Dual Certified Architects", sub: "Microsoft MVP & Salesforce Lead" },
-                { title: "Zero-Disruption Migration", sub: "Parallel ledger verification" },
-                { title: "Sub-15min Critical Response", sub: "24/7 dedicated enterprise TAM" },
-              ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3 text-xs">
-                  <span className="text-cyan-400 font-bold">✓</span>
-                  <div>
-                    <div className="font-semibold text-zinc-200">{item.title}</div>
-                    <div className="text-zinc-500 text-[11px] font-mono">{item.sub}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <FinalCTA
+          id="platforms-cta-heading"
+          eyebrow="Platform Strategy & Advisory"
+          headline="Ready to elevate your platform architecture?"
+          description="Schedule a dedicated 30-minute architectural consultation with our principal platform engineers. We'll evaluate your current Microsoft or Salesforce stack and outline immediate optimization pathways."
+          primaryButton={{
+            label: "Schedule Advisory Call",
+            href: "/Contact",
+          }}
+          secondaryButton={{
+            label: "Explore Solution Blueprints →",
+            href: "/Solutions",
+          }}
+          sidePanel={{
+            title: "Platform Engineering SLA",
+            items: [
+              { label: "Dual Certified Architects", sublabel: "Microsoft MVP & Salesforce Lead" },
+              { label: "Zero-Disruption Migration", sublabel: "Parallel ledger verification" },
+              { label: "Sub-15min Critical Response", sublabel: "24/7 dedicated enterprise TAM" },
+            ],
+          }}
+        />
 
       </main>
 
-      <Footer />
+      <Footer hideCTA />
     </div>
   );
 }

@@ -10,6 +10,8 @@ import {
 } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FinalCTA from "@/components/FinalCTA";
+import { useHeroMotion } from "@/components/useHeroMotion";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -287,6 +289,7 @@ function AnimatedStat({ value, suffix = "" }: { value: string; suffix?: string }
 // ─── Main Industries Page Component ──────────────────────────────────────────
 
 export default function IndustriesPage() {
+  const heroMotion = useHeroMotion();
   const [activeSectorIdx, setActiveSectorIdx] = useState(0);
 
   const { scrollYProgress } = useScroll();
@@ -357,9 +360,7 @@ export default function IndustriesPage() {
         >
           {/* Top Category Chip */}
           <motion.div
-            initial={{ opacity: 0, y: 18, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            {...heroMotion.badge}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl shadow-lg"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -369,9 +370,7 @@ export default function IndustriesPage() {
           {/* Heading */}
           <motion.h1
             id="industries-hero-heading"
-            initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.heading}
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Intelligent systems built{" "}
@@ -381,9 +380,7 @@ export default function IndustriesPage() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.paragraph}
             className="mt-6 text-base sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed"
           >
             Every industry has unique compliance mandates, operational nuances, and customer expectations.
@@ -392,9 +389,7 @@ export default function IndustriesPage() {
 
           {/* Interactive 8-Sector Jump Dock */}
           <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35 }}
+            {...heroMotion.actions}
             className="mt-12 flex flex-wrap justify-center gap-2.5 max-w-5xl"
           >
             {industries.map((ind, i) => (
@@ -421,9 +416,7 @@ export default function IndustriesPage() {
 
           {/* Telemetry HUD */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.45 }}
+            {...heroMotion.telemetry}
             className="mt-12 w-full max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-800/20 backdrop-blur-md shadow-2xl"
           >
             {[
@@ -644,66 +637,32 @@ export default function IndustriesPage() {
         </section>
 
         {/* ── HIGH-CONVERSION BOTTOM CTA ───────────────────────────────────── */}
-        <section
-          aria-labelledby="industries-cta-heading"
-          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
-        >
-          <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12">
-            <div className="max-w-xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-emerald-400 font-bold">
-                Industry-Specific Advisory
-              </span>
-              <h2
-                id="industries-cta-heading"
-                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
-              >
-                Ready to transform your sector operations?
-              </h2>
-              <p className="mt-4 text-zinc-400 text-base sm:text-lg leading-relaxed">
-                Connect with our industry architects. We will conduct a thorough 30-minute discovery
-                evaluating your sector regulations, tech stack bottlenecks, and AI automation opportunities.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
-                  <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                    <span>Schedule Industry Discovery</span>
-                    <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-                  </Link>
-                </motion.div>
-                <Link
-                  href="/Solutions"
-                  className="px-7 py-4 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 font-semibold text-sm transition-colors"
-                >
-                  Explore Solution Blueprints →
-                </Link>
-              </div>
-            </div>
-
-            {/* SLA Badge Panel */}
-            <div className="w-full lg:w-80 p-6 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-4">
-              <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 font-bold border-b border-zinc-800/60 pb-3">
-                Industry Delivery Assurance
-              </div>
-              {[
-                { title: "Strict Compliance Guard", sub: "HIPAA, GDPR, ISO 27001 verified" },
-                { title: "Zero Data Disruption", sub: "Parallel cutover & reconciliation" },
-                { title: "Domain Expert Lead", sub: "Direct consultation with sector architects" },
-              ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3 text-xs">
-                  <span className="text-emerald-400 font-bold">✓</span>
-                  <div>
-                    <div className="font-semibold text-zinc-200">{item.title}</div>
-                    <div className="text-zinc-500 text-[11px] font-mono">{item.sub}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <FinalCTA
+          id="industries-cta-heading"
+          eyebrow="Industry-Specific Advisory"
+          headline="Ready to transform your sector operations?"
+          description="Connect with our industry architects. We will conduct a thorough 30-minute discovery evaluating your sector regulations, tech stack bottlenecks, and AI automation opportunities."
+          primaryButton={{
+            label: "Schedule Industry Discovery",
+            href: "/Contact",
+          }}
+          secondaryButton={{
+            label: "Explore Solution Blueprints →",
+            href: "/Solutions",
+          }}
+          sidePanel={{
+            title: "Industry Delivery Assurance",
+            items: [
+              { label: "Strict Compliance Guard", sublabel: "HIPAA, GDPR, ISO 27001 verified" },
+              { label: "Zero Data Disruption", sublabel: "Parallel cutover & reconciliation" },
+              { label: "Domain Expert Lead", sublabel: "Direct consultation with sector architects" },
+            ],
+          }}
+        />
 
       </main>
 
-      <Footer />
+      <Footer hideCTA />
     </div>
   );
 }

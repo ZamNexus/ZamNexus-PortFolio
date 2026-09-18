@@ -12,7 +12,10 @@ import {
 } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FinalCTA from "@/components/FinalCTA";
 import ParticleNetwork from "@/components/ParticleNetwork";
+import PillTab from "@/components/PillTab";
+import { useHeroMotion } from "@/components/useHeroMotion";
 
 // ─── Type Definitions ────────────────────────────────────────────────────────
 
@@ -28,6 +31,7 @@ interface Solution {
   id: SolutionCategory;
   icon: string;
   tag: string;
+  shortLabel?: string;
   title: string;
   description: string;
   capabilities: string[];
@@ -128,6 +132,7 @@ const solutions: Solution[] = [
     id: "ai",
     icon: "◈",
     tag: "AI & ML",
+    shortLabel: "AI & ML",
     title: "AI & Intelligent Solutions",
     description:
       "Practical Artificial Intelligence that gets things done. From custom copilots and autonomous AI agents to document intelligence and governed, responsible automation.",
@@ -146,6 +151,7 @@ const solutions: Solution[] = [
     id: "saas",
     icon: "⬡",
     tag: "SAAS PRODUCTS",
+    shortLabel: "SaaS Products",
     title: "SaaS Product Development",
     description:
       "We design and build scalable, multi-tenant SaaS products — from early concept to enterprise-ready platform — with security, API-first architecture, and growth built in.",
@@ -164,6 +170,7 @@ const solutions: Solution[] = [
     id: "cloud",
     icon: "⬢",
     tag: "CLOUD & DEVOPS",
+    shortLabel: "Cloud & DevOps",
     title: "Cloud-Native & Serverless Engineering",
     description:
       "Modern, event-driven backend systems built with Node.js, TypeScript and AWS serverless architecture — resilient, cost-efficient, and designed to scale.",
@@ -182,6 +189,7 @@ const solutions: Solution[] = [
     id: "automation",
     icon: "⟐",
     tag: "AUTOMATION",
+    shortLabel: "Automation",
     title: "Intelligent Automation",
     description:
       "We connect applications, eliminate manual transcription, and orchestrate workflows that combine traditional automation with autonomous AI agents.",
@@ -200,6 +208,7 @@ const solutions: Solution[] = [
     id: "microsoft",
     icon: "⊞",
     tag: "MICROSOFT",
+    shortLabel: "Microsoft Platforms",
     title: "Microsoft Business Solutions",
     description:
       "Consulting, architecture and delivery across Dynamics 365, Power Platform, Azure and Microsoft Copilot — helping you get more from the ecosystem you already invest in.",
@@ -218,6 +227,7 @@ const solutions: Solution[] = [
     id: "salesforce",
     icon: "⊙",
     tag: "SALESFORCE",
+    shortLabel: "Salesforce Cloud",
     title: "Salesforce Solutions",
     description:
       "Implementation, architecture, integration and AI — built around your business processes and your growth ambitions, not just standard platform features.",
@@ -413,6 +423,7 @@ function GyroCard({
 // ─── Main Home Page Component ────────────────────────────────────────────────
 
 export default function HomePage() {
+  const heroMotion = useHeroMotion();
   const [activeSolutionId, setActiveSolutionId] = useState<SolutionCategory>("ai");
 
   const { scrollYProgress } = useScroll();
@@ -465,9 +476,7 @@ export default function HomePage() {
         >
           {/* Top Category Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 18, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            {...heroMotion.badge}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl shadow-lg"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-hover)] animate-pulse" />
@@ -477,9 +486,7 @@ export default function HomePage() {
           {/* Heading */}
           <motion.h1
             id="home-hero-heading"
-            initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.heading}
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Engineering mission-critical systems for{" "}
@@ -489,9 +496,7 @@ export default function HomePage() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.paragraph}
             className="mt-6 text-base sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed"
           >
             ZamNexus synthesizes 15+ years of enterprise architecture with artificial intelligence,
@@ -500,9 +505,7 @@ export default function HomePage() {
 
           {/* Hero CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
+            {...heroMotion.actions}
             className="mt-10 flex flex-wrap items-center justify-center gap-4"
           >
             <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
@@ -519,9 +522,7 @@ export default function HomePage() {
 
           {/* System Telemetry HUD */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.45 }}
+            {...heroMotion.telemetry}
             className="mt-16 w-full max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-800/20 backdrop-blur-md shadow-2xl"
           >
             {[
@@ -675,7 +676,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="relative z-10 pt-4 border-t border-zinc-800/60 flex items-center justify-between">
+                <div className="relative z-10 pt-4 border-t border-zinc-800/60 flex flex-wrap sm:flex-nowrap items-center justify-between gap-3">
                   <Link
                     href={prod.href}
                     className="text-xs font-mono font-bold text-white hover:text-[var(--accent-hover)] transition-colors flex items-center gap-2"
@@ -685,7 +686,7 @@ export default function HomePage() {
                   </Link>
                   <Link
                     href="/Contact"
-                    className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors"
+                    className="inline-flex items-center justify-center px-3.5 py-1.5 rounded-full border border-zinc-700 bg-zinc-800/80 hover:bg-zinc-700/90 hover:border-zinc-500 text-zinc-100 hover:text-white text-xs font-mono font-semibold transition-all duration-150 ease-out hover:scale-[1.03] hover:-translate-y-0.5 active:scale-[0.98] shadow-sm flex-shrink-0"
                   >
                     Request Demo
                   </Link>
@@ -716,32 +717,19 @@ export default function HomePage() {
           </div>
 
           {/* Interactive Category Switcher Tabs */}
-          <div className="flex flex-wrap justify-center gap-2 mb-12">
-            {solutions.map((sol) => {
-              const isSelected = sol.id === activeSolutionId;
-              return (
-                <button
-                  key={sol.id}
-                  onClick={() => setActiveSolutionId(sol.id)}
-                  className={`px-4 py-2.5 rounded-full text-xs font-mono font-bold transition-all duration-300 flex items-center gap-2.5 cursor-pointer relative ${
-                    isSelected
-                      ? "bg-zinc-800 text-white border border-zinc-700 shadow-xl"
-                      : "bg-zinc-900/50 hover:bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800/80"
-                  }`}
-                >
-                  <span style={{ color: sol.accent }}>{sol.icon}</span>
-                  <span>{sol.title.split(" ")[0]} {sol.title.split(" ")[1] || ""}</span>
-                  {isSelected && (
-                    <motion.div
-                      layoutId="solution-tab-pill"
-                      className="absolute inset-0 rounded-full border-2 pointer-events-none"
-                      style={{ borderColor: sol.accent }}
-                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                    />
-                  )}
-                </button>
-              );
-            })}
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
+            {solutions.map((sol) => (
+              <PillTab
+                key={sol.id}
+                variant="pill"
+                isSelected={sol.id === activeSolutionId}
+                onClick={() => setActiveSolutionId(sol.id)}
+                icon={<span style={{ color: sol.accent }}>{sol.icon}</span>}
+                label={sol.shortLabel || sol.tag}
+                accent={sol.accent}
+                layoutId="solution-tab-pill"
+              />
+            ))}
           </div>
 
           {/* Active Solution Stage with AnimatePresence */}
@@ -940,7 +928,7 @@ export default function HomePage() {
             {industriesList.map((ind) => (
               <Link
                 key={ind.name}
-                href="/Industries"
+                href="/Products/Industries"
                 className="p-6 rounded-2xl bg-zinc-900/40 border border-zinc-800/80 hover:bg-zinc-900/70 hover:border-zinc-600 transition-all duration-300 flex flex-col justify-between group shadow-md"
               >
                 <div>
@@ -1041,66 +1029,32 @@ export default function HomePage() {
         </section>
 
         {/* ── HIGH-CONVERSION BOTTOM CTA ───────────────────────────────────── */}
-        <section
-          aria-labelledby="home-cta-heading"
-          className="max-w-7xl mx-auto px-6 py-24"
-        >
-          <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12">
-            <div className="max-w-xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-                Deploy with Total Confidence
-              </span>
-              <h2
-                id="home-cta-heading"
-                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
-              >
-                Let&apos;s build what&apos;s next for your business.
-              </h2>
-              <p className="mt-4 text-zinc-400 text-base sm:text-lg leading-relaxed">
-                Whether you need a dedicated enterprise product deployment, an autonomous AI copilot integration,
-                or complete cloud-native modern engineering — our senior architects are ready to partner with you.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
-                  <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                    <span>Schedule Executive Briefing</span>
-                    <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-                  </Link>
-                </motion.div>
-                <Link
-                  href="/Solutions"
-                  className="px-7 py-4 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 font-semibold text-sm transition-colors"
-                >
-                  Explore Solutions Architecture →
-                </Link>
-              </div>
-            </div>
-
-            {/* SLA Badge Panel */}
-            <div className="w-full lg:w-80 p-6 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-4">
-              <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 font-bold border-b border-zinc-800/60 pb-3">
-                ZamNexus Deployment SLA
-              </div>
-              {[
-                { title: "Direct Principal Architect Pairing", sub: "Zero junior gatekeepers" },
-                { title: "Penny-Perfect Ledger Guarantee", sub: "Parallel ledger reconciliation" },
-                { title: "Sub-15min Emergency SLA", sub: "24/7 dedicated enterprise TAM" },
-              ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3 text-xs">
-                  <span className="text-emerald-400 font-bold">✓</span>
-                  <div>
-                    <div className="font-semibold text-zinc-200">{item.title}</div>
-                    <div className="text-zinc-500 text-[11px] font-mono">{item.sub}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <FinalCTA
+          id="home-cta-heading"
+          eyebrow="Deploy with Total Confidence"
+          headline="Let's build what's next for your business."
+          description="Whether you need a dedicated enterprise product deployment, an autonomous AI copilot integration, or complete cloud-native modern engineering — our senior architects are ready to partner with you."
+          primaryButton={{
+            label: "Schedule Executive Briefing",
+            href: "/Contact",
+          }}
+          secondaryButton={{
+            label: "Explore Solutions Architecture →",
+            href: "/Solutions",
+          }}
+          sidePanel={{
+            title: "ZamNexus Deployment SLA",
+            items: [
+              { label: "Direct Principal Architect Pairing", sublabel: "Zero junior gatekeepers" },
+              { label: "Penny-Perfect Ledger Guarantee", sublabel: "Parallel ledger reconciliation" },
+              { label: "Sub-15min Emergency SLA", sublabel: "24/7 dedicated enterprise TAM" },
+            ],
+          }}
+        />
 
       </main>
 
-      <Footer />
+      <Footer hideCTA />
     </div>
   );
 }

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   motion,
   AnimatePresence,
@@ -15,6 +16,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FinalCTA from "@/components/FinalCTA";
+import PillTab from "@/components/PillTab";
+import { useHeroMotion } from "@/components/useHeroMotion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,6 +58,19 @@ interface DeploymentStep {
   description: string;
   accent: string;
   deliverables: string[];
+}
+
+export interface InterestField {
+  id: string;
+  category: "cores" | "platforms" | "industries";
+  categoryLabel: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+  icon: string;
+  accent: string;
+  target: string;
+  tags: string[];
 }
 
 // ─── Streamlined Minimalist Product Engines ─────────────────────────────────
@@ -359,6 +376,244 @@ const clientMarquee = [
   "Specialist Diagnostic Network",
 ];
 
+// ─── Interest Navigator Categories & Specializations ────────────────────────
+
+export const interestFields: InterestField[] = [
+  // ─── PRODUCT SUITE CORES ───
+  {
+    id: "core-znxerp",
+    category: "cores",
+    categoryLabel: "Product Suite Cores",
+    title: "ZNXERP — Industrial MES & Supply Chain",
+    subtitle: "End-to-end manufacturing formulation, multi-currency ledgers, lab QC & automated GRN.",
+    badge: "Active Core",
+    icon: "🏭",
+    accent: "#3B82F6",
+    target: "#product-stage-znxerp",
+    tags: ["Manufacturing", "Pharma", "Supply Chain", "WMS", "Accounts", "MES"],
+  },
+  {
+    id: "core-znxepos",
+    category: "cores",
+    categoryLabel: "Product Suite Cores",
+    title: "ZNXePOS — Sub-Second Retail Mesh POS",
+    subtitle: "Offline-first multi-till synchronization, central SKU catalog, and barcode billing.",
+    badge: "Active Core",
+    icon: "⚡",
+    accent: "#F59E0B",
+    target: "#product-stage-znxepos",
+    tags: ["Retail", "Point of Sale", "Multi-Till", "Offline-First", "Barcode", "Inventory"],
+  },
+  {
+    id: "core-znxedu",
+    category: "cores",
+    categoryLabel: "Product Suite Cores",
+    title: "ZNXEdu — Unified Multi-Campus ERP",
+    subtitle: "Biometric turnstiles, fee bank reconciliation, grading, and parent portal applications.",
+    badge: "Active Core",
+    icon: "🎓",
+    accent: "#8B5CF6",
+    target: "#product-stage-znxedu",
+    tags: ["Education", "Schools", "Universities", "Biometrics", "Fee Engine", "Admissions"],
+  },
+  {
+    id: "core-znxcare",
+    category: "cores",
+    categoryLabel: "Product Suite Cores",
+    title: "ZNXCare — Clinical Hospital EHR & LIS",
+    subtitle: "Structured SOAP charting, HL7 analyzer integration, bed management & FIFO pharmacy.",
+    badge: "Active Core",
+    icon: "⟐",
+    accent: "#10B981",
+    target: "#product-stage-znxcare",
+    tags: ["Healthcare", "Hospitals", "EHR", "HL7", "Pharmacy", "Intake", "Diagnostics"],
+  },
+
+  // ─── ENTERPRISE PLATFORMS ───
+  {
+    id: "plat-d365",
+    category: "platforms",
+    categoryLabel: "Enterprise Platforms",
+    title: "Microsoft Dynamics 365 Core",
+    subtitle: "Enterprise CRM, Finance & Operations, Field Service, and Customer Engagement.",
+    badge: "Platform Hub",
+    icon: "⊞",
+    accent: "#0EA5E9",
+    target: "/Products/Platforms#microsoft-ecosystem",
+    tags: ["Dynamics 365", "Microsoft", "CRM", "Finance & Ops", "Field Service"],
+  },
+  {
+    id: "plat-powerplatform",
+    category: "platforms",
+    categoryLabel: "Enterprise Platforms",
+    title: "Power Platform & Automation",
+    subtitle: "High-impact Power Apps, automated approval flows with Power Automate, and Power BI.",
+    badge: "Platform Hub",
+    icon: "⚡",
+    accent: "#38BDF8",
+    target: "/Products/Platforms#microsoft-ecosystem",
+    tags: ["Power Apps", "Power Automate", "Power BI", "Dataverse", "Low-Code"],
+  },
+  {
+    id: "plat-copilot",
+    category: "platforms",
+    categoryLabel: "Enterprise Platforms",
+    title: "Microsoft Copilot & AI Studio",
+    subtitle: "Custom Copilot Studio agents, Azure OpenAI RAG connectors, and reasoning engines.",
+    badge: "Platform Hub",
+    icon: "🧠",
+    accent: "#0284C7",
+    target: "/Products/Platforms#microsoft-ecosystem",
+    tags: ["Copilot", "Azure OpenAI", "RAG", "AI Agents", "GenAI"],
+  },
+  {
+    id: "plat-azure-services",
+    category: "platforms",
+    categoryLabel: "Enterprise Platforms",
+    title: "Azure Integration Services Backbone",
+    subtitle: "Enterprise event-driven integrations with Logic Apps, API Management & Service Bus.",
+    badge: "Platform Hub",
+    icon: "☁️",
+    accent: "#0284C7",
+    target: "/Products/Platforms#microsoft-ecosystem",
+    tags: ["Azure", "Logic Apps", "API Management", "Service Bus", "Event Grid"],
+  },
+  {
+    id: "plat-salesforce-core",
+    category: "platforms",
+    categoryLabel: "Enterprise Platforms",
+    title: "Salesforce Sales & Service Cloud",
+    subtitle: "Precision CPQ pricing engines, pipeline velocity, and omnichannel support triage.",
+    badge: "Platform Hub",
+    icon: "⊙",
+    accent: "#00A1E0",
+    target: "/Products/Platforms#salesforce-ecosystem",
+    tags: ["Salesforce", "Sales Cloud", "Service Cloud", "CPQ", "Omnichannel"],
+  },
+  {
+    id: "plat-agentforce",
+    category: "platforms",
+    categoryLabel: "Enterprise Platforms",
+    title: "Salesforce Agentforce & Einstein AI",
+    subtitle: "Autonomous CRM bots, lead scoring, and automated tier-1 case triage resolution.",
+    badge: "Platform Hub",
+    icon: "✨",
+    accent: "#38BDF8",
+    target: "/Products/Platforms#salesforce-ecosystem",
+    tags: ["Agentforce", "Einstein AI", "Salesforce", "Autonomous Bots", "Predictive"],
+  },
+  {
+    id: "plat-cross-gateway",
+    category: "platforms",
+    categoryLabel: "Enterprise Platforms",
+    title: "The Cross-Platform Integration Gateway",
+    subtitle: "High-throughput API mesh bridging Azure, MuleSoft, SAP, and Salesforce federations.",
+    badge: "Platform Hub",
+    icon: "🔗",
+    accent: "#6366F1",
+    target: "/Products/Platforms#integration-mesh",
+    tags: ["MuleSoft", "Integration Mesh", "Azure Bridge", "SAP", "Zero-Copy Data"],
+  },
+
+  // ─── VERTICAL INDUSTRIES ───
+  {
+    id: "ind-finance",
+    category: "industries",
+    categoryLabel: "Vertical Industries",
+    title: "Financial Services & FinTech",
+    subtitle: "Regulatory KYC, AML compliance automation, fraud scoring, and audit traceability.",
+    badge: "9 Sectors",
+    icon: "💳",
+    accent: "#10B981",
+    target: "/Products/Industries#financial-services",
+    tags: ["Banking", "FinTech", "Compliance", "AML", "KYC", "Audit Trails"],
+  },
+  {
+    id: "ind-healthcare",
+    category: "industries",
+    categoryLabel: "Vertical Industries",
+    title: "Healthcare & Life Sciences",
+    subtitle: "Clinical EHR, HL7 lab interoperability, DICOM imaging, and HIPAA/GDPR records.",
+    badge: "9 Sectors",
+    icon: "🏥",
+    accent: "#F43F5E",
+    target: "/Products/Industries#healthcare",
+    tags: ["Healthcare", "Hospitals", "EHR", "HL7", "Clinical", "HIPAA", "Pharma"],
+  },
+  {
+    id: "ind-retail",
+    category: "industries",
+    categoryLabel: "Vertical Industries",
+    title: "Retail & E-Commerce",
+    subtitle: "Cloud & offline POS, multi-till sync, central SKU catalog, and customer loyalty engines.",
+    badge: "9 Sectors",
+    icon: "🛍️",
+    accent: "#F97316",
+    target: "/Products/Industries#retail-ecommerce",
+    tags: ["Retail", "E-Commerce", "Point of Sale", "SKU Catalog", "Loyalty", "Omnichannel"],
+  },
+  {
+    id: "ind-education",
+    category: "industries",
+    categoryLabel: "Vertical Industries",
+    title: "Education & Academia",
+    subtitle: "Multi-campus trusts, biometric admissions, timetable generators & student fee billing.",
+    badge: "9 Sectors",
+    icon: "🎓",
+    accent: "#8B5CF6",
+    target: "/Products/Industries#education",
+    tags: ["Education", "Schools", "Colleges", "Universities", "Student Portals", "Biometrics"],
+  },
+  {
+    id: "ind-public-sector",
+    category: "industries",
+    categoryLabel: "Vertical Industries",
+    title: "Public Sector & Government",
+    subtitle: "WCAG 2.1 AAA accessible citizen portals, case triage & sovereign cloud data governance.",
+    badge: "9 Sectors",
+    icon: "🏛️",
+    accent: "#0EA5E9",
+    target: "/Products/Industries#public-sector",
+    tags: ["Government", "Public Sector", "WCAG", "Accessibility", "Citizen Portals"],
+  },
+  {
+    id: "ind-prof-services",
+    category: "industries",
+    categoryLabel: "Vertical Industries",
+    title: "Professional Services & Legal",
+    subtitle: "Client engagement portals, automated billable hour tracking & AI document OCR.",
+    badge: "9 Sectors",
+    icon: "💼",
+    accent: "#F59E0B",
+    target: "/Products/Industries#professional-services",
+    tags: ["Legal", "Consulting", "Advisory", "Timesheets", "Billing", "Document OCR"],
+  },
+  {
+    id: "ind-property",
+    category: "industries",
+    categoryLabel: "Vertical Industries",
+    title: "Property & Facilities Management",
+    subtitle: "IoT building telemetry, automated tenant lease renewals & dispatch work orders.",
+    badge: "9 Sectors",
+    icon: "🏢",
+    accent: "#14B8A6",
+    target: "/Products/Industries#property-facilities",
+    tags: ["Real Estate", "Facilities", "IoT", "Sensors", "Tenant Portal", "Leases"],
+  },
+  {
+    id: "ind-saas",
+    category: "industries",
+    categoryLabel: "Vertical Industries",
+    title: "Technology & SaaS Scale-Ups",
+    subtitle: "Multi-tenant cloud backends, serverless event queues & embedded AI reasoning agents.",
+    badge: "9 Sectors",
+    icon: "☁️",
+    accent: "#6366F1",
+    target: "/Products/Industries#technology-saas",
+    tags: ["SaaS", "Microservices", "API", "Cloud-Native", "Serverless", "AI Copilots"],
+  },
+];
+
 // ─── Hydration-Safe Animated Number Counter ─────────────────────────────────
 
 function AnimatedStat({ value, suffix = "" }: { value: string; suffix?: string }) {
@@ -457,7 +712,7 @@ function ProductScene({
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start w-full">
         
         {/* Left Column: Brand, Narrative, Metrics & CTAs */}
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-7 pl-6 sm:pl-7">
           {/* Header Tag with Icon and Logo */}
           <motion.div
             className="flex items-center gap-4 mb-6"
@@ -750,7 +1005,7 @@ function ProductScene({
                           </div>
 
                           <div
-                            className={`text-xs font-bold font-mono truncate transition-colors ${
+                            className={`text-xs font-bold font-mono whitespace-normal break-words transition-colors ${
                               isCurrent ? "text-white" : "text-zinc-400 group-hover:text-zinc-200"
                             }`}
                           >
@@ -987,7 +1242,14 @@ function HorizontalDeploymentPipeline() {
 // ─── Main Products Hub Page Component ────────────────────────────────────────
 
 export default function ProductsPage() {
+  const heroMotion = useHeroMotion();
+  const router = useRouter();
   const [activeEngineIdx, setActiveEngineIdx] = useState(0);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<"all" | "cores" | "platforms" | "industries">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const enginesContainerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll();
@@ -996,6 +1258,69 @@ export default function ProductsPage() {
     damping: 30,
     restDelta: 0.001,
   });
+
+  // Filter interest fields based on category filter and search term
+  const filteredInterests = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return interestFields.filter((item) => {
+      const matchesCategory =
+        activeCategoryFilter === "all" || item.category === activeCategoryFilter;
+      if (!matchesCategory) return false;
+      if (!query) return true;
+      return (
+        item.title.toLowerCase().includes(query) ||
+        item.subtitle.toLowerCase().includes(query) ||
+        item.categoryLabel.toLowerCase().includes(query) ||
+        item.tags.some((t) => t.toLowerCase().includes(query))
+      );
+    });
+  }, [activeCategoryFilter, searchQuery]);
+
+  // Click outside and Escape key handler for interest dropdown
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleKeyDown);
+      // Auto focus search field when opened
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 50);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [dropdownOpen]);
+
+  const handleSelectInterest = (item: InterestField) => {
+    setDropdownOpen(false);
+    try {
+      if (item.target.startsWith("#")) {
+        const element = document.getElementById(item.target.slice(1));
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+          const engineIndex = productEngines.findIndex(
+            (e) => `product-stage-${e.id}` === item.target.slice(1)
+          );
+          if (engineIndex !== -1) setActiveEngineIdx(engineIndex);
+        }
+      } else {
+        router.push(item.target);
+      }
+    } catch {
+      // Ignore navigation cancellation
+    }
+  };
 
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
@@ -1061,9 +1386,7 @@ export default function ProductsPage() {
           className="max-w-7xl mx-auto px-6 pt-40 pb-16 text-center flex flex-col items-center"
         >
           <motion.div
-            initial={{ opacity: 0, y: 18, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            {...heroMotion.badge}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl shadow-lg"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-hover)] animate-pulse" />
@@ -1072,9 +1395,7 @@ export default function ProductsPage() {
 
           <motion.h1
             id="products-hero-heading"
-            initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.heading}
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Systems engineered for{" "}
@@ -1084,20 +1405,215 @@ export default function ProductsPage() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.paragraph}
             className="mt-6 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed"
           >
             Four purpose-built engines connected through a unified security and intelligence mesh.
             Select an engine to preview its workflow.
           </motion.p>
 
+          {/* ── INTERACTIVE INTEREST NAVIGATOR DROPDOWN & FAST SWITCHER ── */}
+          <div className="mt-8 w-full max-w-3xl relative z-30" ref={dropdownRef}>
+            {/* Control Bar: Dropdown Trigger + Quick Navigation Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {/* Main Interactive Dropdown Trigger */}
+              <button
+                type="button"
+                id="interest-navigator-btn"
+                onClick={() => setDropdownOpen((prev) => !prev)}
+                className={`inline-flex items-center gap-3 px-5 py-3 rounded-2xl border transition-all duration-300 cursor-pointer shadow-xl backdrop-blur-xl ${
+                  dropdownOpen
+                    ? "border-[var(--accent-hover)] bg-zinc-900 ring-2 ring-[var(--accent-hover)]/20"
+                    : "border-zinc-700/90 bg-zinc-900/90 hover:border-zinc-500 hover:bg-zinc-900 text-zinc-200"
+                }`}
+                aria-haspopup="listbox"
+                aria-expanded={dropdownOpen}
+              >
+                <span className="w-2.5 h-2.5 rounded-full bg-[var(--accent-hover)] animate-pulse" />
+                <span className="font-mono text-xs uppercase tracking-wider text-zinc-400">
+                  Interest Navigator:
+                </span>
+                <span className="text-white font-medium text-sm">
+                  {searchQuery ? `Searching: "${searchQuery}"` : "Jump to Your Field of Interest"}
+                </span>
+                <motion.span
+                  animate={{ rotate: dropdownOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-zinc-400 text-xs ml-1"
+                >
+                  ▼
+                </motion.span>
+              </button>
+
+              {/* Quick Direct Link Pill: Enterprise Platforms */}
+              <Link
+                href="/Products/Platforms"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-blue-500/40 bg-blue-950/40 hover:bg-blue-900/50 text-xs font-mono text-blue-300 hover:text-white transition-all duration-200 shadow-lg hover:border-blue-400 group"
+              >
+                <span className="text-blue-400">⊞</span>
+                <span className="font-semibold">Enterprise Platforms</span>
+                <span className="group-hover:translate-x-0.5 transition-transform text-blue-400">→</span>
+              </Link>
+
+              {/* Quick Direct Link Pill: Vertical Industries */}
+              <Link
+                href="/Products/Industries"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-emerald-500/40 bg-emerald-950/40 hover:bg-emerald-900/50 text-xs font-mono text-emerald-300 hover:text-white transition-all duration-200 shadow-lg hover:border-emerald-400 group"
+              >
+                <span className="text-emerald-400">🏢</span>
+                <span className="font-semibold">Vertical Industries (9)</span>
+                <span className="group-hover:translate-x-0.5 transition-transform text-emerald-400">→</span>
+              </Link>
+            </div>
+
+            {/* Interactive Dropdown Panel Modal */}
+            <AnimatePresence>
+              {dropdownOpen && (
+                <motion.div
+                  initial={heroMotion.shouldReduceMotion ? false : { opacity: 0.8, y: 8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                  transition={{ duration: heroMotion.shouldReduceMotion ? 0 : 0.2, ease: "easeOut" }}
+                  className="absolute left-1/2 -translate-x-1/2 top-full mt-3 w-full max-w-2xl sm:max-w-3xl rounded-3xl bg-[#0c0f17]/95 border border-zinc-700 shadow-[0_25px_80px_rgba(0,0,0,0.95)] backdrop-blur-2xl p-5 text-left z-50 flex flex-col max-h-[75vh]"
+                >
+                  {/* Search Input Filter Bar */}
+                  <div className="relative mb-3.5">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400 text-sm">
+                      🔍
+                    </div>
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Type your sector or interest (e.g., Healthcare, Dynamics 365, Retail POS, ERP, Azure)..."
+                      className="w-full pl-10 pr-9 py-2.5 bg-zinc-950/90 border border-zinc-700/80 rounded-xl text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-[var(--accent-hover)] focus:ring-1 focus:ring-[var(--accent-hover)] transition-all font-sans"
+                    />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery("")}
+                        className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-zinc-400 hover:text-white text-xs cursor-pointer"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Category Filter Pills */}
+                  <div className="flex flex-wrap items-center gap-1.5 mb-3 pb-3 border-b border-zinc-800/80">
+                    <PillTab
+                      variant="pill"
+                      size="sm"
+                      isSelected={activeCategoryFilter === "all"}
+                      onClick={() => setActiveCategoryFilter("all")}
+                      label={`All (${interestFields.length})`}
+                    />
+                    <PillTab
+                      variant="pill"
+                      size="sm"
+                      isSelected={activeCategoryFilter === "cores"}
+                      onClick={() => setActiveCategoryFilter("cores")}
+                      icon="⚡"
+                      label="Product Cores (4)"
+                      accent="var(--accent-hover)"
+                    />
+                    <PillTab
+                      variant="pill"
+                      size="sm"
+                      isSelected={activeCategoryFilter === "platforms"}
+                      onClick={() => setActiveCategoryFilter("platforms")}
+                      icon="⊞"
+                      label="Enterprise Platforms (7)"
+                      accent="#0EA5E9"
+                    />
+                    <PillTab
+                      variant="pill"
+                      size="sm"
+                      isSelected={activeCategoryFilter === "industries"}
+                      onClick={() => setActiveCategoryFilter("industries")}
+                      icon="🏢"
+                      label="Vertical Industries (8)"
+                      accent="#10B981"
+                    />
+                  </div>
+
+                  {/* Scrollable Matching List */}
+                  <div className="overflow-y-auto space-y-2 pr-1 custom-scrollbar max-h-[48vh]">
+                    {filteredInterests.length === 0 ? (
+                      <div className="py-8 text-center text-zinc-500 font-mono text-xs">
+                        No matching interest fields found for &ldquo;{searchQuery}&rdquo;. Try another term.
+                      </div>
+                    ) : (
+                      filteredInterests.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => handleSelectInterest(item)}
+                          className="w-full text-left p-3.5 rounded-2xl bg-zinc-900/50 hover:bg-zinc-800/80 border border-zinc-800/80 hover:border-zinc-600 transition-all duration-200 group flex items-start justify-between gap-3 cursor-pointer"
+                        >
+                          <div className="flex items-start gap-3">
+                            <span
+                              className="text-xl p-2 rounded-xl bg-zinc-950 border border-zinc-800 shrink-0 mt-0.5"
+                              style={{ color: item.accent }}
+                            >
+                              {item.icon}
+                            </span>
+                            <div>
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-sm font-bold text-white group-hover:text-white transition-colors">
+                                  {item.title}
+                                </span>
+                                <span
+                                  className="text-[10px] font-mono px-2 py-0.5 rounded-md uppercase tracking-wider"
+                                  style={{
+                                    backgroundColor: `color-mix(in srgb, ${item.accent} 15%, transparent)`,
+                                    color: item.accent,
+                                  }}
+                                >
+                                  {item.badge}
+                                </span>
+                              </div>
+                              <p className="text-xs text-zinc-400 mt-1 leading-relaxed line-clamp-2">
+                                {item.subtitle}
+                              </p>
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {item.tags.slice(0, 4).map((t) => (
+                                  <span
+                                    key={t}
+                                    className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-950/80 text-zinc-400 border border-zinc-800/60"
+                                  >
+                                    {t}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="shrink-0 flex items-center gap-1 text-xs font-mono text-zinc-400 group-hover:text-white pt-1">
+                            <span>{item.target.startsWith("#") ? "Jump" : "Explore"}</span>
+                            <span className="group-hover:translate-x-1 transition-transform">
+                              {item.target.startsWith("#") ? "↓" : "→"}
+                            </span>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Modal Footer Quick Action Tip */}
+                  <div className="mt-3 pt-3 border-t border-zinc-800 flex items-center justify-between text-[11px] font-mono text-zinc-400">
+                    <span>💡 Click any option to navigate directly</span>
+                    <span className="text-zinc-500">Esc to close</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           {/* 4-Engine Cockpit Cards Grid */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.35 }}
+            {...heroMotion.telemetry}
             className="mt-12 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
           >
             {productEngines.map((engine, idx) => (
@@ -1133,7 +1649,7 @@ export default function ProductsPage() {
                 <div className="font-mono text-sm font-bold text-white group-hover:text-[var(--accent-hover)] transition-colors">
                   {engine.code}
                 </div>
-                <div className="text-xs font-mono text-zinc-400 truncate mt-0.5">
+                <div className="text-xs font-mono text-zinc-400 whitespace-normal break-words mt-0.5">
                   {engine.name}
                 </div>
 
@@ -1224,13 +1740,60 @@ export default function ProductsPage() {
                           }`}>
                             {p.code}
                           </div>
-                          <div className="text-[11px] font-mono text-zinc-500 truncate mt-0.5">
+                          <div className="text-[11px] font-mono text-zinc-500 whitespace-normal break-words mt-0.5">
                             {p.name.split(" ").slice(0, 2).join(" ")}
                           </div>
                         </div>
                       </div>
                     </button>
                   ))}
+
+                  {/* Ecosystem Sub-Pages Navigation Links */}
+                  <div className="pt-4 mt-4 border-t border-zinc-800/80 space-y-1">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 px-4 mb-2 font-bold">
+                      Ecosystem Sub-Pages
+                    </div>
+                    
+                    <Link
+                      href="/Products/Platforms"
+                      className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 group hover:bg-zinc-900/50 block border border-transparent hover:border-blue-500/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-base font-mono text-blue-400 group-hover:scale-110 transition-transform">
+                          ⊞
+                        </span>
+                        <div>
+                          <div className="text-xs font-semibold text-zinc-300 group-hover:text-blue-300 transition-colors flex items-center gap-1.5">
+                            <span>Platforms</span>
+                            <span className="text-[10px] font-mono text-blue-400">→</span>
+                          </div>
+                          <div className="text-[10px] font-mono text-zinc-500 whitespace-normal break-words">
+                            Dynamics 365 &amp; Salesforce
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/Products/Industries"
+                      className="w-full text-left px-4 py-3 rounded-xl transition-all duration-300 group hover:bg-zinc-900/50 block border border-transparent hover:border-emerald-500/30"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-base font-mono text-emerald-400 group-hover:scale-110 transition-transform">
+                          🏢
+                        </span>
+                        <div>
+                          <div className="text-xs font-semibold text-zinc-300 group-hover:text-emerald-300 transition-colors flex items-center gap-1.5">
+                            <span>Industries</span>
+                            <span className="text-[10px] font-mono text-emerald-400">→</span>
+                          </div>
+                          <div className="text-[10px] font-mono text-zinc-500 whitespace-normal break-words">
+                            9 Regulated Sectors
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
                 </div>
               </div>
 
@@ -1250,6 +1813,93 @@ export default function ProductsPage() {
 
         {/* ── HORIZONTAL DEPLOYMENT & LIFECYCLE PIPELINE (GSAP PINNED) ──────── */}
         <HorizontalDeploymentPipeline />
+
+        {/* ── PLATFORMS & INDUSTRY EXTENSIONS ─────────────────────────────── */}
+        <section
+          aria-labelledby="platforms-industries-heading"
+          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
+        >
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+              Ecosystem Extensions
+            </span>
+            <h2
+              id="platforms-industries-heading"
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
+            >
+              Enterprise Platforms &amp; Vertical Industries
+            </h2>
+            <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
+              Explore how our products integrate natively with global enterprise platforms, or inspect our tailored software configurations for regulated industries.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Platforms Card */}
+            <Link
+              href="/Products/Platforms"
+              className="group p-8 sm:p-10 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 hover:border-blue-500/60 transition-all duration-300 flex flex-col justify-between relative overflow-hidden shadow-xl hover:bg-zinc-900/70"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30">
+                    Enterprise Platforms
+                  </span>
+                  <span className="text-xs font-mono text-zinc-500">Microsoft &amp; Salesforce</span>
+                </div>
+                <h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">
+                  Microsoft Dynamics 365, Power Platform &amp; Salesforce
+                </h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Enterprise-grade ecosystem engineering. Full-lifecycle delivery across Microsoft Dynamics 365, Azure Integration Services, Salesforce Agentforce, and Data Cloud.
+                </p>
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {["Dynamics 365", "Power Platform", "Salesforce Cloud", "Agentforce", "Azure"].map((p) => (
+                    <span key={p} className="text-[11px] font-mono px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-300">
+                      {p}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="pt-6 mt-6 border-t border-zinc-800/60 flex items-center justify-between text-xs font-mono text-blue-400 group-hover:text-blue-300">
+                <span>Explore Enterprise Platforms</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </Link>
+
+            {/* Industries Card */}
+            <Link
+              href="/Products/Industries"
+              className="group p-8 sm:p-10 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 hover:border-emerald-500/60 transition-all duration-300 flex flex-col justify-between relative overflow-hidden shadow-xl hover:bg-zinc-900/70"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                    Vertical Specializations
+                  </span>
+                  <span className="text-xs font-mono text-zinc-500">9 Regulated Sectors</span>
+                </div>
+                <h3 className="text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                  Tailored Configurations for Regulated Sectors
+                </h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Every vertical brings unique regulatory mandates and operational workflows. Inspect pre-configured compliance matrices for Financial Services, Healthcare, Retail, and Education.
+                </p>
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {["Financial Services", "Healthcare EHR", "Retail POS", "Campus IoT", "Public Sector"].map((ind) => (
+                    <span key={ind} className="text-[11px] font-mono px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-300">
+                      {ind}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="pt-6 mt-6 border-t border-zinc-800/60 flex items-center justify-between text-xs font-mono text-emerald-400 group-hover:text-emerald-300">
+                <span>Explore Industry Configurations</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </Link>
+          </div>
+        </section>
 
         {/* ── CLIENT TRUST MARQUEE ─────────────────────────────────────────── */}
         <section
@@ -1285,66 +1935,32 @@ export default function ProductsPage() {
         </section>
 
         {/* ── HIGH-CONVERSION BOTTOM CTA ───────────────────────────────────── */}
-        <section
-          aria-labelledby="products-cta-heading"
-          className="max-w-6xl mx-auto px-6 py-24"
-        >
-          <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12">
-            <div className="max-w-xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-                Deploy with Total Confidence
-              </span>
-              <h2
-                id="products-cta-heading"
-                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
-              >
-                Experience the Product Suite in Action
-              </h2>
-              <p className="mt-4 text-zinc-400 text-base leading-relaxed">
-                Schedule a dedicated 30-minute demonstration tailored to your exact operational requirements.
-                See how ZNXERP, ZNXePOS, ZNXEdu, or ZNXCare seamlessly maps to your workflow.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
-                  <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                    <span>Schedule Executive Demo</span>
-                    <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-                  </Link>
-                </motion.div>
-                <Link
-                  href="/Solutions"
-                  className="px-7 py-4 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 font-semibold text-sm transition-colors"
-                >
-                  Explore Solutions Architecture →
-                </Link>
-              </div>
-            </div>
-
-            {/* SLA Badge Panel */}
-            <div className="w-full lg:w-80 p-6 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-4">
-              <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 font-bold border-b border-zinc-800/60 pb-3">
-                Deployment Assurance
-              </div>
-              {[
-                { title: "Zero-Downtime Migration", sub: "Parallel ledger verification" },
-                { title: "24/7 Priority Support", sub: "< 15 minute critical response" },
-                { title: "Custom Module Extensions", sub: "Tailored to regulatory needs" },
-              ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3 text-xs">
-                  <span className="text-emerald-400 font-bold">✓</span>
-                  <div>
-                    <div className="font-semibold text-zinc-200">{item.title}</div>
-                    <div className="text-zinc-500 text-[11px] font-mono">{item.sub}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <FinalCTA
+          id="products-cta-heading"
+          eyebrow="Deploy with Total Confidence"
+          headline="Experience the Product Suite in Action"
+          description="Schedule a dedicated 30-minute demonstration tailored to your exact operational requirements. See how ZNXERP, ZNXePOS, ZNXEdu, or ZNXCare seamlessly maps to your workflow."
+          primaryButton={{
+            label: "Schedule Executive Demo",
+            href: "/Contact",
+          }}
+          secondaryButton={{
+            label: "Explore Solutions Architecture →",
+            href: "/Solutions",
+          }}
+          sidePanel={{
+            title: "Deployment Assurance",
+            items: [
+              { label: "Zero-Downtime Migration", sublabel: "Parallel ledger verification" },
+              { label: "24/7 Priority Support", sublabel: "< 15 minute critical response" },
+              { label: "Custom Module Extensions", sublabel: "Tailored to regulatory needs" },
+            ],
+          }}
+        />
 
       </main>
 
-      <Footer />
+      <Footer hideCTA />
     </div>
   );
 }

@@ -325,7 +325,7 @@ export default function ZNXCarePage() {
                       {idx < activeWorkflowIdx ? "✓ COMPLETE" : isCurrent ? "● ACTIVE" : "PENDING"}
                     </span>
                   </div>
-                  <div className="text-xs font-bold font-mono text-white truncate">
+                  <div className="text-xs font-bold font-mono text-white whitespace-normal break-words">
                     {item.phase}
                   </div>
                 </button>

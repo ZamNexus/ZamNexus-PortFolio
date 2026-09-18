@@ -587,9 +587,9 @@ h1, h2, h3, h4, h5, h6 {
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 0.22s var(--ease-out),
-    transform 0.28s var(--ease-out),
-    visibility 0s linear 0.28s;
+    opacity 0.15s ease-out,
+    transform 0.15s ease-out,
+    visibility 0s linear 0.15s;
   z-index: 60;
 }
 
@@ -599,8 +599,8 @@ h1, h2, h3, h4, h5, h6 {
   visibility: visible;
   pointer-events: auto;
   transition:
-    opacity 0.22s var(--ease-out),
-    transform 0.28s var(--ease-out),
+    opacity 0.15s ease-out,
+    transform 0.15s ease-out,
     visibility 0s;
 }
 
@@ -1844,4 +1844,16 @@ h1, h2, h3, h4, h5, h6 {
   [class*="animate-[svc-blob"] {
     animation: none !important;
   }
+
+  /* Global Hero prefers-reduced-motion guarantee */
+  [aria-labelledby*="hero"],
+  [aria-labelledby*="hero"] *,
+  section[id*="hero"],
+  section[id*="hero"] * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+  }
 }
+

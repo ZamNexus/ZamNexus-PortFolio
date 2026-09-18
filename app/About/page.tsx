@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import {
   motion,
@@ -10,8 +11,19 @@ import {
 } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FinalCTA from "@/components/FinalCTA";
+import { useHeroMotion } from "@/components/useHeroMotion";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
+
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  specialty: string;
+  photo?: string;
+  accent: string;
+}
 
 interface CapabilityItem {
   title: string;
@@ -30,6 +42,51 @@ interface PhilosophyPrinciple {
 }
 
 // ─── Static Data ─────────────────────────────────────────────────────────────
+
+// ─── Team Members (Dummy Placeholders — Add names and photos when available) ────
+
+const teamMembers: TeamMember[] = [
+  {
+    id: "cto",
+    name: "[Name Pending]",
+    role: "Chief Technology Officer",
+    specialty: "Enterprise Architecture & AI Systems",
+    photo: "", // Add photo path here (e.g. /team/cto.jpg) in the future
+    accent: "#8B5CF6",
+  },
+  {
+    id: "principal-architect",
+    name: "[Name Pending]",
+    role: "Principal Systems Architect",
+    specialty: "Cloud-Native Infrastructure & Mesh",
+    photo: "", // Add photo path here in the future
+    accent: "#6366F1",
+  },
+  {
+    id: "head-ai",
+    name: "[Name Pending]",
+    role: "Head of AI Research",
+    specialty: "Autonomous Multi-Agent Systems",
+    photo: "", // Add photo path here in the future
+    accent: "#06B6D4",
+  },
+  {
+    id: "iot-lead",
+    name: "[Name Pending]",
+    role: "IoT & Systems Lead",
+    specialty: "Edge Infrastructure & POS Platforms",
+    photo: "", // Add photo path here in the future
+    accent: "#F59E0B",
+  },
+  {
+    id: "clinical-advisor",
+    name: "[Name Pending]",
+    role: "Clinical Systems Advisor",
+    specialty: "Healthcare Informatics & Compliance",
+    photo: "", // Add photo path here in the future
+    accent: "#10B981",
+  },
+];
 
 const capabilities: CapabilityItem[] = [
   {
@@ -166,6 +223,7 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 // ─── Main About Page Component ───────────────────────────────────────────────
 
 export default function AboutPage() {
+  const heroMotion = useHeroMotion();
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -212,9 +270,7 @@ export default function AboutPage() {
         >
           {/* Top Category Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 18, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            {...heroMotion.badge}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl shadow-lg"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-hover)] animate-pulse" />
@@ -224,9 +280,7 @@ export default function AboutPage() {
           {/* Heading */}
           <motion.h1
             id="about-hero-heading"
-            initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.heading}
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Connecting Intelligence.{" "}
@@ -236,9 +290,7 @@ export default function AboutPage() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.paragraph}
             className="mt-6 text-base sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed"
           >
             ZamNexus is the technology and digital engineering brand of Zamooq Limited.
@@ -248,9 +300,7 @@ export default function AboutPage() {
 
           {/* 15-Year Heritage Telemetry HUD */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.35 }}
+            {...heroMotion.telemetry}
             className="mt-14 w-full max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-800/20 backdrop-blur-md shadow-2xl"
           >
             {[
@@ -576,67 +626,279 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── HIGH-CONVERSION BOTTOM CTA ───────────────────────────────────── */}
+        {/* ── LEADERSHIP & ARCHITECTURE TEAM ───────────────────────────────── */}
         <section
-          aria-labelledby="about-cta-heading"
+          aria-labelledby="team-heading"
           className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
         >
-          <div className="rounded-3xl bg-gradient-to-br from-zinc-900/90 via-zinc-900/60 to-zinc-950 border border-zinc-800 p-10 sm:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12">
-            <div className="max-w-xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-                Backed by 15 Years of Excellence
-              </span>
-              <h2
-                id="about-cta-heading"
-                className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
-              >
-                Let&apos;s build your next enterprise milestone.
-              </h2>
-              <p className="mt-4 text-zinc-400 text-base sm:text-lg leading-relaxed">
-                Whether you are modernizing core enterprise ledgers, embedding autonomous AI copilots,
-                or launching a scalable SaaS platform — our senior architects are ready to partner with you.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
-                  <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                    <span>Start a Conversation</span>
-                    <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-                  </Link>
-                </motion.div>
-                <Link
-                  href="/Products"
-                  className="px-7 py-4 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 font-semibold text-sm transition-colors"
-                >
-                  Explore Product Suite →
-                </Link>
-              </div>
-            </div>
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+              Leadership &amp; Engineering
+            </span>
+            <h2
+              id="team-heading"
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
+            >
+              The Minds Behind the Architecture
+            </h2>
+            <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
+              Senior engineering leadership with decades of experience in high-throughput enterprise systems,
+              AI governance, and mission-critical cloud infrastructure.
+            </p>
+          </div>
 
-            {/* SLA Badge Panel */}
-            <div className="w-full lg:w-80 p-6 rounded-2xl bg-zinc-950/70 border border-zinc-800 space-y-4">
-              <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 font-bold border-b border-zinc-800/60 pb-3">
-                ZamNexus Partnership Promise
-              </div>
-              {[
-                { title: "Direct Architect Access", sub: "No junior layer handoffs" },
-                { title: "15+ Years Track Record", sub: "Proven delivery across regulated sectors" },
-                { title: "Continuous Stewardship", sub: "Proactive long-term engineering TAM" },
-              ].map((item) => (
-                <div key={item.title} className="flex items-start gap-3 text-xs">
-                  <span className="text-emerald-400 font-bold">✓</span>
-                  <div>
-                    <div className="font-semibold text-zinc-200">{item.title}</div>
-                    <div className="text-zinc-500 text-[11px] font-mono">{item.sub}</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            {teamMembers.map((member, idx) => (
+              <motion.div
+                key={member.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-40px" }}
+                transition={{
+                  duration: 0.45,
+                  delay: idx * 0.08, // ~80ms light stagger fade-in on scroll
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                whileHover={{ y: -6, borderColor: member.accent }}
+                className="group relative rounded-3xl bg-zinc-900/40 border border-zinc-800/80 hover:bg-zinc-900/70 p-6 backdrop-blur-sm transition-all duration-300 flex flex-col items-center text-center shadow-xl justify-between h-full min-h-[340px]"
+              >
+                {/* Subtle top accent gradient on hover */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: `linear-gradient(90deg, transparent, ${member.accent}, transparent)` }}
+                />
+
+                <div className="flex flex-col items-center w-full">
+                  {/* Team Portrait / Dummy Placeholder */}
+                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden mb-4 border border-zinc-800 bg-zinc-950/80 group-hover:border-zinc-700 transition-colors flex flex-col items-center justify-center shrink-0 shadow-inner">
+                    {member.photo ? (
+                      <Image
+                        src={member.photo}
+                        alt={`${member.name} - ${member.role}`}
+                        fill
+                        unoptimized
+                        priority
+                        sizes="(max-width: 640px) 112px, 128px"
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-zinc-500 group-hover:text-zinc-400 transition-colors p-2 select-none">
+                        <svg
+                          className="w-12 h-12 mb-1.5 opacity-40 group-hover:opacity-70 transition-opacity"
+                          fill="currentColor"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span className="text-[10px] font-mono tracking-widest uppercase opacity-60">
+                          Photo Pending
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Dummy Name Placeholder */}
+                  <h3 className="text-sm sm:text-base font-mono font-medium text-zinc-300 tracking-tight transition-colors">
+                    {member.name}
+                  </h3>
+
+                  {/* Concise Role Badge — 100% visible, high contrast, clean fit */}
+                  <div
+                    className="mt-2.5 px-3 py-1 rounded-full text-xs font-mono font-semibold tracking-tight border inline-flex items-center justify-center text-center"
+                    style={{
+                      color: member.accent,
+                      borderColor: `${member.accent}40`,
+                      backgroundColor: `${member.accent}14`,
+                    }}
+                  >
+                    {member.role}
                   </div>
                 </div>
-              ))}
-            </div>
+
+                {/* Specialization Discipline (fully visible, natural text wrapping, no truncation) */}
+                <div className="mt-4 pt-3.5 border-t border-zinc-800/60 w-full text-xs font-mono text-zinc-400 leading-relaxed">
+                  {member.specialty}
+                </div>
+              </motion.div>
+            ))}
           </div>
         </section>
 
+        {/* ── COMPANY & CORPORATE GOVERNANCE BLOCK ────────────────────────── */}
+        <section
+          aria-labelledby="company-heading"
+          className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
+        >
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+              Corporate Governance &amp; Presence
+            </span>
+            <h2
+              id="company-heading"
+              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
+            >
+              Company Information &amp; Offices
+            </h2>
+            <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
+              Institutional accountability, registered legal entities, and physical operational centers supporting our clients globally.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            {/* Left Column: Registered Entity & Registration Number */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-40px" }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-6 p-8 sm:p-10 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 backdrop-blur-md relative overflow-hidden shadow-xl flex flex-col justify-between"
+            >
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-xs font-mono px-3 py-1 rounded-full border border-blue-500/40 bg-blue-500/10 text-blue-400 font-bold">
+                    LEGAL ENTITY &amp; REGISTRATION
+                  </span>
+                  <span className="text-xs font-mono text-zinc-500">Est. 2009</span>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white mb-1">
+                  Zamooq Limited
+                </h3>
+                <div className="text-xs font-mono text-zinc-400 mb-6">
+                  Trading as <span className="text-white font-semibold">ZamNexus</span>
+                </div>
+
+                <div className="space-y-3.5 text-xs font-mono">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80 gap-1">
+                    <span className="text-zinc-500 uppercase tracking-wider text-[11px]">Incorporation Authority</span>
+                    <span className="text-white font-semibold">Companies House (England &amp; Wales)</span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80 gap-1">
+                    <span className="text-zinc-500 uppercase tracking-wider text-[11px]">Company Registration</span>
+                    <span className="text-zinc-300 font-semibold flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      Incorporated 2009 · Verified on Enterprise SOW
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80 gap-1">
+                    <span className="text-zinc-500 uppercase tracking-wider text-[11px]">Regulatory Status</span>
+                    <span className="text-emerald-400 font-semibold">UK GDPR · DPA 2018 Data Controller</span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80 gap-1">
+                    <span className="text-zinc-500 uppercase tracking-wider text-[11px]">Direct Compliance Desk</span>
+                    <a href="mailto:legal@zamnexus.com" className="text-[var(--accent-hover)] hover:underline">
+                      legal@zamnexus.com
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Right Column: Physical Office Locations */}
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="lg:col-span-6 p-8 sm:p-10 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 backdrop-blur-md relative overflow-hidden shadow-xl flex flex-col justify-between"
+            >
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+              <div>
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-xs font-mono px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 font-bold">
+                    PHYSICAL OPERATIONAL CENTERS
+                  </span>
+                  <span className="text-xs font-mono text-zinc-500">Global Delivery</span>
+                </div>
+
+                <h3 className="text-2xl font-bold text-white mb-6">
+                  Physical Office Locations
+                </h3>
+
+                <div className="space-y-3.5 text-xs font-mono">
+                  {/* UK Office */}
+                  <div className="p-3.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-white font-bold flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-blue-400" />
+                        United Kingdom (Registered Head Office)
+                      </span>
+                      <span className="text-[10px] text-zinc-500 font-semibold uppercase">EUROPE</span>
+                    </div>
+                    <div className="text-zinc-300 font-sans text-xs pt-1">
+                      34 Beaconsfield, Luton, Bedfordshire, LU2 0RW, United Kingdom
+                    </div>
+                  </div>
+
+                  {/* Pakistan Office */}
+                  <div className="p-3.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-white font-bold flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                        Pakistan (Engineering &amp; R&amp;D Hub)
+                      </span>
+                      <span className="text-[10px] text-zinc-500 font-semibold uppercase">SOUTH ASIA</span>
+                    </div>
+                    <div className="text-zinc-300 font-sans text-xs pt-1">
+                      Suite #1, 2nd Floor, I-9 Markaz, Islamabad, Pakistan
+                    </div>
+                  </div>
+
+                  {/* UAE Expansion (Explicitly flagged as pending) */}
+                  <div className="p-3.5 rounded-xl bg-zinc-950/40 border border-zinc-800/40 space-y-1 opacity-85">
+                    <div className="flex items-center justify-between">
+                      <span className="text-zinc-400 font-bold flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-amber-400/60" />
+                        United Arab Emirates (Regional Hub)
+                      </span>
+                      <span className="text-[10px] text-amber-400 font-semibold uppercase">EXPANSION · Q4 2026</span>
+                    </div>
+                    <div className="text-zinc-500 font-sans text-xs pt-1">
+                      Regional registration in process · Physical premises to be announced
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── HIGH-CONVERSION BOTTOM CTA ───────────────────────────────────── */}
+        <FinalCTA
+          id="about-cta-heading"
+          eyebrow="Backed by 15 Years of Excellence"
+          headline="Let's build your next enterprise milestone."
+          description="Whether you are modernizing core enterprise ledgers, embedding autonomous AI copilots, or launching a scalable SaaS platform — our senior architects are ready to partner with you."
+          primaryButton={{
+            label: "Start a Conversation",
+            href: "/Contact",
+          }}
+          secondaryButton={{
+            label: "Explore Product Suite →",
+            href: "/Products",
+          }}
+          sidePanel={{
+            title: "ZamNexus Partnership Promise",
+            items: [
+              { label: "Direct Architect Access", sublabel: "No junior layer handoffs" },
+              { label: "15+ Years Track Record", sublabel: "Proven delivery across regulated sectors" },
+              { label: "Continuous Stewardship", sublabel: "Proactive long-term engineering TAM" },
+            ],
+          }}
+        />
+
       </main>
 
-      <Footer />
+      <Footer hideCTA />
     </div>
   );
 }
