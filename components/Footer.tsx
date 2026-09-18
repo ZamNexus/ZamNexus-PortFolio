@@ -82,35 +82,40 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
           </div>
 
           <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {/* Solutions & Services */}
+          {/* Services */}
           <div>
             <h4 className="text-xs font-mono uppercase tracking-widest text-white font-bold mb-4">
-              Solutions
+              Services
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/Solutions#ai-powered-business" className="hover:text-[var(--accent-hover)] transition-colors">
-                  AI-Powered Business
+                <Link href="/Services#ai-intelligent" className="hover:text-[var(--accent-hover)] transition-colors">
+                  AI & Intelligent
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions#saas-platforms" className="hover:text-[var(--accent-hover)] transition-colors">
-                  SaaS Platforms
-                </Link>
-              </li>
-              <li>
-                <Link href="/Solutions#cloud-native-solutions" className="hover:text-[var(--accent-hover)] transition-colors">
-                  Cloud-Native Solutions
-                </Link>
-              </li>
-              <li>
-                <Link href="/Solutions#intelligent-automation" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Services#intelligent-automation" className="hover:text-[var(--accent-hover)] transition-colors">
                   Intelligent Automation
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions#connected-enterprise" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Services#saas-development" className="hover:text-[var(--accent-hover)] transition-colors">
+                  SaaS Platforms
+                </Link>
+              </li>
+              <li>
+                <Link href="/Services#cloud-native" className="hover:text-[var(--accent-hover)] transition-colors">
+                  Cloud-Native
+                </Link>
+              </li>
+              <li>
+                <Link href="/Services#connected-enterprise" className="hover:text-[var(--accent-hover)] transition-colors">
                   Connected Enterprise
+                </Link>
+              </li>
+              <li>
+                <Link href="/Services#digital-transformation" className="hover:text-[var(--accent-hover)] transition-colors">
+                  Digital Transformation
                 </Link>
               </li>
             </ul>
@@ -206,12 +211,12 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
                 </Link>
               </li>
               <li>
-                <Link href="/Products/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Services#microsoft-solutions" className="hover:text-[var(--accent-hover)] transition-colors">
                   Microsoft Solutions
                 </Link>
               </li>
               <li>
-                <Link href="/Products/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Services#salesforce-solutions" className="hover:text-[var(--accent-hover)] transition-colors">
                   Salesforce Solutions
                 </Link>
               </li>

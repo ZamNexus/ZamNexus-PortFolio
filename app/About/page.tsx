@@ -528,10 +528,10 @@ export default function AboutPage() {
 
               <div className="mt-8">
                 <Link
-                  href="/Solutions"
+                  href="/Services"
                   className="inline-flex items-center gap-2 text-xs font-mono font-bold text-[var(--accent-hover)] hover:underline"
                 >
-                  Explore How We Architect Solutions →
+                  Explore How We Deliver Services →
                 </Link>
               </div>
             </div>

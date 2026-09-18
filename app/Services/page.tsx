@@ -26,6 +26,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface ServiceBlock {
   id: string;
+  legacyIds?: string[];
   index: string;
   tag: string;
   title: string;
@@ -53,142 +54,256 @@ interface WhyDifferentiator {
 const services: ServiceBlock[] = [
   {
     id: "ai-intelligent",
+    legacyIds: ["ai-powered-business", "ai-powered"],
     index: "01",
     tag: "AI & INTELLIGENT SOLUTIONS",
     title: "AI & Intelligent Solutions",
     description:
-      "Practical AI that delivers real business value — from strategy and architecture through to production-ready AI copilots, autonomous agents, intelligent automation and governed AI systems.",
+      "We help organisations put Artificial Intelligence to practical use — from AI strategy, data readiness, and system architecture through to production-ready copilots, autonomous multi-agent systems, RAG knowledge pipelines, and governed AI infrastructure.",
     capabilities: [
-      "AI Strategy & Architecture",
-      "AI Copilots & Assistants",
-      "Autonomous AI Agents",
-      "Generative AI Solutions",
-      "Knowledge & Document Intelligence",
-      "RAG & Retrieval-Augmented Generation",
-      "Responsible AI Governance",
-      "AI Integration & Deployment",
+      "AI Strategy, Benchmarking & Architecture",
+      "Enterprise AI Copilots & Assistants",
+      "Autonomous Multi-Agent Systems",
+      "RAG & Domain Knowledge Pipelines",
+      "Generative AI Solutions & Content Systems",
+      "Responsible AI Governance & Guardrails",
+      "AI Integration, Deployment & Telemetry",
+      "Document Intelligence & OCR Extraction",
     ],
     accent: "#8B5CF6",
     icon: "◈",
   },
   {
-    id: "saas-development",
+    id: "intelligent-automation",
+    legacyIds: ["automation"],
     index: "02",
+    tag: "INTELLIGENT AUTOMATION",
+    title: "Intelligent Automation",
+    description:
+      "We eliminate manual friction, connect fragmented applications, and build intelligent workflows — combining event-driven integration with AI agents that reason, decide, and act autonomously to accelerate operations and free teams for higher-value work.",
+    capabilities: [
+      "End-to-End Business Process Automation",
+      "Agentic Decision Orchestration & AI Agents",
+      "Event-Driven Micro-Workflows & Triggers",
+      "Cross-Application & ERP/CRM Integration",
+      "Automated Exception Handling & Self-Healing",
+      "Process Mining, Discovery & Optimization",
+      "Workflow Design & Orchestration",
+      "Automation Governance & Audit Trails",
+    ],
+    accent: "#F59E0B",
+    icon: "⟐",
+  },
+  {
+    id: "saas-development",
+    legacyIds: ["saas-platforms"],
+    index: "03",
     tag: "SAAS PRODUCT DEVELOPMENT",
     title: "SaaS Product Development",
     description:
-      "We design and build scalable, secure SaaS products — from product strategy and architecture through to multi-tenant applications, customer portals and API-first platforms built for growth.",
+      "From initial architecture to market-ready product, we design and build scalable, multi-tenant SaaS platforms with security, performance, and subscription monetization built in from the start — enabling your software to scale smoothly without costly re-platforming.",
     capabilities: [
-      "Product Strategy & Architecture",
-      "Multi-Tenant Application Development",
-      "Customer & Partner Portals",
-      "API-First Platform Design",
-      "Subscription & Billing Integration",
-      "Performance Engineering",
-      "Security & Compliance",
-      "Product Roadmapping & Iteration",
+      "Product Strategy & Technical Architecture",
+      "Multi-Tenant Application & Compute Isolation",
+      "Customer & Partner Self-Serve Portals",
+      "API-First & Headless Platform Design",
+      "Stripe, Paddle & Subscription Billing Engines",
+      "Granular RBAC, Audit Logging & Compliance",
+      "Performance Engineering & Global Edge CDN",
+      "Zero-Downtime CI/CD & Deployment Pipelines",
     ],
-    accent: "#F59E0B",
+    accent: "#06B6D4",
     icon: "⬡",
   },
   {
     id: "cloud-native",
-    index: "03",
+    legacyIds: ["cloud-native-solutions"],
+    index: "04",
     tag: "CLOUD-NATIVE ENGINEERING",
     title: "Cloud-Native & Serverless Engineering",
     description:
-      "Modern, event-driven backend systems and cloud infrastructure built with Node.js, TypeScript and AWS serverless architecture — resilient, cost-efficient and designed to adapt as your business grows.",
+      "Modern backend systems and cloud infrastructure built for resilience, high availability, and cost efficiency. We architect serverless, event-driven platforms on AWS using Node.js, TypeScript, and Infrastructure-as-Code that scale elastically with zero operational bloat.",
     capabilities: [
-      "Cloud-Native Backend Development (Node.js, TypeScript)",
+      "Cloud-Native Backend Development (Node.js/TS)",
       "Serverless Architecture (AWS Lambda, Step Functions)",
-      "Event-Driven Systems Design",
-      "Infrastructure-as-Code (Terraform, CDK)",
-      "CI/CD Pipeline Automation",
-      "API Design & Integration",
-      "Observability & Monitoring",
-      "Legacy Modernisation & Migration",
+      "Event-Driven Systems & Microservices (EventBridge, SQS)",
+      "Infrastructure-as-Code (Terraform, AWS CDK)",
+      "Distributed Caching & Real-Time Data Sync",
+      "CI/CD Pipeline Automation & GitOps",
+      "Zero-Trust Cloud Security & Governance",
+      "Full-Stack Observability, Tracing & Monitoring",
     ],
     accent: "#14B8A6",
     icon: "⬢",
   },
   {
-    id: "intelligent-automation",
-    index: "04",
-    tag: "INTELLIGENT AUTOMATION",
-    title: "Intelligent Automation",
+    id: "connected-enterprise",
+    legacyIds: [],
+    index: "05",
+    tag: "CONNECTED ENTERPRISE",
+    title: "Connected Enterprise",
     description:
-      "We remove manual work, connect applications and build workflows that combine traditional automation with AI agents — freeing your people for higher-value work and enabling faster, smarter action.",
+      "We break down enterprise data silos by integrating core business platforms — Microsoft Dynamics 365, Power Platform, Azure, and Salesforce — into a synchronized ecosystem where data, workflows, and AI intelligence operate seamlessly in real time.",
     capabilities: [
-      "Business Process Automation",
-      "Workflow Design & Orchestration",
-      "Agentic Automation (AI Agents)",
-      "AI-Enhanced Workflows",
-      "Event-Driven Automation",
-      "Process Discovery & Optimisation",
-      "Integration Automation",
-      "Automation Governance",
+      "Microsoft Dynamics 365 Architecture & Customization",
+      "Salesforce Sales & Service Cloud Integration",
+      "Bi-Directional ERP/CRM Real-Time Synchronization",
+      "Enterprise Data Fabric & Universal Schema",
+      "Cross-Platform Workflow & Process Automation",
+      "Enterprise Copilot & Role-Based AI Assistants",
+      "MuleSoft & Azure API Gateway Integration",
+      "Data Migration, Cleansing & Integrity Verification",
+    ],
+    accent: "#6366F1",
+    icon: "⊞",
+  },
+  {
+    id: "digital-transformation",
+    legacyIds: [],
+    index: "06",
+    tag: "DIGITAL TRANSFORMATION",
+    title: "Digital Transformation & Modernization",
+    description:
+      "Strategic modernization programmes that guide organisations from legacy, monolithic bottlenecks to modern, modular, and cloud-first environments — reducing maintenance debt, accelerating feature delivery, and ensuring business agility.",
+    capabilities: [
+      "Enterprise Modernization Roadmaps & Tech Due Diligence",
+      "Monolith Decoupling & Modern REST/GraphQL APIs",
+      "Strangler Fig Migration & Zero-Downtime Transition",
+      "Cloud Migration & Data Pipeline Modernization",
+      "Architecture Governance & Developer Velocity",
+      "Enterprise Security, Compliance & Risk Reduction",
+      "Executive Technology Strategy & Advisory",
+      "Continuous Delivery & DevSecOps Implementation",
     ],
     accent: "#F43F5E",
-    icon: "⟐",
+    icon: "⊙",
   },
   {
     id: "microsoft-solutions",
-    index: "05",
+    legacyIds: [],
+    index: "07",
     tag: "MICROSOFT SOLUTIONS",
     title: "Microsoft Business Solutions",
     description:
-      "Consulting, architecture and delivery across Dynamics 365, Power Platform, Azure and Microsoft Copilot — helping you get more from the Microsoft ecosystem you already invest in.",
+      "Consulting, solution architecture, and delivery across Dynamics 365, Power Platform, Azure Integration Services, and Microsoft Copilot — empowering your organisation to maximize the return on your existing Microsoft ecosystem investments.",
     capabilities: [
       "Microsoft Dynamics 365 (Sales, Customer Service, Field Service)",
       "Power Platform (Power Apps, Power Automate, Dataverse)",
-      "Microsoft Copilot Integration",
-      "Azure Integration Services",
-      "Enterprise Architecture & Strategy",
-      "Data Migration & System Integration",
-      "Analytics & Business Intelligence",
-      "Continuous Improvement & Support",
+      "Microsoft Copilot Studio & Custom Copilots",
+      "Azure Integration Services & Logic Apps",
+      "Enterprise Architecture & Cloud Strategy",
+      "Dataverse Schema Design & Legacy Data Migration",
+      "Power BI Analytics & Executive Dashboards",
+      "Continuous Managed Services & Advisory",
     ],
     accent: "#0EA5E9",
     icon: "⊞",
   },
   {
     id: "salesforce-solutions",
-    index: "06",
+    legacyIds: [],
+    index: "08",
     tag: "SALESFORCE SOLUTIONS",
     title: "Salesforce Solutions",
     description:
-      "Implementation, architecture, integration and AI — built around your business processes and growth ambitions, not just the platform features.",
+      "Implementation, architecture, custom configuration, and AI enablement across Salesforce Sales Cloud, Service Cloud, and Agentforce — aligned with your operational processes and revenue targets, not just default platform features.",
     capabilities: [
-      "Salesforce Consulting & Strategy",
-      "Solution Architecture",
-      "CRM Implementation & Optimisation",
-      "Sales & Service Automation",
-      "Platform Integration",
-      "Data Architecture & Migration",
-      "Salesforce AI & Analytics",
-      "Ongoing Managed Services",
+      "Salesforce Consulting & Roadmapping",
+      "Sales Cloud & Service Cloud Implementation",
+      "Custom Apex & Lightning Web Components (LWC)",
+      "Agentforce & Salesforce AI Integration",
+      "Sales & Service Workflow Automation",
+      "MuleSoft & Third-Party API Integration",
+      "CRM Data Migration & Cleansing",
+      "Ongoing Salesforce Optimization & Support",
     ],
     accent: "#10B981",
-    icon: "⊙",
+    icon: "⟁",
   },
 ];
 
 const processSteps: ProcessStep[] = [
-  { number: "01", label: "Discover", description: "We understand your business, challenges, technology landscape and opportunities through structured workshops and analysis." },
-  { number: "02", label: "Define", description: "We define the right strategy, architecture and approach — aligning technology decisions with business goals." },
-  { number: "03", label: "Design", description: "We architect secure, scalable solutions designed to connect systems, automate processes and enable intelligence." },
-  { number: "04", label: "Build", description: "We develop, configure and test using agile delivery — keeping quality high and cycles short." },
-  { number: "05", label: "Connect", description: "We integrate your applications, APIs, data and workflows into a connected technology ecosystem." },
-  { number: "06", label: "Evolve", description: "We continuously improve and evolve your technology as your organisation and market change." },
+  {
+    number: "01",
+    label: "Discover & Audit",
+    description:
+      "We understand your commercial bottlenecks, audit legacy systems, and identify high-value opportunities through structured discovery workshops.",
+  },
+  {
+    number: "02",
+    label: "Architect & Define",
+    description:
+      "We define technical strategy, data schemas, cloud infrastructure, and zero-trust security blueprints aligned directly with commercial goals.",
+  },
+  {
+    number: "03",
+    label: "Build & Prototype",
+    description:
+      "We develop, configure, and prototype using rapid agile cycles — keeping time-to-value short and code quality uncompromising.",
+  },
+  {
+    number: "04",
+    label: "Connect & Integrate",
+    description:
+      "We integrate your applications, APIs, data pipelines, and enterprise platforms into a unified, synchronized technology mesh.",
+  },
+  {
+    number: "05",
+    label: "Automate & Harden",
+    description:
+      "We deploy autonomous AI agents, automated workflows, and production security hardening to eliminate manual toil and technical debt.",
+  },
+  {
+    number: "06",
+    label: "Evolve & Scale",
+    description:
+      "We provide continuous telemetry, proactive performance optimization, and architectural evolution as your market demands change.",
+  },
 ];
 
 const whyPoints: WhyDifferentiator[] = [
-  { title: "Business-Focused", description: "We start with your business challenges, opportunities and goals — not just the technology.", accent: "#F59E0B", iconPath: "M3 7h18v13H3V7Z M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M3 12h18" },
-  { title: "Intelligence-Driven", description: "We help you use AI, automation and real-time data to make smarter decisions and act faster.", accent: "#8B5CF6", iconPath: "M13 2 4 14h6l-1 8 9-12h-6l1-8Z" },
-  { title: "Enterprise Experience", description: "Proven delivery of complex enterprise applications, integrations and technology programmes.", accent: "#2563EB", iconPath: "M4 3h16v18H4V3Z M9 21v-4h6v4 M9 8h1.5 M13.5 8H15 M9 12h1.5 M13.5 12H15" },
-  { title: "Cloud-Native Thinking", description: "Systems designed to be secure, resilient, scalable and ready to evolve.", accent: "#14B8A6", iconPath: "M6 18h11a4 4 0 0 0 .5-7.97A6 6 0 0 0 5.5 11 4 4 0 0 0 6 18Z" },
-  { title: "Secure & Responsible by Design", description: "Security, governance and responsible AI built in from the start, not bolted on afterwards.", accent: "#F43F5E", iconPath: "M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z M9 12l2 2 4-4" },
-  { title: "Built to Scale", description: "Solutions designed to grow with your organisation and adapt to changing business needs.", accent: "#10B981", iconPath: "M3 17l6-6 4 4 8-8 M17 7h4v4" },
+  {
+    title: "Business Outcomes First",
+    description:
+      "Every architectural decision is tied directly to measurable commercial impact — reduced cycle time, lower compute costs, and revenue growth.",
+    accent: "#F59E0B",
+    iconPath: "M3 7h18v13H3V7Z M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M3 12h18",
+  },
+  {
+    title: "Intelligence Built-In",
+    description:
+      "AI and real-time automation are embedded directly into your data pipelines and workflows from day one — never bolted on as a fragile wrapper.",
+    accent: "#8B5CF6",
+    iconPath: "M13 2 4 14h6l-1 8 9-12h-6l1-8Z",
+  },
+  {
+    title: "Connected by Design",
+    description:
+      "We eliminate silos before writing code. Applications, APIs, ERP/CRM systems, and automated workflows communicate continuously in real time.",
+    accent: "#0EA5E9",
+    iconPath: "M4 3h16v18H4V3Z M9 21v-4h6v4 M9 8h1.5 M13.5 8H15 M9 12h1.5 M13.5 12H15",
+  },
+  {
+    title: "Cloud-Native & Serverless",
+    description:
+      "Event-driven, elastic systems engineered with Infrastructure-as-Code to scale on demand with zero operational bloat or legacy debt.",
+    accent: "#14B8A6",
+    iconPath: "M6 18h11a4 4 0 0 0 .5-7.97A6 6 0 0 0 5.5 11 4 4 0 0 0 6 18Z",
+  },
+  {
+    title: "Secure & Governed by Design",
+    description:
+      "Zero-trust IAM, end-to-end data encryption, role-based access control, and responsible AI guardrails built in from the ground up.",
+    accent: "#F43F5E",
+    iconPath: "M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z M9 12l2 2 4-4",
+  },
+  {
+    title: "Engineered to Evolve",
+    description:
+      "Loose coupling and modular architectures designed to grow with your organisation and adapt cleanly as your technology and market change.",
+    accent: "#10B981",
+    iconPath: "M3 17l6-6 4 4 8-8 M17 7h4v4",
+  },
 ];
 
 // ─── Animated Grid Background (unique to Services) ──────────────────────────
@@ -342,7 +457,7 @@ function ServiceScene({
     <motion.div
       ref={ref}
       id={`service-scene-${service.id}`}
-      className="min-h-[80vh] flex items-center py-20 relative"
+      className="min-h-[80vh] flex items-center py-20 relative scroll-mt-32"
       initial={{ opacity: 0.3 }}
       animate={{
         opacity: isActive ? 1 : 0.4,
@@ -350,6 +465,12 @@ function ServiceScene({
       }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
+      {/* Anchor targets with scroll offset for sticky header */}
+      <span id={service.id} className="absolute -top-32 pointer-events-none" aria-hidden="true" />
+      {service.legacyIds?.map((legacyId) => (
+        <span key={legacyId} id={legacyId} className="absolute -top-32 pointer-events-none" aria-hidden="true" />
+      ))}
+
       {/* Full-width ambient glow — unique color per service, stronger when active */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -396,7 +517,7 @@ function ServiceScene({
               >
                 {service.tag}
               </span>
-              <span className="text-xs font-mono text-zinc-600">{service.index} / 06</span>
+              <span className="text-xs font-mono text-zinc-600">{service.index} / 08</span>
             </div>
           </motion.div>
 
@@ -427,8 +548,8 @@ function ServiceScene({
             transition={{ duration: 0.5, delay: 0.35 }}
           >
             <Link
-              href="/Contact"
-              className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full font-semibold text-sm text-white transition-all duration-300 hover:gap-4 hover:shadow-lg"
+              href={`/Contact?service=${service.id}`}
+              className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full font-semibold text-sm text-white transition-all duration-300 hover:gap-4 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
               style={{
                 background: service.accent,
                 boxShadow: `0 0 30px color-mix(in srgb, ${service.accent} 30%, transparent)`,
@@ -684,7 +805,7 @@ export default function ServicesPage() {
                 {...heroMotion.badge}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-zinc-400">6 Services · Full Lifecycle</span>
+                <span className="text-zinc-400">8 Core Disciplines · Full Lifecycle</span>
               </motion.div>
 
               <motion.h1
@@ -706,8 +827,7 @@ export default function ServicesPage() {
                 className="text-lg text-zinc-400 leading-relaxed max-w-lg mb-10"
                 {...heroMotion.paragraph}
               >
-                Deep capability across AI, cloud, SaaS and automation —
-                designed around your business objectives, not a technology brief.
+                Deep engineering capability across AI, cloud-native systems, SaaS platforms, intelligent automation, and enterprise ecosystems — architected around your business outcomes, not a technology brief.
               </motion.p>
 
               <motion.div
@@ -720,7 +840,7 @@ export default function ServicesPage() {
                 </Link>
                 <Link
                   href="#services-section"
-                  className="px-7 py-4 rounded-full bg-transparent border border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-white font-semibold text-sm transition-all duration-300 inline-flex items-center gap-2"
+                  className="px-7 py-4 rounded-full bg-transparent border border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-white font-semibold text-sm transition-all duration-300 inline-flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
                 >
                   Explore Services
                   <motion.span
@@ -738,30 +858,36 @@ export default function ServicesPage() {
               className="relative hidden lg:block"
               {...heroMotion.visual}
             >
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3.5">
                 {services.map((srv, i) => (
-                  <motion.div
+                  <motion.button
+                    type="button"
                     key={srv.id}
-                    className="p-5 rounded-2xl border border-zinc-800/40 bg-zinc-900/30 backdrop-blur-sm group cursor-default hover:border-opacity-100 transition-all duration-400"
+                    onClick={() => {
+                      document
+                        .getElementById(`service-scene-${srv.id}`)
+                        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }}
+                    className="p-4 rounded-2xl border border-zinc-800/40 bg-zinc-900/30 backdrop-blur-sm group text-left cursor-pointer hover:border-opacity-100 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-[var(--accent-hover)] focus-visible:outline-none"
                     {...heroMotion.custom({ y: 8, delay: 0.015 * i, duration: 0.3 })}
                     whileHover={{
-                      scale: 1.03,
+                      scale: 1.02,
                       borderColor: srv.accent,
                       transition: { duration: 0.2 },
                     }}
                     style={{ ["--card-accent" as string]: srv.accent }}
                   >
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-xl" style={{ color: srv.accent }}>{srv.icon}</span>
-                      <span className="text-xs font-mono text-zinc-600">{srv.index}</span>
+                    <div className="flex items-center gap-2.5 mb-1.5">
+                      <span className="text-lg" style={{ color: srv.accent }}>{srv.icon}</span>
+                      <span className="text-xs font-mono text-zinc-500">{srv.index}</span>
                     </div>
-                    <h3 className="text-sm font-semibold text-zinc-300 group-hover:text-white transition-colors leading-tight">
+                    <h3 className="text-xs sm:text-sm font-semibold text-zinc-300 group-hover:text-white transition-colors leading-tight">
                       {srv.title}
                     </h3>
-                    <div className="mt-2 text-[10px] font-mono text-zinc-600">
+                    <div className="mt-1.5 text-[10px] font-mono text-zinc-500">
                       {srv.capabilities.length} capabilities
                     </div>
-                  </motion.div>
+                  </motion.button>
                 ))}
               </div>
 
@@ -771,7 +897,7 @@ export default function ServicesPage() {
                 {...heroMotion.telemetry}
               >
                 <div className="text-2xl font-extrabold text-white font-mono">
-                  <AnimatedCounter value={48} suffix="+" />
+                  <AnimatedCounter value={64} suffix="+" />
                 </div>
                 <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 leading-tight">
                   Total<br />Capabilities
@@ -805,10 +931,10 @@ export default function ServicesPage() {
                 What We Do
               </span>
               <p className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3">
-                Six Ways We Create Value
+                Eight Ways We Create Value
               </p>
               <p className="mt-4 text-zinc-400 max-w-2xl text-base leading-relaxed">
-                Scroll through each service to explore its full capabilities — from AI strategy to enterprise CRM.
+                Scroll through each service to explore its full capabilities — from AI strategy and serverless systems to enterprise CRM and digital modernization.
               </p>
             </motion.div>
 
@@ -938,16 +1064,16 @@ export default function ServicesPage() {
         {/* ── FINAL CTA ────────────────────────────────────────────────────── */}
         <FinalCTA
           id="services-cta-heading"
-          eyebrow="Ready to Get Started?"
-          headline="Let's build what's next."
-          description="Tell us about your challenge, your idea or your ambition — we'll help you define the right approach."
+          eyebrow="Ready to Build What's Next?"
+          headline="Let's architect your solution."
+          description="Whether you are deploying enterprise AI copilots, modernizing legacy systems, or launching a scalable SaaS platform — our engineering team is ready to deliver."
           primaryButton={{
             label: "Start a Conversation",
             href: "/Contact",
           }}
           secondaryButton={{
-            label: "Explore Solutions →",
-            href: "/Solutions",
+            label: "Explore Product Platforms →",
+            href: "/Products/Platforms",
           }}
         />
 

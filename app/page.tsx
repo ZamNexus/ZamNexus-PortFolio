@@ -284,12 +284,42 @@ const whyPoints: WhyPoint[] = [
 ];
 
 const deliverySteps: DeliveryStep[] = [
-  { number: "01", label: "Discover", description: "We map your commercial bottlenecks, technology landscape, and data models." },
-  { number: "02", label: "Design", description: "We architect secure, scalable solutions designed to connect systems and enable intelligence." },
-  { number: "03", label: "Build", description: "We develop and configure using rapid agile delivery — keeping cycles short and quality uncompromised." },
-  { number: "04", label: "Connect", description: "We integrate applications, APIs, and data into a unified, synchronized technology mesh." },
-  { number: "05", label: "Automate", description: "We deploy autonomous AI agents and automated workflows to eliminate repetitive labor." },
-  { number: "06", label: "Evolve", description: "We continuously monitor telemetry and evolve your systems as your market demands change." },
+  {
+    number: "01",
+    label: "Discover & Audit",
+    description:
+      "We understand your commercial bottlenecks, audit legacy systems, and identify high-value opportunities through structured discovery.",
+  },
+  {
+    number: "02",
+    label: "Architect & Define",
+    description:
+      "We define technical strategy, data schemas, cloud infrastructure, and zero-trust security blueprints aligned directly with commercial goals.",
+  },
+  {
+    number: "03",
+    label: "Build & Prototype",
+    description:
+      "We develop, configure, and prototype using rapid agile cycles — keeping time-to-value short and code quality uncompromising.",
+  },
+  {
+    number: "04",
+    label: "Connect & Integrate",
+    description:
+      "We integrate your applications, APIs, data pipelines, and enterprise platforms into a unified, synchronized technology mesh.",
+  },
+  {
+    number: "05",
+    label: "Automate & Harden",
+    description:
+      "We deploy autonomous AI agents, automated workflows, and production security hardening to eliminate manual friction.",
+  },
+  {
+    number: "06",
+    label: "Evolve & Scale",
+    description:
+      "We provide continuous telemetry, proactive performance optimization, and architectural evolution as your market demands change.",
+  },
 ];
 
 const industriesList = [
@@ -772,8 +802,8 @@ export default function HomePage() {
                     </span>
                   </div>
 
-                  <Link href="/Solutions" className="liquid-lime-btn text-xs sm:text-sm py-3 px-6 inline-flex">
-                    <span>Explore Solution Blueprints</span>
+                  <Link href="/Services" className="liquid-lime-btn text-xs sm:text-sm py-3 px-6 inline-flex">
+                    <span>Explore Service Capabilities</span>
                     <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
                   </Link>
                 </div>
@@ -1039,8 +1069,8 @@ export default function HomePage() {
             href: "/Contact",
           }}
           secondaryButton={{
-            label: "Explore Solutions Architecture →",
-            href: "/Solutions",
+            label: "Explore Services →",
+            href: "/Services",
           }}
           sidePanel={{
             title: "ZamNexus Deployment SLA",
