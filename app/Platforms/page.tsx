@@ -697,10 +697,10 @@ export default function PlatformsPage() {
                   <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
                 </Link>
                 <Link
-                  href="/Solutions"
+                  href="/Services#connected-enterprise"
                   className="px-5 py-3 rounded-full border border-zinc-700 hover:border-zinc-500 bg-zinc-900/50 text-zinc-300 hover:text-white text-xs font-semibold transition-all duration-300"
                 >
-                  View Solutions Mesh
+                  View Connected Enterprise
                 </Link>
               </motion.div>
             </div>
@@ -946,8 +946,8 @@ export default function PlatformsPage() {
             href: "/Contact",
           }}
           secondaryButton={{
-            label: "Explore Solution Blueprints →",
-            href: "/Solutions",
+            label: "Explore Services →",
+            href: "/Services",
           }}
           sidePanel={{
             title: "Platform Engineering SLA",

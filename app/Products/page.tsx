@@ -1945,8 +1945,8 @@ export default function ProductsPage() {
             href: "/Contact",
           }}
           secondaryButton={{
-            label: "Explore Solutions Architecture →",
-            href: "/Solutions",
+            label: "Explore Services →",
+            href: "/Services",
           }}
           sidePanel={{
             title: "Deployment Assurance",

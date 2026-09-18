@@ -442,7 +442,7 @@ export default function ContactPage() {
               <div className="flex flex-wrap gap-2">
                 {[
                   { label: "Products Deck", href: "/Products" },
-                  { label: "Solutions", href: "/Solutions" },
+                  { label: "Services Hub", href: "/Services" },
                   { label: "Platforms", href: "/Products/Platforms" },
                   { label: "Industries", href: "/Products/Industries" },
                 ].map((item) => (

@@ -30,26 +30,18 @@ interface NavItem {
 
 const navLinks: NavItem[] = [
   {
-    label: "Solutions",
-    href: "/Solutions",
-    dropdown: [
-      { label: "AI-Powered Business", href: "/Solutions#ai-powered-business" },
-      { label: "SaaS Platforms", href: "/Solutions#saas-platforms" },
-      { label: "Cloud-Native Solutions", href: "/Solutions#cloud-native-solutions" },
-      { label: "Intelligent Automation", href: "/Solutions#intelligent-automation" },
-      { label: "Connected Enterprise", href: "/Solutions#connected-enterprise" },
-    ],
-  },
-  {
     label: "Services",
     href: "/Services",
+    columns: 2,
     dropdown: [
-      { label: "AI & Intelligent Solutions", href: "/Services" },
-      { label: "SaaS Product Development", href: "/Services" },
-      { label: "Cloud-Native Engineering", href: "/Services" },
-      { label: "Intelligent Automation", href: "/Services" },
-      { label: "Microsoft Solutions", href: "/Services" },
-      { label: "Salesforce Solutions", href: "/Services" },
+      { label: "AI & Intelligent Solutions", href: "/Services#ai-intelligent" },
+      { label: "Intelligent Automation", href: "/Services#intelligent-automation" },
+      { label: "SaaS Product Development", href: "/Services#saas-development" },
+      { label: "Cloud-Native Engineering", href: "/Services#cloud-native" },
+      { label: "Connected Enterprise", href: "/Services#connected-enterprise" },
+      { label: "Digital Transformation", href: "/Services#digital-transformation" },
+      { label: "Microsoft Solutions", href: "/Services#microsoft-solutions" },
+      { label: "Salesforce Solutions", href: "/Services#salesforce-solutions" },
     ],
   },
   {

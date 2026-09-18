@@ -654,8 +654,8 @@ export default function IndustriesPage() {
             href: "/Contact",
           }}
           secondaryButton={{
-            label: "Explore Solution Blueprints →",
-            href: "/Solutions",
+            label: "Explore Services →",
+            href: "/Services",
           }}
           sidePanel={{
             title: "Industry Delivery Assurance",
