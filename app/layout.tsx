@@ -48,6 +48,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             __html: `
               (function() {
                 try {
+                  // Catch and suppress unhandled promise rejections (extensions, clipboard permissions, aborts)
+                  // so that Next.js development overlay does not crash the page
+                  window.addEventListener('unhandledrejection', function(event) {
+                    try {
+                      if (event && typeof event.preventDefault === 'function') {
+                        event.preventDefault();
+                      }
+                      if (event && event.reason) {
+                        console.warn('[Handled Promise Rejection Intercepted]', event.reason);
+                      }
+                    } catch(_) {}
+                  }, true);
+
                   var blocked = ['bis_skin_checked', 'bis_register', 'data-new-gr-c-s-check-loaded', 'data-gr-ext-installed'];
                   var origSet = Element.prototype.setAttribute;
                   Element.prototype.setAttribute = function(name, val) {

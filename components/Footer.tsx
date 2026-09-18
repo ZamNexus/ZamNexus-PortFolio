@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import FinalCTA from "@/components/FinalCTA";
+
 interface TechPartner {
   name: string;
 }
@@ -12,38 +14,27 @@ const techPartners: TechPartner[] = [
   { name: "Azure" },
 ];
 
-export default function Footer() {
+export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) {
   return (
     <footer className="bg-[#050608] text-zinc-400 pt-16 px-6 relative z-10">
       <div className="max-w-6xl mx-auto">
-        {/* ── PRE-FOOTER CTA — gradient banner ─────────────────────────────── */}
-        <div className="relative isolate overflow-hidden rounded-3xl border border-zinc-800 bg-gradient-to-br from-[var(--accent)]/20 via-[#8B5CF6]/12 to-zinc-950 p-8 sm:p-16 mb-16 text-center">
-          <div className="noise-overlay" aria-hidden="true" />
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-              Let&apos;s Talk
-            </span>
-            <h3 className="mt-3 text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Ready to connect intelligence?
-            </h3>
-            <p className="mt-4 text-zinc-400 text-base sm:text-lg max-w-lg mx-auto leading-relaxed line-clamp-2">
-              Tell us what you&apos;re building — we&apos;ll show you how AI, automation
-              and connected systems get you there faster.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <Link href="/Contact" className="liquid-lime-btn text-base py-3.5 px-8">
-                <span>Book a Call</span>
-                <span className="arrow-icon w-8 h-8 text-sm">→</span>
-              </Link>
-              <Link
-                href="/Services"
-                className="px-7 py-3.5 rounded-full bg-transparent hover:bg-zinc-800/50 text-zinc-200 border border-zinc-700 hover:border-zinc-500 font-semibold text-sm transition-all duration-300"
-              >
-                Explore Services
-              </Link>
-            </div>
-          </div>
-        </div>
+        {/* ── PRE-FOOTER CTA ──────────────────────────────────────────────── */}
+        {!hideCTA && (
+          <FinalCTA
+            eyebrow="Let's Talk"
+            headline="Ready to connect intelligence?"
+            description="Tell us what you're building — we'll show you how AI, automation and connected systems get you there faster."
+            primaryButton={{
+              label: "Book a Call",
+              href: "/Contact",
+            }}
+            secondaryButton={{
+              label: "Explore Services",
+              href: "/Services",
+            }}
+            containerClassName="max-w-none px-0 py-0 mb-16"
+          />
+        )}
 
         {/* ── TECH PARTNER STRIP — muted, brightens on hover ───────────────── */}
         <div className="mb-16 pb-16 border-b border-zinc-800/60">
@@ -79,6 +70,15 @@ export default function Footer() {
               We design and deliver intelligent enterprise solutions powered by AI,
               cloud-native engineering, SaaS, automation and modern business applications.
             </p>
+            <div className="pt-1 flex items-center gap-2 text-xs font-mono">
+              <span className="text-zinc-500 uppercase tracking-wider">Inquiries:</span>
+              <a
+                href="mailto:{{OFFICIAL_EMAIL}}"
+                className="text-zinc-300 hover:text-[var(--accent-hover)] transition-colors"
+              >
+                {"{{OFFICIAL_EMAIL}}"}
+              </a>
+            </div>
           </div>
 
           <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -89,27 +89,27 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Solutions#ai-powered-business" className="hover:text-[var(--accent-hover)] transition-colors">
                   AI-Powered Business
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Solutions#saas-platforms" className="hover:text-[var(--accent-hover)] transition-colors">
                   SaaS Platforms
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Solutions#cloud-native-solutions" className="hover:text-[var(--accent-hover)] transition-colors">
                   Cloud-Native Solutions
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Solutions#intelligent-automation" className="hover:text-[var(--accent-hover)] transition-colors">
                   Intelligent Automation
                 </Link>
               </li>
               <li>
-                <Link href="/Solutions" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Solutions#connected-enterprise" className="hover:text-[var(--accent-hover)] transition-colors">
                   Connected Enterprise
                 </Link>
               </li>
@@ -133,12 +133,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Products/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
                   Platforms
                 </Link>
               </li>
               <li>
-                <Link href="/Industries" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Products/Industries" className="hover:text-[var(--accent-hover)] transition-colors">
                   Industries
                 </Link>
               </li>
@@ -206,12 +206,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Products/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
                   Microsoft Solutions
                 </Link>
               </li>
               <li>
-                <Link href="/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
+                <Link href="/Products/Platforms" className="hover:text-[var(--accent-hover)] transition-colors">
                   Salesforce Solutions
                 </Link>
               </li>
@@ -231,10 +231,10 @@ export default function Footer() {
             © {new Date().getFullYear()} ZamNexus, a technology brand of Zamooq Limited. All rights reserved.
           </div>
           <div className="flex items-center gap-6">
-            <Link href="/Contact" className="hover:text-zinc-300 transition-colors">
+            <Link href="/Privacy" className="hover:text-zinc-300 transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/Contact" className="hover:text-zinc-300 transition-colors">
+            <Link href="/Terms" className="hover:text-zinc-300 transition-colors">
               Terms of Service
             </Link>
           </div>

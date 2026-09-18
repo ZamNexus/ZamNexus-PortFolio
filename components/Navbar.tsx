@@ -7,18 +7,23 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const ANNOUNCEMENT_BAR_HEIGHT = 36;
 const ANNOUNCEMENT_DISMISS_KEY = "zn_announcement_dismissed";
-const DROPDOWN_CLOSE_DELAY_MS = 140;
+const DROPDOWN_CLOSE_DELAY_MS = 0;
 
 interface DropdownItem {
   label: string;
   href: string;
-  description?: string;
+}
+
+interface DropdownGroup {
+  groupLabel: string;
+  items: DropdownItem[];
 }
 
 interface NavItem {
   label: string;
   href: string;
   dropdown?: DropdownItem[];
+  groups?: DropdownGroup[];
   /** 1 = narrow single-column, 2 = wider two-column mega-menu. Default: 1. */
   columns?: 1 | 2;
 }
@@ -28,76 +33,52 @@ const navLinks: NavItem[] = [
     label: "Solutions",
     href: "/Solutions",
     dropdown: [
-      { label: "AI-Powered Business", href: "/Solutions", description: "Copilots, agents, and AI-native workflows" },
-      { label: "SaaS Platforms", href: "/Solutions", description: "Multi-tenant products, API-first" },
-      { label: "Cloud-Native Solutions", href: "/Solutions", description: "Serverless, event-driven backends" },
-      { label: "Intelligent Automation", href: "/Solutions", description: "Workflows that decide and act" },
-      { label: "Connected Enterprise", href: "/Solutions", description: "Unified data, systems, and intelligence" },
+      { label: "AI-Powered Business", href: "/Solutions#ai-powered-business" },
+      { label: "SaaS Platforms", href: "/Solutions#saas-platforms" },
+      { label: "Cloud-Native Solutions", href: "/Solutions#cloud-native-solutions" },
+      { label: "Intelligent Automation", href: "/Solutions#intelligent-automation" },
+      { label: "Connected Enterprise", href: "/Solutions#connected-enterprise" },
     ],
   },
   {
     label: "Services",
     href: "/Services",
     dropdown: [
-      { label: "AI & Intelligent Solutions", href: "/Services", description: "Strategy, architecture, agents" },
-      { label: "SaaS Product Development", href: "/Services", description: "From concept to enterprise scale" },
-      { label: "Cloud-Native Engineering", href: "/Services", description: "AWS, TypeScript, event-driven" },
-      { label: "Intelligent Automation", href: "/Services", description: "Business process automation + AI" },
-      { label: "Microsoft Solutions", href: "/Services", description: "Dynamics 365, Power Platform, Azure" },
-      { label: "Salesforce Solutions", href: "/Services", description: "Implementation, integration, AI" },
+      { label: "AI & Intelligent Solutions", href: "/Services" },
+      { label: "SaaS Product Development", href: "/Services" },
+      { label: "Cloud-Native Engineering", href: "/Services" },
+      { label: "Intelligent Automation", href: "/Services" },
+      { label: "Microsoft Solutions", href: "/Services" },
+      { label: "Salesforce Solutions", href: "/Services" },
     ],
   },
   {
     label: "Products",
     href: "/Products",
     dropdown: [
-      { label: "ZNXERP", href: "/Products/znxerp", description: "Enterprise resource planning" },
-      { label: "ZNXePOS", href: "/Products/znxepos", description: "Point of sale for retail" },
-      { label: "ZNXEdu", href: "/Products/znxedu", description: "Education management system" },
-      { label: "ZNXCare", href: "/Products/znxcare", description: "Patient management" },
-    ],
-  },
-  {
-    label: "Platforms",
-    href: "/Platforms",
-    dropdown: [
-      { label: "Microsoft Dynamics 365", href: "/Platforms", description: "Sales, Service, Field Service" },
-      { label: "Power Platform", href: "/Platforms", description: "Power Apps, Power Automate, Copilot" },
-      { label: "Microsoft Azure", href: "/Platforms", description: "Cloud infrastructure & integration" },
-      { label: "Salesforce", href: "/Platforms", description: "CRM, automation, data cloud" },
-    ],
-  },
-  {
-    label: "Industries",
-    href: "/Industries",
-    columns: 2,
-    dropdown: [
-      { label: "Financial Services", href: "/Industries" },
-      { label: "Professional Services", href: "/Industries" },
-      { label: "Property & Facilities", href: "/Industries" },
-      { label: "Retail & E-Commerce", href: "/Industries" },
-      { label: "Education", href: "/Industries" },
-      { label: "Healthcare", href: "/Industries" },
-      { label: "Public Sector", href: "/Industries" },
-      { label: "Non-Profit Organisations", href: "/Industries" },
-      { label: "Technology & SaaS", href: "/Industries" },
+      { label: "ZNXERP", href: "/Products/znxerp" },
+      { label: "ZNXePOS", href: "/Products/znxepos" },
+      { label: "ZNXEdu", href: "/Products/znxedu" },
+      { label: "ZNXCare", href: "/Products/znxcare" },
+      { label: "Platforms", href: "/Products/Platforms" },
+      { label: "Industries", href: "/Products/Industries" },
     ],
   },
   {
     label: "Insights",
     href: "/Insights",
     dropdown: [
-      { label: "Engineering Research", href: "/Insights", description: "Architecture blueprints & post-mortems" },
-      { label: "Technical Case Studies", href: "/Insights", description: "Multi-store mesh & EHR automation" },
-      { label: "Executive Briefings", href: "/Insights", description: "Quarterly technology perspectives" },
+      { label: "Engineering Research", href: "/Insights" },
+      { label: "Technical Case Studies", href: "/Insights" },
+      { label: "Executive Briefings", href: "/Insights" },
     ],
   },
   {
     label: "About",
     href: "/About",
     dropdown: [
-      { label: "Our Story", href: "/About", description: "Who we are, why we build" },
-      { label: "Contact", href: "/Contact", description: "Start a conversation" },
+      { label: "Our Story", href: "/About" },
+      { label: "Contact", href: "/Contact" },
     ],
   },
 ];
@@ -143,9 +124,10 @@ export default function Navbar() {
       setScrolled(currentY > 40);
 
       if (delta > 8 && currentY > 120) {
-        setVisible(false);
-        setMobileOpen(false);
-        setOpenIdx(null);
+        if (!mobileOpen) {
+          setVisible(false);
+          setOpenIdx(null);
+        }
       } else if (delta < -5) {
         setVisible(true);
       }
@@ -155,15 +137,43 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [mobileOpen]);
 
-  // ── Escape closes any open dropdown ──
+  // ── Lock background scroll & interaction when mobile drawer is open ──
+  useEffect(() => {
+    if (mobileOpen) {
+      const originalOverflow = document.body.style.overflow;
+      const originalTouchAction = document.body.style.touchAction;
+      document.body.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.body.style.touchAction = originalTouchAction;
+      };
+    }
+  }, [mobileOpen]);
+
+  // ── Escape closes any open dropdown or mobile menu ──
   useEffect(() => {
     const onKeydown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenIdx(null);
+      if (e.key === "Escape") {
+        setOpenIdx(null);
+        setMobileOpen(false);
+      }
     };
     window.addEventListener("keydown", onKeydown);
     return () => window.removeEventListener("keydown", onKeydown);
+  }, []);
+
+  // ── Auto-close mobile drawer on desktop resize ──
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMobileOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // ── Morphing indicator: measure the target link's text bounds ──
@@ -253,14 +263,16 @@ export default function Navbar() {
       <header
         style={{ top: barDismissed ? 0 : ANNOUNCEMENT_BAR_HEIGHT }}
         className={`fixed inset-x-0 z-50 transition-all duration-300 ease-out ${
-          visible ? "translate-y-0" : "-translate-y-full"
+          visible || mobileOpen ? "translate-y-0" : "-translate-y-full"
         } ${
-          scrolled
+          mobileOpen
+            ? "bg-[#090b10] border-b border-white/[0.08]"
+            : scrolled
             ? "bg-[#0A0F1E]/85 backdrop-blur-xl border-b border-white/[0.06]"
             : "bg-transparent border-b border-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-5 sm:px-10 lg:px-14 flex items-center justify-between h-[80px]">
+        <div className="relative z-50 max-w-7xl mx-auto px-5 sm:px-10 lg:px-14 flex items-center justify-between h-[80px]">
           {/* ── LEFT: Brand Logo ── */}
           <Link
             href="/"
@@ -333,29 +345,50 @@ export default function Navbar() {
                       className={`nav-dropdown ${isOpen ? "nav-dropdown--open" : ""} ${
                         link.columns === 2 ? "nav-dropdown--wide" : ""
                       }`}
+                      style={{ transition: "opacity 150ms ease-out, transform 150ms ease-out" }}
                     >
-                      <div
-                        className={`nav-dropdown-inner ${
-                          link.columns === 2 ? "nav-dropdown-inner--grid" : ""
-                        }`}
-                      >
-                        {link.dropdown!.map((item) => (
-                          <Link
-                            key={`${item.label}-${item.href}`}
-                            href={item.href}
-                            role="menuitem"
-                            className="nav-dropdown-item"
-                            onClick={() => setOpenIdx(null)}
-                          >
-                            <span className="nav-dropdown-item-label">{item.label}</span>
-                            {item.description && (
-                              <span className="nav-dropdown-item-desc">
-                                {item.description}
-                              </span>
-                            )}
-                          </Link>
-                        ))}
-                      </div>
+                      {link.groups ? (
+                        /* Grouped mega-menu for Products */
+                        <div className="nav-dropdown-inner flex gap-6 min-w-[280px]">
+                          {link.groups.map((group) => (
+                            <div key={group.groupLabel} className="flex-1 min-w-[120px]">
+                              <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-600 font-bold px-2 pb-2 border-b border-zinc-800/60 mb-1">
+                                {group.groupLabel}
+                              </div>
+                              {group.items.map((item) => (
+                                <Link
+                                  key={`${item.label}-${item.href}`}
+                                  href={item.href}
+                                  role="menuitem"
+                                  className="nav-dropdown-item"
+                                  onClick={() => setOpenIdx(null)}
+                                >
+                                  <span className="nav-dropdown-item-label">{item.label}</span>
+                                </Link>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        /* Standard flat dropdown */
+                        <div
+                          className={`nav-dropdown-inner ${
+                            link.columns === 2 ? "nav-dropdown-inner--grid" : ""
+                          }`}
+                        >
+                          {link.dropdown!.map((item) => (
+                            <Link
+                              key={`${item.label}-${item.href}`}
+                              href={item.href}
+                              role="menuitem"
+                              className="nav-dropdown-item"
+                              onClick={() => setOpenIdx(null)}
+                            >
+                              <span className="nav-dropdown-item-label">{item.label}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -390,11 +423,12 @@ export default function Navbar() {
 
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2 rounded-md text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
-              aria-label="Toggle Navigation Menu"
+              className="p-2.5 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-hover)]"
+              aria-label={mobileOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
               aria-expanded={mobileOpen}
+              aria-controls="mobile-nav-drawer"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 {mobileOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
@@ -405,10 +439,24 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* ── MOBILE MENU PANEL ── */}
-        {mobileOpen && (
-          <div className="lg:hidden absolute top-full inset-x-0 border-t border-white/[0.06] bg-[#0A0F1E]/95 backdrop-blur-xl shadow-2xl animate-fade-in max-h-[calc(100vh-96px)] overflow-y-auto">
-            <div className="max-w-7xl mx-auto px-5 sm:px-10 py-6 space-y-1">
+        {/* ── MOBILE NAV DRAWER (FULL-VIEWPORT FULLY OPAQUE BACKDROP) ── */}
+        <div
+          id="mobile-nav-drawer"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile Navigation Menu"
+          className={`lg:hidden fixed inset-0 top-0 left-0 right-0 bottom-0 w-full h-[100dvh] min-h-screen bg-[#090b10] z-40 flex flex-col transition-transform duration-[220ms] ease-out will-change-transform ${
+            mobileOpen
+              ? "translate-x-0 pointer-events-auto visible"
+              : "translate-x-full pointer-events-none invisible"
+          }`}
+          style={{
+            paddingTop: barDismissed ? "80px" : `${ANNOUNCEMENT_BAR_HEIGHT + 80}px`,
+          }}
+        >
+          {/* Scrollable Nav Content */}
+          <div className="flex-1 overflow-y-auto px-6 py-6 space-y-2 overscroll-contain flex flex-col justify-between">
+            <div className="space-y-1">
               {navLinks.map((link) => {
                 const isActive =
                   link.href !== "/"
@@ -417,15 +465,15 @@ export default function Navbar() {
                 const expanded = mobileExpanded === link.label;
                 const hasDropdown = !!link.dropdown;
                 return (
-                  <div key={link.label} className="border-b border-white/[0.04]">
+                  <div key={link.label} className="border-b border-white/[0.05]">
                     <div className="flex items-center justify-between">
                       <Link
                         href={link.href}
                         onClick={() => setMobileOpen(false)}
-                        className={`flex-1 py-3.5 px-2 text-base font-medium transition-colors ${
+                        className={`flex-1 py-3.5 px-2 text-base font-semibold transition-colors ${
                           isActive
-                            ? "text-[var(--accent-hover)]"
-                            : "text-zinc-300 hover:text-white"
+                            ? "text-[var(--accent-hover)] font-bold"
+                            : "text-zinc-200 hover:text-white"
                         }`}
                       >
                         {link.label}
@@ -436,13 +484,13 @@ export default function Navbar() {
                           onClick={() =>
                             setMobileExpanded(expanded ? null : link.label)
                           }
-                          className="p-3 text-zinc-500 hover:text-white transition-colors"
-                          aria-label={expanded ? "Collapse" : "Expand"}
+                          className="p-3 text-zinc-400 hover:text-white transition-colors"
+                          aria-label={expanded ? `Collapse ${link.label}` : `Expand ${link.label}`}
                           aria-expanded={expanded}
                         >
                           <svg
                             className={`w-4 h-4 transition-transform duration-200 ${
-                              expanded ? "rotate-180" : ""
+                              expanded ? "rotate-180 text-[var(--accent-hover)]" : ""
                             }`}
                             viewBox="0 0 12 12"
                             fill="none"
@@ -459,13 +507,13 @@ export default function Navbar() {
                       )}
                     </div>
                     {hasDropdown && expanded && (
-                      <div className="pb-3 pl-4 space-y-1">
+                      <div className="pb-3 pl-4 space-y-1 bg-zinc-950/60 rounded-xl mb-2 p-2 border border-zinc-800/40">
                         {link.dropdown!.map((item) => (
                           <Link
                             key={`${item.label}-${item.href}`}
                             href={item.href}
                             onClick={() => setMobileOpen(false)}
-                            className="block py-2 px-2 text-sm text-zinc-400 hover:text-[var(--accent-hover)] transition-colors"
+                            className="block py-2 px-3 text-sm text-zinc-300 hover:text-[var(--accent-hover)] hover:bg-zinc-800/50 rounded-lg transition-colors font-medium"
                           >
                             {item.label}
                           </Link>
@@ -475,19 +523,41 @@ export default function Navbar() {
                   </div>
                 );
               })}
-              <div className="pt-4">
+            </div>
+
+            {/* Bottom Drawer Actions & Enterprise Links */}
+            <div className="pt-6 pb-8 space-y-4">
+              <Link
+                href="/Contact"
+                onClick={() => setMobileOpen(false)}
+                className="liquid-lime-btn w-full justify-center text-sm py-3.5"
+              >
+                <span>Talk to Us</span>
+                <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
+              </Link>
+
+              <div className="flex items-center justify-between text-xs font-mono text-zinc-500 pt-2 border-t border-zinc-800/60">
                 <Link
-                  href="/Contact"
+                  href="/Privacy"
                   onClick={() => setMobileOpen(false)}
-                  className="nav-cta w-full justify-center"
+                  className="hover:text-zinc-300 transition-colors"
                 >
-                  <span>Talk to Us</span>
-                  <span className="nav-cta-arrow" aria-hidden="true">→</span>
+                  Privacy Policy
                 </Link>
+                <span>·</span>
+                <Link
+                  href="/Terms"
+                  onClick={() => setMobileOpen(false)}
+                  className="hover:text-zinc-300 transition-colors"
+                >
+                  Terms of Service
+                </Link>
+                <span>·</span>
+                <span className="text-zinc-600">Enterprise AI</span>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </header>
     </>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, type CSSProperties, type MouseEvent } from "react";
+import { useState, useRef, useEffect, useCallback, type CSSProperties, type MouseEvent } from "react";
 import Link from "next/link";
 import {
   motion,
@@ -14,6 +14,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FinalCTA from "@/components/FinalCTA";
+import PillTab from "@/components/PillTab";
+import { useHeroMotion } from "@/components/useHeroMotion";
 
 // Register GSAP plugins at module scope (safe in "use client" Next.js)
 gsap.registerPlugin(ScrollTrigger);
@@ -231,14 +234,14 @@ const challengeMatchers: ChallengeMatcher[] = [
     challenge: "Need to build a scalable multi-tenant SaaS product",
     icon: "🚀",
     targetSolutionId: "saas-platforms",
-    recommendation: "SaaS Product Development",
+    recommendation: "SaaS Platforms & Product Engineering",
   },
   {
     id: "c3",
     challenge: "Legacy systems & fragmented enterprise CRM/ERP data",
     icon: "🔗",
     targetSolutionId: "connected-enterprise",
-    recommendation: "Connected Enterprise (Dynamics & Salesforce)",
+    recommendation: "Connected Enterprise (Dynamics 365 & Salesforce)",
   },
   {
     id: "c4",
@@ -253,6 +256,13 @@ const challengeMatchers: ChallengeMatcher[] = [
     icon: "🧠",
     targetSolutionId: "ai-powered",
     recommendation: "AI-Powered Business & Enterprise Copilots",
+  },
+  {
+    id: "c6",
+    challenge: "Monolithic tech debt & fragmented systems delaying agility",
+    icon: "🔄",
+    targetSolutionId: "digital-transformation",
+    recommendation: "Digital Transformation & Enterprise Modernization",
   },
 ];
 
@@ -631,10 +641,25 @@ function BlueprintCard({
   };
 
   return (
-    <motion.div
-      ref={cardRef}
-      id={`solution-${solution.id}`}
-      initial={{ opacity: 0.3, y: 35, rotateX: -6 }}
+    <div
+      id={solution.id}
+      className="relative scroll-mt-28"
+    >
+      {/* Anchor targets and aliases for smooth auto-scroll and direct deep-linking */}
+      <span id={`solution-${solution.id}`} className="absolute top-0 left-0 pointer-events-none scroll-mt-28" aria-hidden="true" />
+      {solution.id === "ai-powered" && (
+        <span id="ai-powered-business" className="absolute top-0 left-0 pointer-events-none scroll-mt-28" aria-hidden="true" />
+      )}
+      {solution.id === "cloud-native" && (
+        <span id="cloud-native-solutions" className="absolute top-0 left-0 pointer-events-none scroll-mt-28" aria-hidden="true" />
+      )}
+      {solution.id === "digital-transformation" && (
+        <span id="enterprise-digital-transformation" className="absolute top-0 left-0 pointer-events-none scroll-mt-28" aria-hidden="true" />
+      )}
+      <motion.div
+        ref={cardRef}
+        id={`solution-${solution.id}-card`}
+        initial={{ opacity: 0.3, y: 35, rotateX: -6 }}
       animate={{
         opacity: inView ? 1 : 0.4,
         y: inView ? 0 : 25,
@@ -864,7 +889,8 @@ function BlueprintCard({
         </div>
       </div>
     </motion.div>
-  );
+  </div>
+);
 }
 
 // ─── Smooth Animated Counter for Telemetry Numbers ──────────────────────────
@@ -905,11 +931,58 @@ function DynamicStatCounter({ value }: { value: string }) {
   return <span ref={ref} suppressHydrationWarning>{display}</span>;
 }
 
+// ─── Smooth Auto-Scroll Helper with 300ms Ease Curve ────────────────────────
+
+const hashToSolutionId: Record<string, string> = {
+  "ai-powered-business": "ai-powered",
+  "ai-powered": "ai-powered",
+  "saas-platforms": "saas-platforms",
+  "cloud-native-solutions": "cloud-native",
+  "cloud-native": "cloud-native",
+  "intelligent-automation": "intelligent-automation",
+  "connected-enterprise": "connected-enterprise",
+  "digital-transformation": "digital-transformation",
+  "enterprise-digital-transformation": "digital-transformation",
+};
+
+function smoothScrollToElement(element: HTMLElement, duration = 300, offset = 100) {
+  const rect = element.getBoundingClientRect();
+  const targetPosition = rect.top + window.pageYOffset - offset;
+  const startPosition = window.pageYOffset;
+  const distance = targetPosition - startPosition;
+
+  if (Math.abs(distance) < 5) return;
+
+  let startTime: number | null = null;
+
+  // 300ms ease curve (easeInOutQuad)
+  const easeInOutQuad = (t: number) =>
+    t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+
+  const step = (currentTime: number) => {
+    if (startTime === null) startTime = currentTime;
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const ease = easeInOutQuad(progress);
+    window.scrollTo(0, startPosition + distance * ease);
+
+    if (elapsed < duration) {
+      requestAnimationFrame(step);
+    } else {
+      window.scrollTo(0, targetPosition);
+    }
+  };
+
+  requestAnimationFrame(step);
+}
+
 // ─── Page Component (Interactive Client) ─────────────────────────────────────
 
 export default function SolutionsPage() {
+  const heroMotion = useHeroMotion();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
+  const [activeChallengeId, setActiveChallengeId] = useState<string>("c1");
 
   // Top scroll progress
   const { scrollYProgress } = useScroll();
@@ -924,13 +997,87 @@ export default function SolutionsPage() {
       ? solutionsData
       : solutionsData.filter((s) => s.category === selectedCategory);
 
-  const handleChallengeClick = (targetId: string) => {
-    setHighlightedId(targetId);
-    const element = document.getElementById(`solution-${targetId}`);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
+  const activeChallenge =
+    challengeMatchers.find((c) => c.id === activeChallengeId) ?? challengeMatchers[0];
+  const matchedSolution =
+    solutionsData.find((s) => s.id === activeChallenge.targetSolutionId) ?? solutionsData[1];
+
+  const scrollToSolution = useCallback((slug: string) => {
+    const cleanSlug = slug.replace(/^#/, "").toLowerCase();
+    if (!cleanSlug) return;
+    const targetSolutionId = hashToSolutionId[cleanSlug] || cleanSlug;
+    const targetSolution = solutionsData.find((s) => s.id === targetSolutionId);
+
+    if (targetSolution) {
+      setSelectedCategory("all");
+      setHighlightedId(targetSolutionId);
+
+      // 300ms ease smooth auto-scroll to the matched blueprint
+      setTimeout(() => {
+        const el =
+          document.getElementById(cleanSlug) ||
+          document.getElementById(targetSolutionId) ||
+          document.getElementById(`solution-${targetSolutionId}`);
+        if (el) {
+          smoothScrollToElement(el, 300, 100);
+        }
+      }, 70);
     }
+  }, []);
+
+  const handleChallengeClick = (targetId: string, challengeId?: string) => {
+    if (challengeId) {
+      setActiveChallengeId(challengeId);
+    } else {
+      const matcher = challengeMatchers.find((c) => c.targetSolutionId === targetId);
+      if (matcher) setActiveChallengeId(matcher.id);
+    }
+    setHighlightedId(targetId);
   };
+
+  const handleScrollToBlueprint = (targetId: string) => {
+    scrollToSolution(targetId);
+  };
+
+  // Handle initial hash on mount, hashchange events, and anchor link clicks
+  useEffect(() => {
+    // Check initial hash when landing on /Solutions#...
+    if (typeof window !== "undefined" && window.location.hash) {
+      scrollToSolution(window.location.hash);
+    }
+
+    const onHashChange = () => {
+      if (typeof window !== "undefined" && window.location.hash) {
+        scrollToSolution(window.location.hash);
+      }
+    };
+
+    const onDocumentClick = (e: globalThis.MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest("a");
+      if (!anchor) return;
+      const href = anchor.getAttribute("href");
+      if (!href) return;
+
+      const hashIndex = href.indexOf("#");
+      if (hashIndex === -1) return;
+
+      const hashPart = href.slice(hashIndex + 1).toLowerCase();
+      if (hashToSolutionId[hashPart]) {
+        // Intercept solution anchor clicks on current page for silky 300ms ease scroll
+        e.preventDefault();
+        window.history.pushState(null, "", `/Solutions#${hashPart}`);
+        scrollToSolution(hashPart);
+      }
+    };
+
+    window.addEventListener("hashchange", onHashChange);
+    document.addEventListener("click", onDocumentClick);
+
+    return () => {
+      window.removeEventListener("hashchange", onHashChange);
+      document.removeEventListener("click", onDocumentClick);
+    };
+  }, [scrollToSolution]);
 
   // Clear highlight after 5 seconds
   useEffect(() => {
@@ -977,9 +1124,7 @@ export default function SolutionsPage() {
         >
           {/* Top category chip with ping */}
           <motion.div
-            initial={{ opacity: 0, y: 15, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.5 }}
+            {...heroMotion.badge}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl shadow-lg"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-hover)] animate-ping" />
@@ -989,9 +1134,7 @@ export default function SolutionsPage() {
           {/* Heading with 3D perspective flip */}
           <motion.h1
             id="solutions-hero-heading"
-            initial={{ opacity: 0, y: 35, rotateX: -20 }}
-            animate={{ opacity: 1, y: 0, rotateX: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.heading}
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
             Technology solutions designed{" "}
@@ -1001,9 +1144,7 @@ export default function SolutionsPage() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.paragraph}
             className="mt-7 text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed"
           >
             Six modular solution disciplines that connect intelligence, eliminate manual friction,
@@ -1012,9 +1153,7 @@ export default function SolutionsPage() {
 
           {/* Hero CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
+            {...heroMotion.actions}
             className="mt-10 flex flex-wrap items-center justify-center gap-4"
           >
             <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.98 }}>
@@ -1035,9 +1174,7 @@ export default function SolutionsPage() {
 
           {/* Top Telemetry / System Stats Bar with Dynamic Counters */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            {...heroMotion.telemetry}
             className="mt-16 w-full max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-800/20 backdrop-blur-md shadow-2xl"
           >
             {[
@@ -1086,30 +1223,169 @@ export default function SolutionsPage() {
             </div>
 
             <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-              {challengeMatchers.map((item) => (
-                <motion.button
-                  key={item.id}
-                  whileHover={{ y: -4, scale: 1.015 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleChallengeClick(item.targetSolutionId)}
-                  className="text-left p-4 rounded-2xl bg-zinc-900/50 border border-zinc-800/90 hover:border-[var(--accent-hover)] hover:bg-zinc-800/40 transition-all duration-300 group flex flex-col justify-between cursor-pointer"
-                >
-                  <div className="flex items-start gap-3">
-                    <span className="text-xl flex-shrink-0 p-2 rounded-xl bg-zinc-800/60 border border-zinc-700/60 group-hover:border-[var(--accent-hover)]/40 transition-colors">
-                      {item.icon}
-                    </span>
-                    <div>
-                      <p className="text-xs font-semibold text-zinc-200 group-hover:text-white leading-snug">
-                        {item.challenge}
-                      </p>
+              {challengeMatchers.map((item) => {
+                const isActive = activeChallengeId === item.id;
+                return (
+                  <motion.button
+                    key={item.id}
+                    id={`challenge-scenario-${item.id}`}
+                    whileHover={{ y: -3, scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleChallengeClick(item.targetSolutionId, item.id)}
+                    aria-pressed={isActive}
+                    className={`text-left p-4 rounded-2xl transition-all duration-200 group flex flex-col justify-between cursor-pointer border ${
+                      isActive
+                        ? "border-[var(--accent-hover)] bg-zinc-900/90 shadow-[0_0_25px_-5px_rgba(208,255,113,0.25)] ring-1 ring-[var(--accent-hover)]/40"
+                        : "border-zinc-800/90 bg-zinc-900/50 hover:border-zinc-700 hover:bg-zinc-800/40"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span
+                        className={`text-xl flex-shrink-0 p-2 rounded-xl border transition-colors ${
+                          isActive
+                            ? "bg-[var(--accent-hover)]/10 border-[var(--accent-hover)]/50"
+                            : "bg-zinc-800/60 border border-zinc-700/60 group-hover:border-zinc-500"
+                        }`}
+                      >
+                        {item.icon}
+                      </span>
+                      <div>
+                        <p
+                          className={`text-xs font-semibold leading-snug transition-colors ${
+                            isActive ? "text-white font-bold" : "text-zinc-300 group-hover:text-white"
+                          }`}
+                        >
+                          {item.challenge}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="mt-3 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-[11px] font-mono text-zinc-500 group-hover:text-[var(--accent-hover)] transition-colors">
-                    <span>Jump to Solution</span>
-                    <span>→</span>
-                  </div>
-                </motion.button>
-              ))}
+                    <div className="mt-3 pt-3 border-t border-zinc-800/60 flex items-center justify-between text-[11px] font-mono transition-colors">
+                      <span
+                        className={
+                          isActive
+                            ? "text-[var(--accent-hover)] font-semibold"
+                            : "text-zinc-500 group-hover:text-zinc-400"
+                        }
+                      >
+                        {isActive ? "Matched Blueprint" : "Select Scenario"}
+                      </span>
+                      <span
+                        className={
+                          isActive
+                            ? "text-[var(--accent-hover)]"
+                            : "text-zinc-500 group-hover:text-[var(--accent-hover)]"
+                        }
+                      >
+                        {isActive ? "● Active" : "→"}
+                      </span>
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </div>
+
+            {/* Matched Architectural Blueprint Result Container with 200ms fade/slide */}
+            <div className="relative z-10 mt-8 pt-8 border-t border-zinc-800/70" id="decision-engine-result">
+              <AnimatePresence mode="wait">
+                {matchedSolution && (
+                  <motion.div
+                    key={matchedSolution.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="p-6 sm:p-8 rounded-2xl bg-zinc-900/75 border border-zinc-800 relative overflow-hidden shadow-2xl backdrop-blur-sm"
+                    style={{
+                      borderLeft: `4px solid ${matchedSolution.accent}`,
+                    }}
+                    data-matched-blueprint={matchedSolution.id}
+                    data-blueprint-title={matchedSolution.title}
+                  >
+                    {/* Atmospheric Glow */}
+                    <div
+                      className="absolute -top-12 -right-12 w-64 h-64 rounded-full blur-[100px] pointer-events-none opacity-20"
+                      style={{ background: matchedSolution.accent }}
+                      aria-hidden="true"
+                    />
+
+                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                      <div className="space-y-3 max-w-2xl">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span
+                            className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full font-bold tracking-wider border"
+                            style={{
+                              borderColor: `${matchedSolution.accent}50`,
+                              color: matchedSolution.accent,
+                              background: `${matchedSolution.accent}15`,
+                            }}
+                          >
+                            Recommended Blueprint · {matchedSolution.index}
+                          </span>
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700/50">
+                            {matchedSolution.tag}
+                          </span>
+                        </div>
+
+                        <div>
+                          <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+                            <span style={{ color: matchedSolution.accent }}>{matchedSolution.icon}</span>
+                            <span>{matchedSolution.title}</span>
+                          </h3>
+                          <p className="mt-2 text-zinc-300 text-sm leading-relaxed">
+                            {matchedSolution.description}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                          <span className="text-[11px] font-mono text-zinc-500 mr-1.5">
+                            Core Capabilities:
+                          </span>
+                          {matchedSolution.capabilities.slice(0, 3).map((cap) => (
+                            <span
+                              key={cap}
+                              className="text-[11px] font-mono px-2.5 py-0.5 rounded-md bg-zinc-800/90 text-zinc-300 border border-zinc-700/60"
+                            >
+                              {cap}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-3.5 flex-shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-zinc-800">
+                        <div className="p-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-left lg:text-right min-w-[170px]">
+                          <span
+                            className="text-xl sm:text-2xl font-mono font-extrabold block"
+                            style={{ color: matchedSolution.accent }}
+                          >
+                            {matchedSolution.metric.value}
+                          </span>
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mt-0.5">
+                            {matchedSolution.metric.label}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                          <button
+                            type="button"
+                            onClick={() => handleScrollToBlueprint(matchedSolution.id)}
+                            className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white font-semibold text-xs transition-all duration-200 flex items-center gap-2 cursor-pointer border border-zinc-700 hover:border-zinc-500"
+                          >
+                            <span>Explore Full Blueprint Specs</span>
+                            <span>↓</span>
+                          </button>
+                          <Link
+                            href="/Contact"
+                            className="liquid-lime-btn text-xs py-2.5 px-4 font-semibold"
+                          >
+                            <span>Engage</span>
+                            <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </section>
@@ -1142,17 +1418,15 @@ export default function SolutionsPage() {
                 { id: "cloud", label: "Cloud-Native" },
                 { id: "enterprise", label: "Enterprise Ecosystems" },
               ].map((filter) => (
-                <button
+                <PillTab
                   key={filter.id}
+                  variant="pill"
+                  size="sm"
+                  isSelected={selectedCategory === filter.id}
                   onClick={() => setSelectedCategory(filter.id)}
-                  className={`px-4 py-2 rounded-xl text-xs font-mono font-medium transition-all ${
-                    selectedCategory === filter.id
-                      ? "bg-[var(--accent-hover)] text-black font-semibold shadow"
-                      : "text-zinc-400 hover:text-white hover:bg-zinc-800/40"
-                  }`}
-                >
-                  {filter.label}
-                </button>
+                  label={filter.label}
+                  accent="var(--accent-hover)"
+                />
               ))}
             </div>
           </div>
@@ -1314,46 +1588,24 @@ export default function SolutionsPage() {
         </section>
 
         {/* ── HIGH-CONVERSION BOTTOM CTA ───────────────────────────────────── */}
-        <section
-          aria-labelledby="solutions-cta-heading"
-          className="max-w-6xl mx-auto px-6 py-20 border-t border-zinc-800/60"
-        >
-          <div className="text-center max-w-3xl mx-auto space-y-6">
-            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-              Ready to Architect Your Solution?
-            </span>
-            <h2
-              id="solutions-cta-heading"
-              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white"
-            >
-              Let&apos;s build what&apos;s next — together.
-            </h2>
-            <p className="text-zinc-400 text-base leading-relaxed max-w-xl mx-auto">
-              Whether you are automating manual workflows, building a new SaaS platform, or integrating
-              enterprise AI agents — our engineering architects are ready to assist.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-              <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.98 }}>
-                <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                  <span>Start a Conversation</span>
-                  <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-                </Link>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  href="/Industries"
-                  className="px-7 py-4 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 hover:border-zinc-600 font-semibold text-sm transition-all duration-300 block"
-                >
-                  Explore Industries →
-                </Link>
-              </motion.div>
-            </div>
-          </div>
-        </section>
+        <FinalCTA
+          id="solutions-cta-heading"
+          eyebrow="Ready to Architect Your Solution?"
+          headline="Let's build what's next — together."
+          description="Whether you are automating manual workflows, building a new SaaS platform, or integrating enterprise AI agents — our engineering architects are ready to assist."
+          primaryButton={{
+            label: "Start a Conversation",
+            href: "/Contact",
+          }}
+          secondaryButton={{
+            label: "Explore Industries →",
+            href: "/Products/Industries",
+          }}
+        />
 
       </main>
 
-      <Footer />
+      <Footer hideCTA />
     </div>
   );
 }

@@ -16,6 +16,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FinalCTA from "@/components/FinalCTA";
+import { useHeroMotion } from "@/components/useHeroMotion";
 
 // Register GSAP plugins — safe to call at module scope in "use client" files
 gsap.registerPlugin(ScrollTrigger);
@@ -373,7 +375,7 @@ function ServiceScene({
 
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start w-full">
         {/* Left — service info */}
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-7 pl-6 sm:pl-7">
           <motion.div
             className="flex items-center gap-4 mb-6"
             initial={{ x: -30, opacity: 0 }}
@@ -594,6 +596,7 @@ function AnimatedCounter({ value, suffix = "" }: { value: number; suffix?: strin
 // ─── Main Page Component ─────────────────────────────────────────────────────
 
 export default function ServicesPage() {
+  const heroMotion = useHeroMotion();
   const [activeServiceIdx, setActiveServiceIdx] = useState(0);
   const servicesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -646,12 +649,11 @@ export default function ServicesPage() {
                   right: "-10%",
                   transformOrigin: "center",
                 }}
-                initial={{ scaleX: 0, opacity: 0 }}
+                initial={heroMotion.shouldReduceMotion ? false : { scaleX: 0.95, opacity: 0.75 }}
                 animate={{ scaleX: 1, opacity: 1 }}
                 transition={{
-                  delay: 0.5 + i * 0.15,
-                  duration: 1.5,
-                  ease: [0.16, 1, 0.3, 1],
+                  duration: 0.35,
+                  ease: "easeOut",
                 }}
               />
             ))}
@@ -664,12 +666,11 @@ export default function ServicesPage() {
                   top: "-10%",
                   bottom: "-10%",
                 }}
-                initial={{ scaleY: 0, opacity: 0 }}
+                initial={heroMotion.shouldReduceMotion ? false : { scaleY: 0.95, opacity: 0.75 }}
                 animate={{ scaleY: 1, opacity: 1 }}
                 transition={{
-                  delay: 0.8 + i * 0.2,
-                  duration: 1.5,
-                  ease: [0.16, 1, 0.3, 1],
+                  duration: 0.35,
+                  ease: "easeOut",
                 }}
               />
             ))}
@@ -680,9 +681,7 @@ export default function ServicesPage() {
             <div>
               <motion.div
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-zinc-800/60 bg-zinc-900/50 backdrop-blur-md text-xs font-mono mb-8"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6 }}
+                {...heroMotion.badge}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-zinc-400">6 Services · Full Lifecycle</span>
@@ -691,9 +690,7 @@ export default function ServicesPage() {
               <motion.h1
                 id="services-hero-heading"
                 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.05] mb-8"
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                {...heroMotion.heading}
               >
                 Technology
                 <br />
@@ -707,9 +704,7 @@ export default function ServicesPage() {
 
               <motion.p
                 className="text-lg text-zinc-400 leading-relaxed max-w-lg mb-10"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.35 }}
+                {...heroMotion.paragraph}
               >
                 Deep capability across AI, cloud, SaaS and automation —
                 designed around your business objectives, not a technology brief.
@@ -717,9 +712,7 @@ export default function ServicesPage() {
 
               <motion.div
                 className="flex flex-wrap gap-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
+                {...heroMotion.actions}
               >
                 <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
                   <span>Talk to Us</span>
@@ -743,22 +736,14 @@ export default function ServicesPage() {
             {/* Right — floating service grid preview */}
             <motion.div
               className="relative hidden lg:block"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              {...heroMotion.visual}
             >
               <div className="grid grid-cols-2 gap-4">
                 {services.map((srv, i) => (
                   <motion.div
                     key={srv.id}
                     className="p-5 rounded-2xl border border-zinc-800/40 bg-zinc-900/30 backdrop-blur-sm group cursor-default hover:border-opacity-100 transition-all duration-400"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      delay: 0.6 + i * 0.1,
-                      duration: 0.5,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
+                    {...heroMotion.custom({ y: 8, delay: 0.015 * i, duration: 0.3 })}
                     whileHover={{
                       scale: 1.03,
                       borderColor: srv.accent,
@@ -783,9 +768,7 @@ export default function ServicesPage() {
               {/* Floating stat overlay — positioned below the grid, centered */}
               <motion.div
                 className="mt-6 mx-auto flex items-center gap-4 px-6 py-3.5 rounded-2xl border border-zinc-800/60 bg-zinc-900/80 backdrop-blur-xl shadow-2xl shadow-black/50 w-fit"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2, duration: 0.6 }}
+                {...heroMotion.telemetry}
               >
                 <div className="text-2xl font-extrabold text-white font-mono">
                   <AnimatedCounter value={48} suffix="+" />
@@ -952,64 +935,25 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════════════════════════════
-            CTA — Full-width gradient band (different from home's card CTA)
-           ══════════════════════════════════════════════════════════════════ */}
-        <section
-          aria-labelledby="services-cta-heading"
-          className="relative overflow-hidden border-t border-zinc-800/60"
-        >
-          {/* Full-width gradient wash */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--accent)]/[0.03] to-transparent pointer-events-none" />
-
-          <motion.div
-            className="max-w-4xl mx-auto px-6 sm:px-10 py-24 text-center relative z-10"
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.div
-              className="text-6xl sm:text-7xl font-extrabold text-white/[0.04] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap pointer-events-none select-none"
-              animate={{ x: ["-50%", "-52%", "-50%"] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-              aria-hidden="true"
-            >
-              BUILD · CONNECT · AUTOMATE · EVOLVE
-            </motion.div>
-
-            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-              Ready to Get Started?
-            </span>
-            <h2
-              id="services-cta-heading"
-              className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-4 mb-6"
-            >
-              Let&apos;s build what&apos;s next.
-            </h2>
-            <p className="text-zinc-400 text-base leading-relaxed max-w-xl mx-auto mb-10">
-              Tell us about your challenge, your idea or your ambition — we&apos;ll
-              help you define the right approach.
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-5">
-              <Link href="/Contact" className="liquid-lime-btn text-base py-4 px-8">
-                <span>Start a Conversation</span>
-                <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-              </Link>
-              <Link
-                href="/Solutions"
-                className="px-7 py-4 rounded-full bg-transparent border border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-white font-semibold text-sm transition-all duration-300"
-              >
-                Explore Solutions →
-              </Link>
-            </div>
-          </motion.div>
-        </section>
+        {/* ── FINAL CTA ────────────────────────────────────────────────────── */}
+        <FinalCTA
+          id="services-cta-heading"
+          eyebrow="Ready to Get Started?"
+          headline="Let's build what's next."
+          description="Tell us about your challenge, your idea or your ambition — we'll help you define the right approach."
+          primaryButton={{
+            label: "Start a Conversation",
+            href: "/Contact",
+          }}
+          secondaryButton={{
+            label: "Explore Solutions →",
+            href: "/Solutions",
+          }}
+        />
 
       </main>
 
-      <Footer />
+      <Footer hideCTA />
     </div>
   );
 }
