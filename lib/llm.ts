@@ -25,9 +25,10 @@ interface Delta {
   tool_calls?: { index: number; id?: string; function?: { name?: string; arguments?: string } }[];
 }
 
-export async function* stream(messages: ChatMessage[], tools: unknown[]): AsyncGenerator<StreamEvent> {
+export async function* stream(messages: ChatMessage[], tools: unknown[], signal?: AbortSignal): AsyncGenerator<StreamEvent> {
   const res = await fetch(URL, {
     method: "POST",
+    signal, // stops the upstream call when the visitor disconnects
     headers: {
       Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
       "Content-Type": "application/json",

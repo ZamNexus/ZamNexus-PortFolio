@@ -85,7 +85,7 @@ export async function POST(req: Request) {
         let saved = false; // one lead per request
         for (let round = 0; round < 2; round++) {
           let reply: ChatMessage | undefined;
-          for await (const ev of stream(messages, TOOLS)) {
+          for await (const ev of stream(messages, TOOLS, req.signal)) {
             if (ev.kind === "thinking") {
               if (!thinking) send({ type: "thinking" });
               thinking = true;
@@ -137,10 +137,11 @@ function originHost(origin: string): string | null {
   }
 }
 
-// Only headers a trusted proxy sets itself. x-forwarded-for is client-controlled, so it is ignored.
-// With no proxy header everyone shares one "unknown" bucket: stricter, but not bypassable.
+// Trust a client-IP header only where the platform sets it (Vercel overwrites x-vercel-forwarded-for).
+// Everywhere else every header is client-controlled, so all traffic shares one bucket: it can't be
+// spoofed, but one noisy client throttles the rest. Fine for local dev; self-hosting needs a trusted proxy header.
 function clientIp(req: Request): string {
-  return req.headers.get("x-vercel-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown";
+  return (process.env.VERCEL && req.headers.get("x-vercel-forwarded-for")) || "unknown";
 }
 
 function safeParse(s: string): Record<string, unknown> {
