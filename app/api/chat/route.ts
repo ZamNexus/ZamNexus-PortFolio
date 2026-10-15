@@ -47,14 +47,17 @@ function cleanLead(raw: Record<string, unknown>) {
 }
 
 export async function POST(req: Request) {
-  // Block other sites from using our endpoint (and our OpenRouter bill).
+  // Block other sites from using our endpoint (and our OpenRouter bill). Origin "null" or malformed is rejected too.
   const origin = req.headers.get("origin");
-  if (origin && new URL(origin).host !== req.headers.get("host")) {
+  if (origin && originHost(origin) !== req.headers.get("host")) {
     return Response.json({ error: "forbidden" }, { status: 403 });
   }
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
-  if (limited(ip)) {
+  if (limited(clientIp(req))) {
     return Response.json({ error: "Too many messages. Please wait a minute and try again." }, { status: 429 });
+  }
+  // Reject oversized bodies from the header before reading them, then re-check the real size.
+  if (Number(req.headers.get("content-length") ?? 0) > MAX_BODY) {
+    return Response.json({ error: "too large" }, { status: 413 });
   }
   const raw = await req.text();
   if (raw.length > MAX_BODY) return Response.json({ error: "too large" }, { status: 413 });
@@ -124,6 +127,20 @@ async function saveLead(lead: object) {
   } catch {
     console.error("LEAD", line);
   }
+}
+
+function originHost(origin: string): string | null {
+  try {
+    return new URL(origin).host;
+  } catch {
+    return null;
+  }
+}
+
+// Only headers a trusted proxy sets itself. x-forwarded-for is client-controlled, so it is ignored.
+// With no proxy header everyone shares one "unknown" bucket: stricter, but not bypassable.
+function clientIp(req: Request): string {
+  return req.headers.get("x-vercel-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown";
 }
 
 function safeParse(s: string): Record<string, unknown> {
