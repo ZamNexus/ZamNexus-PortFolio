@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import ScrollProgress from "@/components/motion/ScrollProgress";
+import Reveal from "@/components/motion/Reveal";
+import Stagger from "@/components/motion/Stagger";
+import SplitWords from "@/components/motion/SplitWords";
+import Spotlight from "@/components/motion/Spotlight";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FinalCTA from "@/components/FinalCTA";
@@ -104,7 +108,10 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
     .slice(0, 2);
 
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
+    <div
+      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-clip"
+      style={{ "--rail": article.accent } as CSSProperties}
+    >
       {/* Background Cyber Grid */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
@@ -121,18 +128,13 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
         />
       </div>
 
+      <ScrollProgress />
       <Navbar />
 
       <main className="relative z-10 max-w-5xl mx-auto px-6 pt-36 pb-28">
-        {/* Quick fade/slide-up transition (200ms) on navigation */}
-        <motion.article
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, ease: "easeOut" }}
-          className="space-y-12"
-        >
+        <article className="space-y-12">
           {/* ── TOP BREADCRUMB & BACK LINK ─────────────────────────────────── */}
-          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800/60 pb-6 text-xs font-mono">
+          <nav aria-label="Breadcrumb" data-enter="1" className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800/60 pb-6 text-xs font-mono">
             <Link
               href="/insights"
               className="inline-flex items-center gap-2 text-zinc-400 hover:text-[var(--accent-hover)] transition-colors group"
@@ -152,7 +154,7 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
 
           {/* ── HERO HEADER ───────────────────────────────────────────────── */}
           <header className="space-y-6">
-            <div className="flex flex-wrap items-center gap-3">
+            <div data-enter="2" className="flex flex-wrap items-center gap-3">
               <span
                 className="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider border"
                 style={{
@@ -169,15 +171,15 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-[1.15]">
-              {article.title}
+              <SplitWords mode="load" text={article.title} />
             </h1>
 
-            <p className="text-base sm:text-xl text-zinc-300 leading-relaxed font-light">
+            <p data-enter="4" className="text-base sm:text-xl text-zinc-300 leading-relaxed font-light">
               {article.subtitle}
             </p>
 
             {/* Author bar & Share button */}
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-zinc-800/80">
+            <div data-enter="5" className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-zinc-800/80">
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center font-mono font-bold text-sm text-black shadow-md"
@@ -204,11 +206,11 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
           </header>
 
           {/* ── QUICK SYSTEM SPECS RIBBON (Scannable Metrics) ──────────────── */}
-          <section aria-labelledby="specs-heading" className="p-6 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 shadow-xl">
+          <section aria-labelledby="specs-heading" data-enter="6" className="p-6 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 shadow-xl">
             <h2 id="specs-heading" className="text-xs font-mono uppercase tracking-widest text-foreground-muted font-bold mb-4">
               Production Architecture Benchmark Targets
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Stagger className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {article.specs.map((spec) => (
                 <div key={spec.label} className="p-3.5 rounded-xl bg-zinc-900/60 border border-zinc-800/60">
                   <div className="text-[11px] font-mono text-foreground-muted mb-1">{spec.label}</div>
@@ -217,11 +219,11 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
                   </div>
                 </div>
               ))}
-            </div>
+            </Stagger>
           </section>
 
           {/* ── THE PROBLEM & THE SOLUTION (Side-by-Side Cards) ─────────────── */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Stagger as="section" className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* The Challenge Card */}
             <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">
@@ -238,10 +240,7 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
             </div>
 
             {/* The Solution Card */}
-            <div
-              className="p-6 sm:p-8 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 space-y-4"
-              style={{ borderLeftWidth: "4px", borderLeftColor: article.accent }}
-            >
+            <div className="article-solution p-6 sm:p-8 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 space-y-4">
               <div
                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-bold border"
                 style={{
@@ -257,44 +256,48 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
               <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
                 {article.solution.description}
               </p>
-              <ul className="space-y-2 pt-1">
+              <Stagger as="ul" className="space-y-2 pt-1">
                 {article.solution.highlights.map((h, i) => (
                   <li key={i} className="flex items-start gap-2 text-xs text-zinc-300 font-mono">
-                    <span className="text-emerald-400 font-bold shrink-0">✓</span>
+                    <svg className="tick tick--success" viewBox="0 0 20 20" aria-hidden="true">
+                      <path d="M4 10.5l4 4 8-9" />
+                    </svg>
                     <span>{h}</span>
                   </li>
                 ))}
-              </ul>
+              </Stagger>
             </div>
-          </section>
+          </Stagger>
 
           {/* ── FULL SUMMARY / EXECUTIVE NARRATIVE ─────────────────────────── */}
-          <section className="p-8 rounded-3xl bg-zinc-950/70 border border-zinc-800/80 space-y-4">
-            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold block">
+          <Reveal as="section" variant="words" replay={false} className="p-8 rounded-3xl bg-zinc-950/70 border border-zinc-800/80 space-y-4">
+            <span className="reveal-sub text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold block">
               Architectural Deep-Dive
             </span>
-            <h2 className="text-2xl font-bold text-white">System Dynamics &amp; Execution</h2>
-            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
+            <h2 className="text-2xl font-bold text-white">
+              <SplitWords text="System Dynamics & Execution" />
+            </h2>
+            <p className="reveal-sub text-sm sm:text-base text-zinc-300 leading-relaxed">
               {article.fullSummary}
             </p>
-          </section>
+          </Reveal>
 
           {/* ── SEQUENTIAL ARCHITECTURE PIPELINE FLOW ──────────────────────── */}
           <section aria-labelledby="pipeline-heading" className="space-y-6">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-foreground-muted font-bold block mb-1">
+            <Reveal variant="words" replay={false}>
+              <span className="reveal-sub text-xs font-mono uppercase tracking-widest text-foreground-muted font-bold block mb-1">
                 System Sequence
               </span>
               <h2 id="pipeline-heading" className="text-2xl font-bold text-white">
-                Step-by-Step Data &amp; Logic Flow
+                <SplitWords text="Step-by-Step Data & Logic Flow" />
               </h2>
-            </div>
+            </Reveal>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Stagger className="rollout rollout--tight grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {article.pipeline.map((step) => (
                 <div
                   key={step.step}
-                  className="p-5 rounded-2xl bg-zinc-900/50 border border-zinc-800/80 flex flex-col justify-between space-y-3 relative overflow-hidden group hover:border-zinc-700 transition-colors"
+                  className="rollout__step lift-card p-5 flex flex-col justify-between space-y-3 group"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-2xl font-extrabold font-mono" style={{ color: article.accent }}>
@@ -311,7 +314,7 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
                   </div>
                 </div>
               ))}
-            </div>
+            </Stagger>
           </section>
 
           {/* ── KEY TAKEAWAYS CALLOUT ──────────────────────────────────────── */}
@@ -321,14 +324,14 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
               <span>Principal Architect Takeaways</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {article.keyTakeaways.map((point, i) => (
                 <div key={i} className="p-4 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-xs font-mono text-zinc-300 flex items-start gap-2.5">
                   <span className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: article.accent }} />
                   <span className="leading-relaxed">{point}</span>
                 </div>
               ))}
-            </div>
+            </Stagger>
 
             {/* Tech Stack Pills */}
             <div className="pt-4 border-t border-zinc-800/60 flex flex-wrap items-center gap-2">
@@ -343,21 +346,18 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
 
           {/* ── RELATED PRODUCT OR SERVICE ─────────────────────────────────── */}
           {related ? (
-            <section aria-labelledby="article-related-heading" className="mb-12">
-              <Link
-                href={related.href}
-                className="group block p-8 rounded-3xl bg-surface/80 border border-[var(--border-subtle)] hover:border-[var(--border-strong)] transition-all duration-300"
-              >
+            <Reveal as="section" aria-labelledby="article-related-heading" className="mb-12">
+              <Link href={related.href} className="product-card lift-card group block p-8">
                 <span className="text-xs font-mono uppercase tracking-widest font-bold text-accent-text">Related</span>
                 <h2 id="article-related-heading" className="mt-2 text-xl sm:text-2xl font-bold text-foreground-strong">
                   {related.name}
                 </h2>
                 <p className="mt-2 text-foreground-muted leading-relaxed">{related.text}</p>
-                <span className="mt-4 inline-block text-sm font-semibold text-accent-text group-hover:underline">
-                  {related.cta} →
+                <span className="product-card__link mt-4 inline-block text-sm font-semibold text-accent-text group-hover:underline">
+                  {related.cta} <span aria-hidden="true">→</span>
                 </span>
               </Link>
-            </section>
+            </Reveal>
           ) : null}
 
           {/* ── BOTTOM CALL TO ACTION ──────────────────────────────────────── */}
@@ -383,13 +383,10 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
               <h2 className="text-sm font-mono font-bold text-zinc-400 uppercase tracking-wider">
                 Related Technical Blueprints
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Stagger className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {relatedInsights.map((rel) => (
-                  <Link
-                    key={rel.id}
-                    href={`/insights/${rel.id}`}
-                    className="p-5 rounded-2xl bg-zinc-900/30 border border-zinc-800/70 hover:border-zinc-700 hover:bg-zinc-900/60 transition-all group flex flex-col justify-between"
-                  >
+                  <Spotlight key={rel.id} as="div" className="lift-card">
+                  <Link href={`/insights/${rel.id}`} className="p-5 group flex h-full flex-col justify-between">
                     <div>
                       <span className="text-[10px] font-mono text-foreground-muted uppercase">{rel.categoryLabel}</span>
                       <h3 className="text-sm font-bold text-white group-hover:text-[var(--accent-hover)] transition-colors mt-1 mb-2 line-clamp-2">
@@ -400,11 +397,12 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
                       Read Blueprint →
                     </span>
                   </Link>
+                  </Spotlight>
                 ))}
-              </div>
+              </Stagger>
             </aside>
           )}
-        </motion.article>
+        </article>
       </main>
 
       <Footer hideCTA />

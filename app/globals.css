@@ -3533,3 +3533,21 @@ h1, h2, h3, h4, h5, h6 {
   .brief-success path { animation: none; }
   .brief-sending::after { animation-duration: 2s; }
 }
+
+/* ── Insights ────────────────────────────────────────────────────────────── */
+
+/* Featured and solution cards carry the article's colour down their left edge */
+.featured-card,
+.article-solution {
+  border-left: 4px solid var(--rail, var(--accent));
+}
+
+.featured-card { isolation: isolate; }
+.featured-card.spotlight::after { border-radius: 24px; }
+
+.tick--success { stroke: var(--success); width: 16px; height: 16px; margin-top: 0; }
+
+/* Pipeline steps sit closer together, so their connectors are shorter */
+@media (min-width: 1024px) {
+  .rollout--tight .rollout__step:not(:last-child)::after { width: 14px; top: 30px; }
+}

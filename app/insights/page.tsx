@@ -1,12 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PillTab from "@/components/PillTab";
-import { useHeroMotion } from "@/components/useHeroMotion";
+import ScrollProgress from "@/components/motion/ScrollProgress";
+import Reveal from "@/components/motion/Reveal";
+import Stagger from "@/components/motion/Stagger";
+import SplitWords from "@/components/motion/SplitWords";
+import Spotlight from "@/components/motion/Spotlight";
 import { submitLead } from "@/lib/submitLead";
 import { company } from "@/lib/siteFacts";
 import { jsonLd, breadcrumbs } from "@/lib/seo";
@@ -15,7 +19,6 @@ import { featuredInsight, articles, categories } from "./insightsData";
 import type { InsightCategory } from "./insightsData";
 
 export default function InsightsPage() {
-  const heroMotion = useHeroMotion();
   const [selectedCategory, setSelectedCategory] = useState<InsightCategory>("all");
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success">("idle");
@@ -43,7 +46,7 @@ export default function InsightsPage() {
   return (
     <div
       suppressHydrationWarning
-      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-hidden"
+      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-clip"
     >
       {/* Background Cyber Grid */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -62,6 +65,7 @@ export default function InsightsPage() {
       </div>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbs([{ name: "Home", path: "/" }, { name: "Insights", path: "/insights" }])) }} />
+      <ScrollProgress />
       <Navbar />
 
       <main className="relative z-10">
@@ -71,28 +75,27 @@ export default function InsightsPage() {
           aria-labelledby="insights-hero-heading"
           className="max-w-7xl mx-auto px-6 pt-40 pb-16 text-center"
         >
-          <motion.div
-            {...heroMotion.badge}
+          <div
+            data-enter="1"
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-xs font-mono font-medium text-[var(--accent-hover)] mb-8 backdrop-blur-xl shadow-lg"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-hover)] animate-pulse" />
             ZamNexus Engineering Research &amp; Architectural Insights
-          </motion.div>
+          </div>
 
-          <motion.h1
+          <h1
             id="insights-hero-heading"
-            {...heroMotion.heading}
             className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.08]"
           >
-            Engineering insights from the systems we build.
-          </motion.h1>
+            <SplitWords mode="load" text="Engineering insights from the systems we build." />
+          </h1>
 
-          <motion.p
-            {...heroMotion.paragraph}
+          <p
+            data-enter="4"
             className="mt-6 text-base sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed"
           >
             What we&apos;ve learned building ERP, retail, education and healthcare software, written for the engineers and IT leaders who will run it.
-          </motion.p>
+          </p>
         </section>
 
         {/* ── FEATURED RESEARCH WHITE-PAPER (HERO CARD) ────────────────────── */}
@@ -100,13 +103,11 @@ export default function InsightsPage() {
           aria-labelledby="featured-heading"
           className="max-w-7xl mx-auto px-6 pb-16"
         >
-          <motion.div
-            {...heroMotion.visual}
-            className="p-8 sm:p-12 rounded-3xl bg-zinc-950/80 border border-zinc-800 shadow-2xl relative overflow-hidden group"
-            style={{
-              borderLeftWidth: "4px",
-              borderLeftColor: featuredInsight.accent,
-            }}
+          <div data-enter="5">
+          <Spotlight
+            as="div"
+            className="featured-card p-8 sm:p-12 rounded-3xl bg-zinc-950/80 border border-zinc-800 shadow-2xl overflow-hidden group"
+            style={{ "--rail": featuredInsight.accent } as CSSProperties}
           >
             <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-3">
@@ -140,7 +141,7 @@ export default function InsightsPage() {
             </p>
 
             {/* Key Takeaways */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               {featuredInsight.keyTakeaways.map((point, i) => (
                 <div
                   key={i}
@@ -150,7 +151,7 @@ export default function InsightsPage() {
                   <span>{point}</span>
                 </div>
               ))}
-            </div>
+            </Stagger>
 
             <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-zinc-800/70">
               <div className="flex items-center gap-3">
@@ -171,7 +172,8 @@ export default function InsightsPage() {
                 <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
               </Link>
             </div>
-          </motion.div>
+          </Spotlight>
+          </div>
         </section>
 
         {/* ── INTERACTIVE CATEGORY DOCK ────────────────────────────────────── */}
@@ -215,8 +217,10 @@ export default function InsightsPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  className="p-7 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-900/70 transition-all duration-300 flex flex-col justify-between group shadow-xl relative overflow-hidden"
+                  className="lift-card product-card p-7 flex flex-col justify-between group"
+                  style={{ "--rail": article.accent } as CSSProperties}
                 >
+                  <div className="product-card__bar" aria-hidden="true" />
                   <div>
                     {/* Category & Read Time */}
                     <div className="flex items-center justify-between mb-4">
@@ -251,7 +255,7 @@ export default function InsightsPage() {
 
                     <Link
                       href={`/insights/${article.id}`}
-                      className="px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-950/80 hover:bg-zinc-800 hover:border-zinc-700 text-xs font-mono text-white transition-colors cursor-pointer inline-flex items-center gap-1"
+                      className="product-card__link px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-950/80 hover:bg-zinc-800 hover:border-zinc-700 text-xs font-mono text-white transition-colors cursor-pointer inline-flex items-center gap-1"
                     >
                       <span>Read Blueprint</span>
                       <span aria-hidden="true">→</span>
@@ -268,18 +272,18 @@ export default function InsightsPage() {
           aria-labelledby="newsletter-heading"
           className="max-w-4xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
-          <div className="p-8 sm:p-14 rounded-3xl bg-gradient-to-br from-zinc-900/90 to-zinc-950 border border-zinc-800 shadow-2xl text-center">
-            <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+          <Reveal variant="words" replay={false} className="p-8 sm:p-14 rounded-3xl bg-gradient-to-br from-zinc-900/90 to-zinc-950 border border-zinc-800 shadow-2xl text-center">
+            <span className="reveal-sub text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Engineering Dispatch
             </span>
             <h2 id="newsletter-heading" className="text-2xl sm:text-4xl font-extrabold text-white mt-2">
-              Get new articles by email
+              <SplitWords text="Get new articles by email" />
             </h2>
-            <p className="text-zinc-400 text-sm max-w-xl mx-auto mt-3 mb-8 leading-relaxed">
+            <p className="reveal-sub text-zinc-400 text-sm max-w-xl mx-auto mt-3 mb-8 leading-relaxed">
               About once a quarter.
             </p>
 
-            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+            <form onSubmit={handleSubscribe} className="reveal-sub flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
               <input
                 type="email"
                 required
@@ -287,7 +291,7 @@ export default function InsightsPage() {
                 onChange={(e) => setNewsletterEmail(e.target.value)}
                 placeholder="you@company.com"
                 aria-label="Email address"
-                className="w-full px-5 py-3.5 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-100 text-xs font-mono focus:outline-none focus:border-[var(--accent-hover)] transition-colors"
+                className="w-full px-5 py-3.5 rounded-full bg-zinc-900 border border-zinc-700 text-zinc-100 text-xs font-mono focus:outline-none focus:border-[var(--accent-hover)] brief-input"
               />
               <button
                 type="submit"
@@ -315,7 +319,7 @@ export default function InsightsPage() {
                 {newsletterError}
               </p>
             )}
-          </div>
+          </Reveal>
         </section>
 
       </main>
