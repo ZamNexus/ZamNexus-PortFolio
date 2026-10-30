@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import DemoRequestForm from "@/components/DemoRequestForm";
-import ProductFlow from "@/components/ProductFlow";
+import ProductScene from "@/components/ProductScene";
+import FlowWalkthrough from "@/components/FlowWalkthrough";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
@@ -246,11 +247,14 @@ export default function ZNXePOSPage() {
 
             {/* The product's event flow, then confirmed figures only (lib/siteFacts.ts) */}
             <div data-enter="6" className="lg:col-span-5 space-y-6">
-              <ProductFlow slug="znxepos" />
+              <ProductScene slug="znxepos" />
               <ProductStats slug="znxepos" accent={ACCENT} />
             </div>
           </div>
         </section>
+
+        {/* ── FOLLOW ONE EVENT (lib/catalog.ts flows) ───────────────────────── */}
+        <FlowWalkthrough slug="znxepos" />
 
         {/* ── BESPOKE RETAIL CHECKOUT & STORE WORKFLOW CONSOLE ─────────────── */}
         <section
