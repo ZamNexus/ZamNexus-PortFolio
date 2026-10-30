@@ -2356,3 +2356,287 @@ h1, h2, h3, h4, h5, h6 {
 @media (scripting: none), print {
   [data-enter] { animation: none; }
 }
+
+/* ── Homepage motion, second layer ─────────────────────────────────────────── */
+
+/* Headings rise word by word from behind a mask (components/motion/SplitWords) */
+.split-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.split-word > span { display: inline-block; }
+
+@keyframes word-rise {
+  from { transform: translateY(108%); }
+}
+
+.split-word--load > span {
+  animation: word-rise 900ms var(--ease-out) both;
+  animation-delay: calc(100ms + var(--w, 0) * 45ms);
+}
+
+[data-reveal="words"] .split-word--reveal > span {
+  transition: transform 900ms var(--ease-out);
+  transition-delay: calc(var(--w, 0) * 40ms);
+}
+
+[data-reveal="words"][data-state="out"] .split-word--reveal > span { transform: translateY(108%); }
+
+[data-reveal="words"] .reveal-sub {
+  transition: opacity var(--motion-slow) var(--ease-out) 250ms, transform var(--motion-slow) var(--ease-out) 250ms;
+}
+
+[data-reveal="words"][data-state="out"] .reveal-sub {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+/* Hero steps after the headline's words */
+[data-enter="6"] { --enter-step: 5; }
+[data-enter="7"] { --enter-step: 6; }
+
+/* Particle network behind the hero (components/HeroBackground) */
+.hero-network {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: min(100vh, 900px);
+  z-index: 0;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, #000 45%, transparent);
+}
+
+/* Reading progress along the top edge */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 80;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--accent), var(--accent-text));
+  pointer-events: none;
+}
+
+/* The active stop on the system map breathes */
+.system-map__dot { position: relative; }
+
+.system-map__stop[data-state="active"] .system-map__dot::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 2px solid var(--signal);
+  animation: stop-ping 2.2s var(--ease-out) infinite;
+}
+
+@keyframes stop-ping {
+  from { transform: scale(1); opacity: 0.7; }
+  to { transform: scale(2.4); opacity: 0; }
+}
+
+/* Product items: a light in the product's colour follows the cursor */
+.product-rail {
+  padding: 26px 16px 24px;
+  margin: 0 -16px;
+  isolation: isolate;
+  transition: border-top-color var(--motion-base) var(--ease-out);
+}
+
+.product-rail::before { left: 16px; }
+
+.product-rail:hover { border-top-color: color-mix(in srgb, var(--rail) 55%, transparent); }
+
+.product-rail img { transition: transform var(--motion-base) var(--ease-out); }
+
+.product-rail:hover img { transform: translateY(-3px); }
+
+.spotlight { position: relative; }
+
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 0 0 24px 24px;
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 40%),
+    color-mix(in srgb, var(--rail, var(--accent)) 16%, transparent),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity var(--motion-base) var(--ease-out);
+}
+
+.spotlight:hover::after { opacity: 1; }
+
+/* Service rows: a panel sweeps in behind the hovered row */
+.service-row {
+  position: relative;
+  isolation: isolate;
+  padding: 22px 16px;
+  margin: 0 -16px;
+}
+
+.service-row::before {
+  content: "";
+  position: absolute;
+  inset: 5px 0;
+  z-index: -1;
+  border-radius: 14px;
+  background: var(--surface-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.service-row:hover::before,
+.service-row:focus-visible::before { transform: scaleX(1); }
+
+/* "What we build with" band */
+.tech-band {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 36px 16px;
+  display: grid;
+  gap: 14px;
+  border-block: 1px solid var(--border-subtle);
+}
+
+.tech-band__label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--foreground-muted);
+  white-space: nowrap;
+}
+
+.tech-band__viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.tech-band__track { animation-duration: 45s; }
+
+.tech-band__list {
+  display: flex;
+  gap: 48px;
+  padding-right: 48px;
+}
+
+.tech-band__list li {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--foreground-muted);
+  white-space: nowrap;
+  transition: color var(--motion-base) var(--ease-out);
+}
+
+.tech-band__list li:hover { color: var(--foreground-strong); }
+
+@media (min-width: 768px) {
+  .tech-band {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 40px;
+    padding-inline: 24px;
+  }
+}
+
+/* How we work: a line runs through the three principles, a dot lights at each */
+.principles {
+  position: relative;
+  padding-left: 34px;
+}
+
+.principles::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent-text), var(--border-subtle));
+  transform-origin: top;
+  transition: transform 1100ms var(--ease-out);
+}
+
+.principles[data-state="out"]::before { transform: scaleY(0); }
+
+.principle { position: relative; }
+
+.principle::before {
+  content: "";
+  position: absolute;
+  left: -34px;
+  top: 6px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--background);
+  border: 2px solid var(--accent-text);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent-text) 15%, transparent);
+}
+
+@media (min-width: 768px) {
+  .principles {
+    padding-left: 0;
+    padding-top: 40px;
+  }
+
+  .principles::before {
+    left: 6px;
+    right: 0;
+    top: 6px;
+    bottom: auto;
+    width: auto;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent-text), var(--border-subtle));
+    transform-origin: left;
+  }
+
+  .principles[data-state="out"]::before { transform: scaleX(0); }
+
+  .principle::before {
+    left: 0;
+    top: -40px;
+  }
+}
+
+/* Latest insight: the title underlines itself on hover */
+.insight-title {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  transition: background-size 600ms var(--ease-out), color var(--motion-base) var(--ease-out);
+}
+
+.group:hover .insight-title,
+.group:focus-visible .insight-title {
+  background-size: 100% 2px;
+  color: var(--accent-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .split-word--load > span { animation: none; }
+  [data-reveal="words"] .split-word--reveal > span,
+  [data-reveal="words"] .reveal-sub { transition: none; }
+  .system-map__stop[data-state="active"] .system-map__dot::after { animation: none; opacity: 0; }
+  .tech-band__track { animation: none; flex-wrap: wrap; width: auto; }
+  .tech-band__list[aria-hidden] { display: none; }
+  .tech-band__list { flex-wrap: wrap; row-gap: 12px; }
+  .principles::before,
+  .service-row::before,
+  .insight-title { transition: none; }
+}
+
+@media (scripting: none), print {
+  .split-word--load > span { animation: none; }
+}

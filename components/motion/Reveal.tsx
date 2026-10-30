@@ -9,8 +9,9 @@ interface RevealProps {
   as?: RevealTag;
   // "rise": the element fades and rises. "group": its children do, one after another
   // (see [data-reveal="group"] in globals.css). "fade": opacity only. "draw": nothing moves
-  // by itself; descendants style off the state (the system map draws its line).
-  variant?: "rise" | "group" | "fade" | "draw";
+  // by itself; descendants style off the state (the system map draws its line). "words": a
+  // SplitWords heading rises word by word, then any .reveal-sub follows.
+  variant?: "rise" | "group" | "fade" | "draw" | "words";
   // Replay each time the element re-enters the viewport, or reveal once.
   replay?: boolean;
   delay?: number;

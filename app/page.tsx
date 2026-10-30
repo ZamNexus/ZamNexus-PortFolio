@@ -7,6 +7,11 @@ import SectionHeader from "@/components/SectionHeader";
 import SystemMap from "@/components/SystemMap";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
+import SplitWords from "@/components/motion/SplitWords";
+import ScrollProgress from "@/components/motion/ScrollProgress";
+import Spotlight from "@/components/motion/Spotlight";
+import HeroBackground from "@/components/HeroBackground";
+import TechMarquee from "@/components/TechMarquee";
 import { products, services } from "@/lib/catalog";
 import { clients, company, confirmed } from "@/lib/siteFacts";
 import { featuredInsight } from "./insights/insightsData";
@@ -29,6 +34,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans overflow-x-hidden">
+      <ScrollProgress />
+      <HeroBackground />
       <Navbar />
 
       <main className="relative z-10">
@@ -37,17 +44,16 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-end">
             <h1
               id="home-hero-heading"
-              data-enter="1"
               className="lg:col-span-8 font-heading text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-[4.4rem] font-bold tracking-[-0.035em] text-foreground-strong text-balance"
             >
-              Software that runs your operations, and the engineers who build the rest.
+              <SplitWords mode="load" text="Software that runs your operations, and the engineers who build the rest." />
             </h1>
             <div className="lg:col-span-4 lg:pb-3">
-              <p data-enter="2" className="text-lg text-foreground-muted leading-relaxed">
+              <p data-enter="5" className="text-lg text-foreground-muted leading-relaxed">
                 Four platforms for manufacturing, retail, education and healthcare, plus custom AI, cloud, Microsoft and
                 Salesforce work for organisations in the UK, Pakistan and the UAE.
               </p>
-              <div data-enter="3" className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <div data-enter="6" className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
                 <Link href="/contact" className="liquid-lime-btn text-base py-3.5 px-7">
                   Book a consultation
                 </Link>
@@ -55,7 +61,7 @@ export default function HomePage() {
                   See the products
                 </Link>
               </div>
-              <p data-enter="4" className="mt-8 text-sm text-foreground-muted">{proof}</p>
+              <p data-enter="7" className="mt-8 text-sm text-foreground-muted">{proof}</p>
             </div>
           </div>
         </section>
@@ -79,14 +85,14 @@ export default function HomePage() {
           />
           <Stagger className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-14">
             {products.map((p) => (
-              <article key={p.slug} className="product-rail" style={{ "--rail": p.accent } as CSSProperties}>
+              <Spotlight key={p.slug} className="product-rail" style={{ "--rail": p.accent } as CSSProperties}>
                 <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
                 <h3 className="mt-5 text-2xl font-bold tracking-tight text-foreground-strong">{p.category}</h3>
                 <p className="mt-3 text-foreground-muted leading-relaxed max-w-[46ch]">{p.purpose}</p>
                 <Link href={`/products/${p.slug}`} className={`mt-5 inline-block ${textLink}`}>
                   See {p.code}
                 </Link>
-              </article>
+              </Spotlight>
             ))}
           </Stagger>
         </section>
@@ -118,12 +124,14 @@ export default function HomePage() {
           </p>
         </section>
 
+        <TechMarquee />
+
         {/* ── HOW WE WORK ──────────────────────────────────────────────────── */}
         <section aria-labelledby="home-how" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <SectionHeader id="home-how" title="One accountable team, from first call to go-live." />
-          <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <Stagger className="principles grid grid-cols-1 md:grid-cols-3 gap-10">
             {principles.map((p) => (
-              <div key={p.title}>
+              <div key={p.title} className="principle">
                 <h3 className="text-lg font-semibold text-foreground-strong">{p.title}</h3>
                 <p className="mt-2 text-foreground-muted leading-relaxed">{p.text}</p>
               </div>
@@ -143,8 +151,8 @@ export default function HomePage() {
           </h2>
           <Reveal variant="fade">
           <Link href={`/insights/${featuredInsight.id}`} className="group mt-4 block max-w-4xl">
-            <span className="block font-heading text-2xl sm:text-4xl font-bold tracking-tight leading-tight text-foreground-strong group-hover:text-accent-text transition-colors duration-300">
-              {featuredInsight.title}
+            <span className="block font-heading text-2xl sm:text-4xl font-bold tracking-tight leading-tight text-foreground-strong">
+              <span className="insight-title">{featuredInsight.title}</span>
             </span>
             <span className="mt-4 block text-foreground-muted leading-relaxed max-w-3xl">{featuredInsight.subtitle}</span>
           </Link>
