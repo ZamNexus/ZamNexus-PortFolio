@@ -1,179 +1,149 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import HeroBackground from "@/components/HeroBackground";
 import SectionHeader from "@/components/SectionHeader";
+import SystemMap from "@/components/SystemMap";
 import { products, services } from "@/lib/catalog";
 import { clients, company, confirmed } from "@/lib/siteFacts";
 import { featuredInsight } from "./insights/insightsData";
 
-// Shown under the hero when no client logos are approved yet. Only facts already stated elsewhere on the site.
-const facts = [
-  ...(company.foundingYear.confirmed ? [`Established ${company.foundingYear.value}`] : []),
-  "Offices in Luton, UK and Islamabad, Pakistan",
-  "4 production platforms",
-  "6 engineering services",
-];
-
-const sectors = [
-  { name: "Manufacturing & pharma", product: "ZNXERP", href: "/products/znxerp" },
-  { name: "Retail & distribution", product: "ZNXePOS", href: "/products/znxepos" },
-  { name: "Education", product: "ZNXEdu", href: "/products/znxedu" },
-  { name: "Healthcare", product: "ZNXCare", href: "/products/znxcare" },
-];
-
 const principles = [
   { title: "Senior people on your project", text: "The architects who scope your project stay to deliver it." },
   { title: "Fixed milestones", text: "Discovery, build, go-live and support, each with a sign-off." },
-  { title: "Support after launch", text: "We run and improve what we ship." },
+  { title: "Support after launch", text: "We run and improve what we ship, for years rather than weeks." },
 ];
 
-const card =
-  "rounded-3xl bg-surface/80 border border-[var(--border-subtle)] transition-all duration-300 hover:border-[var(--border-strong)] hover:-translate-y-1";
+const textLink =
+  "font-semibold text-accent-text underline decoration-accent-text/40 underline-offset-[5px] hover:decoration-accent-text transition-colors duration-300";
 
 export default function HomePage() {
-  const approvedClients = confirmed(clients);
+  const approvedClients = confirmed(clients).map((c) => c.name);
+  // Plain facts until client names are approved (lib/siteFacts.ts).
+  const proof = approvedClients.length
+    ? `Trusted by ${approvedClients.join(", ")}.`
+    : `${company.foundingYear.confirmed ? `Established ${company.foundingYear.value}. ` : ""}Offices in Luton and Islamabad.`;
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans overflow-x-hidden">
-      <HeroBackground />
       <Navbar />
 
       <main className="relative z-10">
         {/* ── HERO ─────────────────────────────────────────────────────────── */}
-        <section aria-labelledby="home-hero-heading" className="max-w-6xl mx-auto px-4 sm:px-6 pt-40 pb-16 text-center">
-          <p className="text-xs font-mono uppercase tracking-widest font-bold text-accent-text">
-            ZamNexus · A Zamooq Limited company
-          </p>
-          <h1
-            id="home-hero-heading"
-            className="mt-6 font-heading text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.08] text-foreground-strong max-w-5xl mx-auto"
-          >
-            Software that runs your operations, and the engineers who build the rest.
-          </h1>
-          <p className="mt-6 text-base sm:text-xl text-foreground-muted max-w-3xl mx-auto leading-relaxed">
-            ZamNexus makes four business platforms for manufacturing, retail, education and healthcare, and delivers
-            custom AI, cloud, Microsoft and Salesforce projects for organisations in the UK, Pakistan and the UAE.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link href="/contact" className="liquid-lime-btn text-base py-4 px-8">
-              <span>Book a consultation</span>
-              <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
-            </Link>
-            <Link
-              href="/products"
-              className="px-7 py-4 rounded-full border border-[var(--border-subtle)] text-foreground font-semibold text-sm hover:border-[var(--border-strong)] hover:text-foreground-strong transition-all duration-300"
+        <section aria-labelledby="home-hero-heading" className="max-w-6xl mx-auto px-4 sm:px-6 pt-32 sm:pt-36 pb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-end">
+            <h1
+              id="home-hero-heading"
+              className="lg:col-span-8 font-heading text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-[4.4rem] font-bold tracking-[-0.035em] text-foreground-strong text-balance"
             >
-              See the products
-            </Link>
+              Software that runs your operations, and the engineers who build the rest.
+            </h1>
+            <div className="lg:col-span-4 lg:pb-3">
+              <p className="text-lg text-foreground-muted leading-relaxed">
+                Four platforms for manufacturing, retail, education and healthcare, plus custom AI, cloud, Microsoft and
+                Salesforce work for organisations in the UK, Pakistan and the UAE.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+                <Link href="/contact" className="liquid-lime-btn text-base py-3.5 px-7">
+                  Book a consultation
+                </Link>
+                <Link href="/products" className={textLink}>
+                  See the products
+                </Link>
+              </div>
+              <p className="mt-8 text-sm text-foreground-muted">{proof}</p>
+            </div>
           </div>
+        </section>
 
-          {/* Proof strip: approved client names, otherwise plain facts */}
-          <ul className="mt-16 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-foreground-muted">
-            {(approvedClients.length ? approvedClients.map((c) => c.name) : facts).map((item) => (
-              <li key={item} className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true" />
-                {item}
-              </li>
-            ))}
-          </ul>
+        {/* ── SYSTEM MAP: the page's one interactive moment ────────────────── */}
+        <section aria-labelledby="map-heading" className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+          <h2 id="map-heading" className="sr-only">
+            How a ZamNexus platform handles one event
+          </h2>
+          <SystemMap />
         </section>
 
         {/* ── PRODUCTS ─────────────────────────────────────────────────────── */}
-        <section aria-labelledby="home-products" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60">
+        <section aria-labelledby="home-products" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <SectionHeader
             id="home-products"
-            tag="Products"
             title="Four platforms, ready to deploy."
-            intro="Each one covers a sector end to end, and can be configured to your processes."
+            intro="Each covers one sector end to end and can be configured to the way you work."
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-14">
             {products.map((p) => (
-              <Link key={p.slug} href={`/products/${p.slug}`} className={`${card} group p-8 flex flex-col`}>
-                <div className="flex items-center justify-between gap-4">
-                  <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
-                  <span className="text-xs font-mono uppercase tracking-wider text-foreground-muted">{p.sector}</span>
-                </div>
-                <h3 className="mt-6 text-xl sm:text-2xl font-bold text-foreground-strong">{p.category}</h3>
-                <p className="mt-3 text-foreground-muted leading-relaxed">{p.purpose}</p>
-                <span className="mt-6 text-sm font-semibold text-accent-text group-hover:underline">See {p.code} →</span>
-              </Link>
+              <article key={p.slug} className="product-rail" style={{ "--rail": p.accent } as CSSProperties}>
+                <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
+                <h3 className="mt-5 text-2xl font-bold tracking-tight text-foreground-strong">{p.category}</h3>
+                <p className="mt-3 text-foreground-muted leading-relaxed max-w-[46ch]">{p.purpose}</p>
+                <Link href={`/products/${p.slug}`} className={`mt-5 inline-block ${textLink}`}>
+                  See {p.code}
+                </Link>
+              </article>
             ))}
           </div>
         </section>
 
         {/* ── SERVICES ─────────────────────────────────────────────────────── */}
-        <section aria-labelledby="home-services" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60">
+        <section aria-labelledby="home-services" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <SectionHeader
             id="home-services"
-            tag="Services"
             title="When you need something built."
-            intro="Six engineering services, delivered by one senior team."
+            intro="Six engineering services from one senior team."
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-12 border-t border-[var(--border-subtle)]">
             {services.map((s) => (
-              <Link key={s.id} href={`/services#${s.id}`} className={`${card} group p-6`}>
-                <h3 className="text-lg font-bold text-foreground-strong">{s.name}</h3>
-                <p className="mt-2 text-sm text-foreground-muted leading-relaxed">{s.short}</p>
-                <span className="mt-4 inline-block text-sm font-semibold text-accent-text group-hover:underline">Learn more →</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ── WHO WE WORK WITH ─────────────────────────────────────────────── */}
-        <section aria-labelledby="home-sectors" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60">
-          <SectionHeader id="home-sectors" tag="Who we work with" title="Built for regulated, high-volume operations." />
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {sectors.map((s) => (
-              <li key={s.name}>
-                <Link href={s.href} className={`${card} block p-6 h-full`}>
-                  <span className="block text-lg font-bold text-foreground-strong">{s.name}</span>
-                  <span className="mt-1 block text-sm text-accent-text">{s.product} →</span>
+              <li key={s.id} className="border-b border-[var(--border-subtle)]">
+                <Link href={`/services#${s.id}`} className="service-row group">
+                  <span className="text-lg font-semibold text-foreground-strong group-hover:text-accent-text transition-colors duration-300">
+                    {s.name}
+                  </span>
+                  <span className="text-foreground-muted">{s.short}</span>
                 </Link>
               </li>
             ))}
           </ul>
-          <p className="mt-8 text-foreground-muted">
-            Financial services, professional services, property or public sector? Our engineering services cover you.{" "}
-            <Link href="/contact" className="font-semibold text-accent-text hover:underline">
-              Talk to us →
+          <p className="mt-10 max-w-2xl text-foreground-muted leading-relaxed">
+            Financial services, professional services, property or public sector? These services cover you too.{" "}
+            <Link href="/contact" className={textLink}>
+              Tell us what you need
             </Link>
           </p>
         </section>
 
         {/* ── HOW WE WORK ──────────────────────────────────────────────────── */}
-        <section aria-labelledby="home-how" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60">
-          <SectionHeader id="home-how" tag="How we work" title="One accountable team from first call to go-live." />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <section aria-labelledby="home-how" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+          <SectionHeader id="home-how" title="One accountable team, from first call to go-live." />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {principles.map((p) => (
-              <div key={p.title} className="rounded-3xl bg-surface/80 border border-[var(--border-subtle)] p-6">
-                <h3 className="text-lg font-bold text-foreground-strong">{p.title}</h3>
-                <p className="mt-2 text-sm text-foreground-muted leading-relaxed">{p.text}</p>
+              <div key={p.title}>
+                <h3 className="text-lg font-semibold text-foreground-strong">{p.title}</h3>
+                <p className="mt-2 text-foreground-muted leading-relaxed">{p.text}</p>
               </div>
             ))}
           </div>
-          <Link href="/services#process" className="mt-8 inline-block font-semibold text-accent-text hover:underline">
-            See our full delivery process →
+          <Link href="/services#process" className={`mt-10 inline-block ${textLink}`}>
+            See how an engagement runs
           </Link>
         </section>
 
         {/* Testimonial section goes here once a quote is approved (Phase 3, Home §7). */}
 
         {/* ── LATEST INSIGHT ───────────────────────────────────────────────── */}
-        <section aria-labelledby="home-insight" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60">
-          <SectionHeader id="home-insight" tag="Latest insight" title="From the systems we build." />
-          <Link href={`/insights/${featuredInsight.id}`} className={`${card} group block p-8`}>
-            <span className="text-xs font-mono uppercase tracking-wider text-foreground-muted">
-              {featuredInsight.categoryLabel} · {featuredInsight.readTime}
+        <section aria-labelledby="home-insight" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+          <h2 id="home-insight" className="text-foreground-muted text-lg">
+            From our engineering notes
+          </h2>
+          <Link href={`/insights/${featuredInsight.id}`} className="group mt-4 block max-w-4xl">
+            <span className="block font-heading text-2xl sm:text-4xl font-bold tracking-tight leading-tight text-foreground-strong group-hover:text-accent-text transition-colors duration-300">
+              {featuredInsight.title}
             </span>
-            <h3 className="mt-3 text-xl sm:text-2xl font-bold text-foreground-strong">{featuredInsight.title}</h3>
-            <p className="mt-3 text-foreground-muted leading-relaxed">{featuredInsight.subtitle}</p>
-            <span className="mt-6 inline-block text-sm font-semibold text-accent-text group-hover:underline">Read the article →</span>
+            <span className="mt-4 block text-foreground-muted leading-relaxed max-w-3xl">{featuredInsight.subtitle}</span>
           </Link>
-          <Link href="/insights" className="mt-6 inline-block font-semibold text-accent-text hover:underline">
-            All insights →
+          <Link href="/insights" className={`mt-8 inline-block ${textLink}`}>
+            All insights
           </Link>
         </section>
       </main>

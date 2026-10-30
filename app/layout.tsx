@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Sora, Geist_Mono } from "next/font/google";
+import { Schibsted_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const sora = Sora({
-  variable: "--font-sora",
+// One family for headings and body; Geist Mono only for real codes and data.
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
   subsets: ["latin"],
 });
 
@@ -35,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${sora.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${schibsted.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
         {/*

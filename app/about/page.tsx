@@ -48,7 +48,7 @@ export default function AboutPage() {
 
         {/* ── STORY ────────────────────────────────────────────────────────── */}
         <section aria-labelledby="story-heading" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 border-t border-zinc-800/60">
-          <SectionHeader id="story-heading" tag="Our story" title="From enterprise projects to our own platforms." />
+          <SectionHeader id="story-heading" title="From enterprise projects to our own platforms." />
           <div className="max-w-3xl space-y-5 text-foreground leading-relaxed">
             <p>
               {company.legalName} has delivered business systems{since}: Microsoft Dynamics 365, financial ledgers and
@@ -64,7 +64,7 @@ export default function AboutPage() {
 
         {/* ── PRINCIPLES (the only "why us" block on the site) ────────────── */}
         <section aria-labelledby="principles-heading" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 border-t border-zinc-800/60">
-          <SectionHeader id="principles-heading" tag="What we believe" title="How we work with clients." />
+          <SectionHeader id="principles-heading" title="How we work with clients." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {principles.map((p) => (
               <div key={p.title} className="rounded-3xl bg-surface/80 border border-[var(--border-subtle)] p-6">
@@ -77,7 +77,7 @@ export default function AboutPage() {
 
         {/* ── LEADERSHIP ───────────────────────────────────────────────────── */}
         <section aria-labelledby="leadership-heading" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 border-t border-zinc-800/60">
-          <SectionHeader id="leadership-heading" tag="Leadership" title="Who leads ZamNexus." />
+          <SectionHeader id="leadership-heading" title="Who leads ZamNexus." />
           <div className="max-w-2xl rounded-3xl bg-surface/80 border border-[var(--border-subtle)] p-8 flex items-start gap-5">
             <div className="w-14 h-14 shrink-0 rounded-full bg-accent flex items-center justify-center font-bold text-white" aria-hidden="true">
               MH
@@ -95,7 +95,7 @@ export default function AboutPage() {
 
         {/* ── OFFICES ──────────────────────────────────────────────────────── */}
         <section aria-labelledby="offices-heading" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 border-t border-zinc-800/60">
-          <SectionHeader id="offices-heading" tag="Offices" title="Where to find us." />
+          <SectionHeader id="offices-heading" title="Where to find us." />
           <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {offices.map((o) => (
               <li key={o.city} className="rounded-3xl bg-surface/80 border border-[var(--border-subtle)] p-6">
@@ -109,7 +109,7 @@ export default function AboutPage() {
 
         {/* ── COMPANY DETAILS ──────────────────────────────────────────────── */}
         <section aria-labelledby="company-heading" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 border-t border-zinc-800/60">
-          <SectionHeader id="company-heading" tag="Company details" title={company.legalName} />
+          <SectionHeader id="company-heading" title={company.legalName} />
           <dl className="max-w-2xl divide-y divide-zinc-800/80 border-y border-zinc-800/80">
             {details.map((d) => (
               <div key={d.label} className="py-4 grid grid-cols-1 sm:grid-cols-3 gap-1">

@@ -117,7 +117,7 @@ export default function ServicesPage() {
 
         {/* ── PROCESS (the only copy on the site) ──────────────────────────── */}
         <section id="process" aria-labelledby="process-heading" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60 scroll-mt-28">
-          <SectionHeader id="process-heading" tag="Process" title="How an engagement runs." />
+          <SectionHeader id="process-heading" title="How an engagement runs." />
           <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {steps.map((step, i) => (
               <li key={step.name} className="rounded-3xl bg-surface/80 border border-[var(--border-subtle)] p-6">
@@ -131,7 +131,7 @@ export default function ServicesPage() {
 
         {/* ── FAQ ──────────────────────────────────────────────────────────── */}
         <section aria-labelledby="faq-heading" className="max-w-3xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60">
-          <SectionHeader id="faq-heading" tag="FAQ" title="Common questions." />
+          <SectionHeader id="faq-heading" title="Common questions." />
           <div className="divide-y divide-zinc-800/80 border-y border-zinc-800/80">
             {faqs.map((f) => (
               <details key={f.q} className="group py-5">

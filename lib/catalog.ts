@@ -77,6 +77,72 @@ export const products: Product[] = [
   },
 ];
 
+// One real event per platform, traced through the modules it touches. Drives the homepage system map;
+// steps paraphrase each product page's own workflow section.
+export interface FlowStep {
+  code: string;
+  name: string;
+  detail: string;
+}
+
+export interface Flow {
+  slug: Product["slug"];
+  sector: string;
+  event: string;
+  steps: FlowStep[];
+}
+
+export const flows: Flow[] = [
+  {
+    slug: "znxerp",
+    sector: "Manufacturing",
+    event: "A raw-material delivery arrives at the gate",
+    steps: [
+      { code: "PRC", name: "Goods in", detail: "The delivery is matched to its purchase order, and a goods-received note and bin labels are created." },
+      { code: "QC", name: "Quarantine", detail: "The stock is locked until the lab tests a sample and releases it." },
+      { code: "MES", name: "Production", detail: "The batch runs against the approved formulation, with yield and machine time recorded." },
+      { code: "WMS", name: "Dispatch", detail: "Finished goods are picked oldest-first and shipped to the customer." },
+      { code: "FIN", name: "Ledger", detail: "Every movement has already posted to the general ledger. No month-end catch-up." },
+    ],
+  },
+  {
+    slug: "znxepos",
+    sector: "Retail",
+    event: "A customer reaches the till",
+    steps: [
+      { code: "POS", name: "Scan", detail: "Items are scanned, and multi-buy deals and loyalty discounts apply automatically." },
+      { code: "PAY", name: "Payment", detail: "The customer splits the bill between cash and card. The receipt prints or goes to WhatsApp." },
+      { code: "SYN", name: "Offline sync", detail: "The sale is saved on the till itself, so trading carries on even if the internet drops." },
+      { code: "STK", name: "Stock", detail: "Branch stock updates, and a reorder is raised when an item falls below its threshold." },
+      { code: "FIN", name: "Ledger", detail: "At shift end the cashier counts blind, and the day's sales post to the ledger." },
+    ],
+  },
+  {
+    slug: "znxedu",
+    sector: "Education",
+    event: "A student walks through the school gate",
+    steps: [
+      { code: "ID", name: "Gate", detail: "The student's card or fingerprint is read at the turnstile." },
+      { code: "ATT", name: "Attendance", detail: "They're marked present for the day's classes, with no register to fill in." },
+      { code: "APP", name: "Parent alert", detail: "A parent gets a notification on the app that their child has arrived." },
+      { code: "FEE", name: "Fees", detail: "Any overdue fee shows on the student's record, matched against the bank automatically." },
+      { code: "MIS", name: "Head office", detail: "Attendance and fees roll up across every campus in one report." },
+    ],
+  },
+  {
+    slug: "znxcare",
+    sector: "Healthcare",
+    event: "A patient arrives at the emergency desk",
+    steps: [
+      { code: "REG", name: "Registration", detail: "The patient is identified and given a permanent medical record number." },
+      { code: "TRG", name: "Triage", detail: "Severity is assessed, a bed is assigned and insurance cover is checked." },
+      { code: "EHR", name: "Doctor", detail: "Notes are written with drug-interaction checks, and lab tests are ordered." },
+      { code: "LIS", name: "Lab", detail: "The analyser sends results straight back into the patient's record over HL7." },
+      { code: "PHR", name: "Pharmacy", detail: "Medicines are dispensed with a barcode check, and the bill is prepared." },
+    ],
+  },
+];
+
 export interface Service {
   id: string;
   // Former anchor ids that must keep working for old links (fragments never reach the server).

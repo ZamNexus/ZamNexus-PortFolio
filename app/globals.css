@@ -62,9 +62,9 @@
   --color-success: var(--success);
   --color-danger: var(--danger);
 
-  /* Typography hierarchy: Inter (body) + Sora (headings) + Geist Mono (labels/data) */
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-sora);
+  /* Typography: Schibsted Grotesk for headings and body, Geist Mono for codes and data */
+  --font-sans: var(--font-schibsted);
+  --font-heading: var(--font-schibsted);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -1863,3 +1863,306 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+
+/* ── Homepage system map (components/SystemMap.tsx) ──────────────────────────
+   One event traced through a platform's modules. --signal is the product colour,
+   --progress (0–1) how far the event has travelled. */
+.system-map {
+  --signal: var(--accent-hover);
+  --dot: 22px;
+  --line: 3px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 28px;
+}
+
+.system-map__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.system-map__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+}
+
+.system-map__tab {
+  position: relative;
+  padding: 6px 0 10px;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--foreground-muted);
+  cursor: pointer;
+  transition: color var(--transition-base);
+}
+
+.system-map__tab:hover { color: var(--foreground); }
+
+.system-map__tab[aria-selected="true"] { color: var(--foreground-strong); }
+
+.system-map__tab::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--signal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-slow), background-color var(--transition-base);
+}
+
+.system-map__tab[aria-selected="true"]::after { transform: scaleX(1); }
+
+.system-map__play {
+  font-size: 0.875rem;
+  color: var(--foreground-muted);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.system-map__play:hover { color: var(--foreground); }
+
+.system-map__event {
+  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 16px;
+  font-size: clamp(1.5rem, 3.2vw, 2.375rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--foreground-strong);
+}
+
+.system-map__product {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--signal);
+  transition: color var(--transition-base);
+}
+
+/* Track: vertical on phones, a horizontal pipeline from 768px. The wrapper draws the line
+   and the travelling pulse; the <ol> lays out the stops. */
+.system-map__track {
+  position: relative;
+  margin-top: 44px;
+}
+
+.system-map__stops {
+  display: grid;
+  gap: 22px;
+}
+
+.system-map__track::before,
+.system-map__track::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--dot) / 2 - var(--line) / 2);
+  top: calc(var(--dot) / 2);
+  width: var(--line);
+  height: calc(100% - var(--dot));
+  border-radius: var(--line);
+}
+
+.system-map__track::before { background: var(--border-subtle); }
+
+.system-map__track::after {
+  background: var(--signal);
+  transform: scaleY(var(--progress));
+  transform-origin: top;
+  transition: transform 700ms var(--ease-out), background-color var(--transition-base);
+}
+
+/* The event itself: a glowing point that rides the line to the active stop */
+.system-map__pulse {
+  position: absolute;
+  z-index: 2;
+  left: calc(var(--dot) / 2);
+  top: calc(var(--dot) / 2 + (100% - var(--dot)) * var(--progress));
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--signal) 55%, transparent), 0 0 24px 6px var(--signal);
+  transition: top 700ms var(--ease-out), left 700ms var(--ease-out), box-shadow var(--transition-base);
+  pointer-events: none;
+}
+
+.system-map__node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: var(--dot) 3.25rem 1fr;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.system-map__dot {
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: 50%;
+  background: var(--background);
+  border: 2px solid var(--border-subtle);
+  transition: background-color var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-slow);
+}
+
+.system-map__code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--foreground-muted);
+  transition: color var(--transition-base);
+}
+
+.system-map__name {
+  font-size: 1.0625rem;
+  color: var(--foreground-muted);
+  transition: color var(--transition-base);
+}
+
+.system-map__node:hover .system-map__name { color: var(--foreground); }
+
+.system-map__stop[data-state="done"] .system-map__dot {
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.system-map__stop[data-state="active"] .system-map__dot {
+  background: var(--signal);
+  border-color: var(--signal);
+  box-shadow: 0 0 0 7px color-mix(in srgb, var(--signal) 22%, transparent);
+}
+
+.system-map__stop[data-state="done"] .system-map__code,
+.system-map__stop[data-state="active"] .system-map__code { color: var(--signal); }
+
+.system-map__stop[data-state="done"] .system-map__name { color: var(--foreground); }
+
+.system-map__stop[data-state="active"] .system-map__name {
+  color: var(--foreground-strong);
+  font-weight: 600;
+}
+
+.system-map__detail {
+  margin-top: 36px;
+  min-height: 7.5rem;
+  max-width: 62ch;
+}
+
+.system-map__detail-text {
+  font-size: clamp(1.125rem, 1.6vw, 1.3125rem);
+  line-height: 1.55;
+  color: var(--foreground);
+  animation: map-detail-in 450ms var(--ease-out);
+}
+
+.system-map__link {
+  display: inline-block;
+  margin-top: 14px;
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent-text) 40%, transparent);
+  text-underline-offset: 5px;
+  transition: text-decoration-color var(--transition-base);
+}
+
+.system-map__link:hover { text-decoration-color: var(--accent-text); }
+
+.system-map__tab:focus-visible,
+.system-map__node:focus-visible,
+.system-map__play:focus-visible,
+.system-map__link:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 4px;
+}
+
+@keyframes map-detail-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (min-width: 768px) {
+  .system-map__stops {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  /* The line runs from the first dot's centre to the last's: 10% to 90% of five equal columns */
+  .system-map__track::before,
+  .system-map__track::after {
+    left: 10%;
+    top: calc(var(--dot) / 2 - var(--line) / 2);
+    width: 80%;
+    height: var(--line);
+  }
+
+  .system-map__pulse {
+    left: calc(10% + 80% * var(--progress));
+    top: calc(var(--dot) / 2);
+  }
+
+  .system-map__track::after {
+    transform: scaleX(var(--progress));
+    transform-origin: left;
+  }
+
+  .system-map__node {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 10px;
+    text-align: center;
+    padding-bottom: 6px;
+  }
+
+  .system-map__code { margin-top: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .system-map__detail-text { animation: none; }
+  .system-map__track::after,
+  .system-map__tab::after,
+  .system-map__pulse,
+  .system-map__dot { transition: none; }
+}
+
+/* ── Homepage product rail and service rows ──────────────────────────────── */
+/* A short bar in the product's own colour, the only place that colour appears outside its page */
+.product-rail {
+  padding-top: 26px;
+  border-top: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.product-rail::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 56px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--rail);
+}
+
+.service-row {
+  display: grid;
+  gap: 4px;
+  padding: 22px 0;
+}
+
+.service-row:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 4px;
+  border-radius: 6px;
+}

@@ -76,7 +76,7 @@ export default function ProductsPage() {
 
         {/* ── COMPARISON ───────────────────────────────────────────────────── */}
         <section aria-labelledby="compare-heading" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60">
-          <SectionHeader id="compare-heading" tag="Compare" title="Which platform is right for you?" />
+          <SectionHeader id="compare-heading" title="Which platform is right for you?" />
           <div className="overflow-x-auto rounded-3xl border border-[var(--border-subtle)]">
             <table className="w-full min-w-[640px] text-left text-sm">
               <thead className="bg-surface-2 text-foreground-strong">
@@ -103,7 +103,7 @@ export default function ProductsPage() {
 
         {/* ── IMPLEMENTATION ───────────────────────────────────────────────── */}
         <section aria-labelledby="rollout-heading" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60">
-          <SectionHeader id="rollout-heading" tag="Implementation" title="From kick-off to go-live." />
+          <SectionHeader id="rollout-heading" title="From kick-off to go-live." />
           <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {rollout.map((step, i) => (
               <li key={step.name} className="rounded-3xl bg-surface/80 border border-[var(--border-subtle)] p-6">
