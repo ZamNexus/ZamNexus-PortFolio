@@ -98,7 +98,7 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
 
   const byline = company.articleAuthorsAreStaff
     ? { name: article.author, role: article.authorRole }
-    : { name: "ZamNexus Engineering", role: "Zamooq Limited" };
+    : { name: "ZamNexus Engineering", role: "ZamNexus Limited" };
 
   const related = relatedOffer[article.id];
 

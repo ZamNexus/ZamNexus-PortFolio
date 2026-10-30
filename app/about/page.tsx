@@ -50,7 +50,7 @@ export default function AboutPage() {
             <SplitWords mode="load" text="About ZamNexus" />
           </h1>
           <p data-enter="4" className="mt-6 text-base sm:text-xl text-foreground-muted max-w-3xl leading-relaxed">
-            We&apos;re the technology brand of {company.legalName}. We build and run the software that manufacturers,
+            We build and run the software that manufacturers,
             retailers, schools and hospitals depend on every day.
           </p>
         </section>
@@ -65,7 +65,7 @@ export default function AboutPage() {
                 CRM for organisations where the numbers have to be right.
               </p>
               <p>
-                ZamNexus grew out of that work. The same problems kept coming up in manufacturing, retail, education and
+                Our platforms grew out of that work. The same problems kept coming up in manufacturing, retail, education and
                 healthcare, so we built a platform for each: ZNXERP, ZNXePOS, ZNXEdu and ZNXCare. Alongside them, our
                 engineers deliver AI, cloud, SaaS and integration projects for clients in the UK, Pakistan and the UAE.
               </p>

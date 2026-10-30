@@ -128,7 +128,7 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
         </Reveal>
         <div className="pt-8 pb-10 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-4">
           <div className="space-y-1">
-            <p>© ZamNexus, a technology brand of {company.legalName}. All rights reserved.</p>
+            <p>© {company.legalName}. All rights reserved.</p>
             <p>
               {company.legalName}, registered in England &amp; Wales
               {company.companyNumber.confirmed ? `, company no. ${company.companyNumber.value}` : ""}. 34 Beaconsfield,

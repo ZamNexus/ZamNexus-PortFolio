@@ -49,7 +49,7 @@ export default function PrivacyPolicyPage() {
             Privacy Policy
           </h1>
           <p className="mt-4 text-base sm:text-lg text-zinc-400 max-w-3xl leading-relaxed">
-            This Privacy Policy explains how ZamNexus, a technology brand of Zamooq Limited,
+            This Privacy Policy explains how ZamNexus Limited
             collects, processes, stores, and safeguards personal data in strict compliance with the
             UK General Data Protection Regulation (UK GDPR), the Data Protection Act 2018 (DPA 2018),
             and applicable international privacy regulations.
@@ -74,7 +74,7 @@ export default function PrivacyPolicyPage() {
               Data Controller Identity
             </span>
             <p className="text-sm font-semibold text-white">
-              Zamooq Limited (Trading as ZamNexus)
+              ZamNexus Limited
             </p>
             <p className="text-xs text-zinc-400">
               Registered Office: 34 Beaconsfield, Luton, Bedfordshire, LU2 0RW, United Kingdom
@@ -128,8 +128,7 @@ export default function PrivacyPolicyPage() {
                 Introduction &amp; Controller Details
               </h2>
               <p>
-                ZamNexus is a technology and engineering brand owned and operated by{" "}
-                <strong className="text-white">Zamooq Limited</strong>, a company incorporated
+                <strong className="text-white">ZamNexus Limited</strong> is a company incorporated
                 under the laws of England and Wales, with its registered address at{" "}
                 <strong className="text-white">34 Beaconsfield, Luton, Bedfordshire, LU2 0RW, United Kingdom</strong>.
               </p>
@@ -140,7 +139,7 @@ export default function PrivacyPolicyPage() {
                 consulting, and integration engagements.
               </p>
               <p>
-                When you engage with us directly, Zamooq Limited acts as the{" "}
+                When you engage with us directly, ZamNexus Limited acts as the{" "}
                 <strong className="text-white">Data Controller</strong> for your personal data. Where we host
                 or process data on behalf of our enterprise clients through our multi-tenant SaaS products,
                 we act as a <strong className="text-white">Data Processor</strong> in accordance with the
@@ -470,7 +469,7 @@ export default function PrivacyPolicyPage() {
                 For any questions regarding this Privacy Policy, to exercise your GDPR rights, or to speak with our Data Protection team, contact:
               </p>
               <div className="p-5 rounded-2xl border border-zinc-800 bg-zinc-900/40 space-y-2 text-xs font-mono">
-                <div className="text-white font-bold">Zamooq Limited t/a ZamNexus</div>
+                <div className="text-white font-bold">ZamNexus Limited</div>
                 <div className="text-zinc-400">Attention: Legal &amp; Data Protection Lead</div>
                 <div className="text-zinc-400">Address: 34 Beaconsfield, Luton, Bedfordshire, LU2 0RW, United Kingdom</div>
                 <div className="text-zinc-400">

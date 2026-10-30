@@ -4,7 +4,7 @@ import { pageMetadata, jsonLd, breadcrumbs } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Terms of Service | ZamNexus",
   description:
-    "The terms that govern use of the ZamNexus website, software products and services provided by Zamooq Limited, under the laws of England and Wales.",
+    "The terms that govern use of the ZamNexus website, software products and services provided by ZamNexus Limited, under the laws of England and Wales.",
   path: "/terms",
 });
 

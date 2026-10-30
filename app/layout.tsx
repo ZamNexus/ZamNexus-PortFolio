@@ -106,7 +106,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   "@type": "Organization",
                   "@id": "https://zamnexus.com/#organization",
                   name: "ZamNexus",
-                  alternateName: "Zamooq Limited",
+                  legalName: "ZamNexus Limited",
                   url: "https://zamnexus.com",
                   logo: "https://zamnexus.com/znx_logo_clean.png",
                   foundingDate: "2009",

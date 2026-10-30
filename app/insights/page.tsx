@@ -160,7 +160,7 @@ export default function InsightsPage() {
                 </div>
                 <div>
                   <div className="text-xs font-bold text-white">{company.articleAuthorsAreStaff ? featuredInsight.author : "ZamNexus Engineering"}</div>
-                  <div className="text-[11px] font-mono text-foreground-muted">{company.articleAuthorsAreStaff ? featuredInsight.authorRole : "Zamooq Limited"}</div>
+                  <div className="text-[11px] font-mono text-foreground-muted">{company.articleAuthorsAreStaff ? featuredInsight.authorRole : "ZamNexus Limited"}</div>
                 </div>
               </div>
 

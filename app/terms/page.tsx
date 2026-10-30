@@ -51,7 +51,7 @@ export default function TermsOfServicePage() {
           </h1>
           <p className="mt-4 text-base sm:text-lg text-zinc-400 max-w-3xl leading-relaxed">
             These Terms of Service constitute a legally binding agreement between you or the entity you represent
-            and Zamooq Limited (trading as ZamNexus), governing the access to and use of our enterprise software
+            and ZamNexus Limited, governing the access to and use of our enterprise software
             products, cloud-native architectures, API meshes, and technical consulting deliverables.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4 sm:gap-8 text-xs font-mono text-zinc-400">
@@ -74,7 +74,7 @@ export default function TermsOfServicePage() {
               Contracting Commercial Entity
             </span>
             <p className="text-sm font-semibold text-white">
-              Zamooq Limited (Trading as ZamNexus)
+              ZamNexus Limited
             </p>
             <p className="text-xs text-zinc-400">
               Registered Office: 34 Beaconsfield, Luton, Bedfordshire, LU2 0RW, United Kingdom
@@ -129,8 +129,7 @@ export default function TermsOfServicePage() {
               </h2>
               <p>
                 These Terms of Service (&quot;Terms&quot;) govern the contractual relationship between{" "}
-                <strong className="text-white">Zamooq Limited</strong>, trading as{" "}
-                <strong className="text-white">ZamNexus</strong> (&quot;Company&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;),
+                <strong className="text-white">ZamNexus Limited</strong> (&quot;Company&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;),
                 a company incorporated under the laws of England and Wales with its registered office at{" "}
                 <strong className="text-white">34 Beaconsfield, Luton, Bedfordshire, LU2 0RW, United Kingdom</strong>,
                 and the customer, business enterprise, or individual (&quot;Client&quot;, &quot;Customer&quot;, or &quot;you&quot;)
@@ -212,16 +211,16 @@ export default function TermsOfServicePage() {
               <p>
                 <strong className="text-white">Our Intellectual Property:</strong> All software source code, object code,
                 architecture designs, algorithms, database schemas, trademarks, documentation, logos, and proprietary workflows
-                embodied within ZamNexus and its products remain the exclusive intellectual property of Zamooq Limited and its licensors.
+                embodied within the ZamNexus products remain the exclusive intellectual property of ZamNexus Limited and its licensors.
               </p>
               <p>
                 <strong className="text-white">License Grant:</strong> Subject to timely payment of applicable fees and full compliance
-                with these Terms, Zamooq Limited grants Customer a non-exclusive, non-transferable, non-sublicensable, revocable license
+                with these Terms, ZamNexus Limited grants Customer a non-exclusive, non-transferable, non-sublicensable, revocable license
                 during the subscription term to access and use the software solely for Customer&apos;s internal business operations.
               </p>
               <p>
                 No ownership rights are transferred to Customer under these Terms. All rights not expressly granted herein are reserved
-                exclusively by Zamooq Limited.
+                exclusively by ZamNexus Limited.
               </p>
             </section>
 
@@ -305,7 +304,7 @@ export default function TermsOfServicePage() {
               </p>
               <p>
                 <strong className="text-white">Disclaimer:</strong> Except as expressly provided herein or in an applicable SLA, the website,
-                services, and software are provided on an &quot;as is&quot; and &quot;as available&quot; basis. Zamooq Limited disclaims all other
+                services, and software are provided on an &quot;as is&quot; and &quot;as available&quot; basis. ZamNexus Limited disclaims all other
                 warranties, express or implied, including warranties of merchantability, fitness for a particular purpose, or non-infringement.
                 We do not warrant that software execution will be completely uninterrupted or error-free.
               </p>
@@ -331,7 +330,7 @@ export default function TermsOfServicePage() {
               </p>
               <p>
                 <strong className="text-white">Liability Cap:</strong> Except for Customer&apos;s payment obligations or willful misconduct, each party&apos;s
-                total aggregate liability arising out of or related to these Terms shall not exceed the total fees paid or payable by Customer to Zamooq Limited
+                total aggregate liability arising out of or related to these Terms shall not exceed the total fees paid or payable by Customer to ZamNexus Limited
                 under the applicable agreement during the twelve (12) months preceding the incident giving rise to liability.
               </p>
             </section>
@@ -345,12 +344,12 @@ export default function TermsOfServicePage() {
                 Mutual Indemnification
               </h2>
               <p>
-                <strong className="text-white">By ZamNexus:</strong> Zamooq Limited agrees to defend and indemnify Customer against claims brought by an
+                <strong className="text-white">By ZamNexus:</strong> ZamNexus Limited agrees to defend and indemnify Customer against claims brought by an
                 independent third party alleging that Customer&apos;s authorized use of the software directly infringes a registered patent or copyright,
                 provided Customer gives prompt written notice, sole control of defense, and reasonable cooperation.
               </p>
               <p>
-                <strong className="text-white">By Customer:</strong> Customer agrees to defend and indemnify Zamooq Limited against third-party claims
+                <strong className="text-white">By Customer:</strong> Customer agrees to defend and indemnify ZamNexus Limited against third-party claims
                 arising out of Customer Data, Customer&apos;s breach of the Acceptable Use Policy, or Customer&apos;s unlawful processing of personal data.
               </p>
             </section>
@@ -438,7 +437,7 @@ export default function TermsOfServicePage() {
                 All legal notices, contractual inquiries, and official correspondence under these Terms must be sent in writing to:
               </p>
               <div className="p-5 rounded-2xl border border-zinc-800 bg-zinc-900/40 space-y-2 text-xs font-mono">
-                <div className="text-white font-bold">Zamooq Limited t/a ZamNexus</div>
+                <div className="text-white font-bold">ZamNexus Limited</div>
                 <div className="text-zinc-400">Attention: Legal &amp; Commercial Contracts Department</div>
                 <div className="text-zinc-400">Address: 34 Beaconsfield, Luton, Bedfordshire, LU2 0RW, United Kingdom</div>
                 <div className="text-zinc-400">

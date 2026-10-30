@@ -10,9 +10,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ---
 
-# Zamooq Platform — Agent Coding Standards & Architecture Guide
+# ZamNexus Platform — Agent Coding Standards & Architecture Guide
 
-> **Company**: Zamooq — Software Development & Consulting  
+> **Company**: ZamNexus Limited — Software Development & Consulting  
 > **Owner & CEO**: Mir Mujeeb Ul Hassan  
 > **Stack**: Next.js 16 · React 19 · TypeScript 5 · Tailwind CSS 4  
 > **Design tokens**: `app/globals.css` is the source of truth (deep navy #0A0F1E, electric blue #2563EB). The lime palette in §3 below is historical and no longer used.
@@ -21,10 +21,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## 1. Project Identity & Business Context
 
-Zamooq is a **premium software services & consulting company** targeting enterprise clients.
+ZamNexus is a **premium software services & consulting company** targeting enterprise clients.
 The website must communicate:
 
-- **Technical authority** — the visitor should immediately trust that Zamooq builds production-grade systems.
+- **Technical authority** — the visitor should immediately trust that ZamNexus builds production-grade systems.
 - **Creative polish** — every pixel, micro-interaction, and animation should feel intentional and premium.
 - **Enterprise readiness** — design choices must signal that this company handles large-scale projects ($50k–$500k+ budgets).
 
@@ -288,13 +288,13 @@ export default function DynamicWidget() {
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Services — Zamooq | Enterprise Software Development & AI Solutions",
-  description: "Explore Zamooq's enterprise capabilities: AI engineering, cloud architecture, cybersecurity, staff augmentation, and custom software development.",
+  title: "Services — ZamNexus | Enterprise Software Development & AI Solutions",
+  description: "Explore ZamNexus's enterprise capabilities: AI engineering, cloud architecture, cybersecurity, staff augmentation, and custom software development.",
   openGraph: {
-    title: "Services — Zamooq",
+    title: "Services — ZamNexus",
     description: "Enterprise software development and consulting.",
     type: "website",
-    siteName: "Zamooq",
+    siteName: "ZamNexus",
   },
 };
 ```
@@ -394,7 +394,7 @@ export const metadata: Metadata = {
 | `<a>` for internal links | Use `next/link` |
 | Inline `style={}` for static styles | Use Tailwind classes or globals.css |
 | `"use client"` on layout.tsx | Keep layouts as Server Components |
-| Placeholder text ("Lorem ipsum") | Write real, contextual copy for Zamooq |
+| Placeholder text ("Lorem ipsum") | Write real, contextual copy for ZamNexus |
 | Generic colors (plain red, blue) | Use design system tokens only |
 | Missing `key` prop in lists | Always use unique, stable keys |
 | `useEffect` for data fetching | Use Server Components or `fetch` in RSC |

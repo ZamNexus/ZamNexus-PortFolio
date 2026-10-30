@@ -1,6 +1,6 @@
 // Every client-supplied claim on the site lives here. Items render only when `confirmed` is true,
 // so an unverified figure, client name or credential can never reach the page by accident.
-// To publish one: confirm it with Zamooq Limited (in writing for client names), then set confirmed: true.
+// To publish one: confirm it with ZamNexus Limited (in writing for client names), then set confirmed: true.
 
 export interface Claim {
   value: string;
@@ -47,7 +47,7 @@ export const clients: { name: string; products: ProductSlug[]; confirmed: boolea
 ];
 
 export const company = {
-  legalName: "Zamooq Limited",
+  legalName: "ZamNexus Limited",
   foundingYear: { value: "2009", label: "Established", confirmed: false } satisfies Claim,
   companyNumber: { value: "", label: "Company No.", confirmed: false } satisfies Claim,
   icoNumber: { value: "", label: "ICO registration", confirmed: false } satisfies Claim,

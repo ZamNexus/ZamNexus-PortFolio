@@ -1,4 +1,4 @@
-# Zamooq Platform — CLAUDE.md (Agent Context Reference)
+# ZamNexus Platform — CLAUDE.md (Agent Context Reference)
 
 > This file is read by Claude-based AI coding agents. It supplements AGENTS.md with Claude-specific conventions.
 
@@ -8,7 +8,7 @@
 
 ## Quick Context
 
-- **Project**: ZamNexus (the technology brand of Zamooq Limited): four business platforms + engineering services
+- **Project**: ZamNexus Limited: four business platforms + engineering services
 - **Owner & CEO**: Mir Mujeeb Ul Hassan
 - **Stack**: Next.js 16 (App Router) + React 19 + TypeScript 5 + Tailwind CSS 4
 - **Design**: Deep navy (#0A0F1E) with electric blue (#2563EB) accent. Tokens live in `app/globals.css`; it is the source of truth over any colour named elsewhere in these docs
@@ -59,7 +59,7 @@ Use the Tailwind tokens from `app/globals.css` (`@theme inline`), not raw hex va
 - **ZERO `any` types** — Define TypeScript interfaces for ALL data structures
 - **ZERO unused imports** — Clean every import on every file
 - **ZERO inline styles** — Use Tailwind or globals.css only
-- **ZERO placeholder text** — Write real Zamooq-specific content
+- **ZERO placeholder text** — Write real ZamNexus-specific content
 - **ZERO `console.log`** — Remove all debug statements
 - **Use `next/image`** for all images (with `width`/`height` or `fill`)
 - **Use `next/link`** for all internal navigation
@@ -155,7 +155,7 @@ export default function PageName() {
 For pages that are Server Components, export metadata directly:
 ```tsx
 export const metadata: Metadata = {
-  title: "Page Title — Zamooq",
+  title: "Page Title — ZamNexus",
   description: "Compelling description (120-160 chars).",
 };
 ```
@@ -174,5 +174,5 @@ For Client Component pages (`"use client"`), metadata must be set via a parent l
 6. **Using `useEffect` for data fetching** — Use Server Components with `async/await` instead
 7. **Hardcoding external URLs for assets that should be local** — Use `/public` directory for owned assets
 8. **Creating components without TypeScript interfaces** — Every prop must be typed
-9. **Using generic Tailwind colors** — Stick to the Zamooq design system palette only
+9. **Using generic Tailwind colors** — Stick to the ZamNexus design system palette only
 10. **Ignoring mobile responsiveness** — Every layout must work on 320px–1920px screens

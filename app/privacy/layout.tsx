@@ -4,7 +4,7 @@ import { pageMetadata, jsonLd, breadcrumbs } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy | ZamNexus",
   description:
-    "How ZamNexus and Zamooq Limited collect, use and protect personal data under UK GDPR and the Data Protection Act 2018, and your rights.",
+    "How ZamNexus Limited collects, use and protect personal data under UK GDPR and the Data Protection Act 2018, and your rights.",
   path: "/privacy",
 });
 

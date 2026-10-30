@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { pageMetadata, jsonLd, breadcrumbs } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "About ZamNexus | A Zamooq Limited Company",
+  title: "About ZamNexus | Business Platforms & Engineering",
   description:
-    "ZamNexus is the technology brand of Zamooq Limited, with teams in the UK and Pakistan building business platforms and enterprise software.",
+    "ZamNexus Limited has teams in the UK and Pakistan building business platforms and enterprise software.",
   path: "/about",
 });
 

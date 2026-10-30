@@ -1,6 +1,6 @@
 # ZamNexus website
 
-Marketing site for ZamNexus, the technology brand of Zamooq Limited. Next.js 16 (App Router), React 19, TypeScript and Tailwind CSS 4.
+Marketing site for ZamNexus Limited. Next.js 16 (App Router), React 19, TypeScript and Tailwind CSS 4.
 
 ## Run it locally
 
