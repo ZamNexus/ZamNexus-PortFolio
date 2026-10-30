@@ -240,7 +240,7 @@ export default function Navbar() {
           role="status"
           className="sticky top-0 inset-x-0 z-[60] h-9 flex items-center justify-center gap-3 px-4 text-center bg-gradient-to-r from-[var(--accent)]/20 via-[#8B5CF6]/20 to-[var(--accent)]/20 border-b border-[var(--accent)]/25 backdrop-blur-sm"
         >
-          <p className="text-xs sm:text-[13px] font-medium text-zinc-200 truncate">
+          <p className="min-w-0 text-xs sm:text-[13px] font-medium text-zinc-200 truncate">
             Four platforms for manufacturing, retail, education and healthcare.{" "}
             <Link href="/products" className="font-bold text-[var(--accent-text)] hover:underline">
               See the products →

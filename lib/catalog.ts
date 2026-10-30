@@ -148,6 +148,8 @@ export interface Service {
   // Former anchor ids that must keep working for old links (fragments never reach the server).
   aliases: string[];
   name: string;
+  // Short form for tight spaces: the services page index and the footer.
+  label: string;
   short: string;
   outcome: string;
   deliverables: string[];
@@ -159,6 +161,7 @@ export const services: Service[] = [
     id: "ai-automation",
     aliases: ["ai-intelligent", "intelligent-automation", "ai-powered-business", "ai-powered", "automation"],
     name: "AI & Automation",
+    label: "AI & Automation",
     short: "Put AI to work inside your real processes, with guardrails.",
     outcome:
       "Put AI to work inside the processes you already run, such as approvals, document handling and customer service, with a person in control where it matters.",
@@ -176,6 +179,7 @@ export const services: Service[] = [
     id: "saas",
     aliases: ["saas-development", "saas-platforms"],
     name: "SaaS Product Development",
+    label: "SaaS Development",
     short: "From architecture to a product customers pay for.",
     outcome:
       "Turn a product idea or an internal tool into a secure multi-tenant SaaS product that customers can sign up for and pay for.",
@@ -193,6 +197,7 @@ export const services: Service[] = [
     id: "cloud",
     aliases: ["cloud-native", "cloud-native-solutions"],
     name: "Cloud-Native Engineering",
+    label: "Cloud-Native",
     short: "Serverless AWS systems that scale and cost less to run.",
     outcome:
       "Back-end systems on AWS that scale up for peaks and down to save money, defined as code so they're repeatable and auditable.",
@@ -209,6 +214,7 @@ export const services: Service[] = [
     id: "integration",
     aliases: ["connected-enterprise", "digital-transformation"],
     name: "Integration & Modernisation",
+    label: "Integration",
     short: "Connect your systems and retire legacy safely.",
     outcome:
       "Connect your ERP, CRM and line-of-business systems so data is entered once, and replace legacy software step by step without a risky big-bang switch-over.",
@@ -226,6 +232,7 @@ export const services: Service[] = [
     id: "microsoft",
     aliases: ["microsoft-solutions", "platforms"],
     name: "Microsoft Dynamics 365 & Power Platform",
+    label: "Microsoft Dynamics 365",
     short: "Implementation, customisation and Copilot.",
     outcome:
       "Implement or rescue Dynamics 365 and Power Platform so your sales, service and finance teams work in one place.",
@@ -241,6 +248,7 @@ export const services: Service[] = [
     id: "salesforce",
     aliases: ["salesforce-solutions"],
     name: "Salesforce",
+    label: "Salesforce",
     short: "Sales and Service Cloud, integrated with the rest of your stack.",
     outcome:
       "Configure and integrate Salesforce so it reflects how you actually sell and serve, not how the default setup assumes you do.",
