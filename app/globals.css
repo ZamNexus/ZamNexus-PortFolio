@@ -3276,3 +3276,129 @@ h1, h2, h3, h4, h5, h6 {
   .product-flow .dg-node,
   .stage-items > * { animation: none; }
 }
+
+.product-card__link:hover span,
+.product-card__link:focus-visible span { transform: translateX(4px); }
+
+/* ── About ───────────────────────────────────────────────────────────────── */
+
+/* Story diagram: each platform and its pulse in the product's own colour */
+.about-story { max-width: 420px; margin-inline: auto; }
+.about-story__pulse { fill: var(--rail); filter: drop-shadow(0 0 6px var(--rail)); }
+.about-story__product { stroke: color-mix(in srgb, var(--rail) 60%, transparent); }
+.about-story__dot { fill: var(--rail); }
+
+/* Principles: a large index number that brightens on hover */
+.principle-card__num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--foreground-muted);
+  transition: color var(--motion-base) var(--ease-out);
+}
+
+.principle-card:hover .principle-card__num { color: var(--accent-text); }
+
+/* Leadership: the avatar ring draws, then the text follows */
+.leader__avatar {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 22%, var(--surface-primary));
+  font-weight: 700;
+  color: var(--foreground-strong);
+}
+
+.leader__avatar svg {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.leader__ring {
+  fill: none;
+  stroke: var(--accent-text);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1100ms var(--ease-out) 150ms;
+}
+
+.leader__text {
+  transition: opacity var(--motion-slow) var(--ease-out) 350ms, transform var(--motion-slow) var(--ease-out) 350ms;
+}
+
+[data-reveal="draw"][data-state="out"] .leader__ring { stroke-dashoffset: 1; }
+[data-reveal="draw"][data-state="out"] .leader__text { opacity: 0; transform: translateX(-10px); }
+
+/* Offices: open ones show a steady light; the one still to open pulses */
+.office-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--success) 35%, transparent);
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.office-status__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--success);
+}
+
+.office-status--soon {
+  border-color: var(--border-strong);
+  background: transparent;
+}
+
+.office-status--soon .office-status__dot {
+  background: var(--accent-text);
+  animation: office-soon 1.8s var(--ease-out) infinite;
+}
+
+@keyframes office-soon {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-text) 60%, transparent); }
+  100% { box-shadow: 0 0 0 8px transparent; }
+}
+
+/* Company details: each row's divider draws as it arrives */
+.details { border-top: 1px solid var(--border-subtle); }
+
+.details__row { position: relative; }
+
+.details__row::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--border-subtle);
+  transform-origin: left;
+  transition: transform 900ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+
+[data-reveal="group"][data-state="out"] .details__row::after { transform: scaleX(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .principle-card__num,
+  .leader__ring,
+  .leader__text,
+  .details__row::after { transition: none; }
+  .office-status--soon .office-status__dot { animation: none; }
+}

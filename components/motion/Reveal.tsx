@@ -2,7 +2,7 @@
 
 import { createElement, useEffect, useState, type CSSProperties, type ReactNode } from "react";
 
-type RevealTag = "div" | "section" | "ul" | "ol" | "article" | "p" | "header";
+type RevealTag = "div" | "section" | "ul" | "ol" | "dl" | "article" | "p" | "header";
 
 interface RevealProps {
   children: ReactNode;
