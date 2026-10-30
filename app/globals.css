@@ -4468,3 +4468,197 @@ h1, h2, h3, h4, h5, h6 {
   .module-core,
   .module-core__port { transition: none; }
 }
+
+/* ── Products hub: one animated emblem per product (components/ProductEmblem) ──
+   Each in its product colour (--rail); they quicken a little while the card is hovered. */
+.emblem {
+  position: relative;
+  height: 112px;
+  margin: -8px -8px 22px;
+  padding: 8px;
+  border-radius: 18px;
+  background:
+    radial-gradient(90% 120% at 30% 0%, color-mix(in srgb, var(--rail) 14%, transparent), transparent 70%),
+    color-mix(in srgb, var(--surface-primary) 55%, transparent);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.emblem svg { display: block; height: 100%; margin-inline: auto; overflow: visible; font-family: var(--font-mono); }
+
+.em-track { fill: color-mix(in srgb, var(--foreground-muted) 20%, transparent); }
+
+/* ERP: gears turn against each other while the batch fills */
+.em-gear { transform-box: fill-box; transform-origin: center; }
+.em-gear--big { animation: em-spin 10s linear infinite; }
+.em-gear--small { animation: em-spin 6.67s linear infinite reverse; }
+.em-teeth { fill: none; stroke: var(--rail); stroke-width: 6; }
+.em-wheel { fill: color-mix(in srgb, var(--rail) 18%, var(--surface-primary)); stroke: var(--rail); stroke-width: 1.5; }
+.em-hub { fill: var(--rail); }
+.em-vessel { fill: none; stroke: var(--border-strong); stroke-width: 1.5; }
+.em-fill { fill: color-mix(in srgb, var(--rail) 55%, transparent); transform-box: fill-box; transform-origin: bottom; animation: em-batch 5s var(--ease-out) infinite; }
+
+@keyframes em-spin { to { transform: rotate(360deg); } }
+@keyframes em-batch {
+  0% { transform: scaleY(0.05); }
+  80% { transform: scaleY(1); fill: color-mix(in srgb, var(--rail) 55%, transparent); }
+  86% { transform: scaleY(1); fill: var(--success); }
+  100% { transform: scaleY(0.05); }
+}
+
+/* ePOS: a laser sweeps the barcode; each read flashes */
+.em-bar { fill: var(--foreground-strong); opacity: 0.85; }
+.em-digits { fill: var(--foreground-muted); font-size: 9px; letter-spacing: 0.08em; text-anchor: middle; }
+.em-laser { fill: var(--rail); filter: drop-shadow(0 0 6px var(--rail)); animation: em-laser 2.4s ease-in-out infinite alternate; }
+.em-beep { fill: var(--success); opacity: 0; animation: em-beep 2.4s linear infinite; }
+
+@keyframes em-laser { from { transform: translateY(0); } to { transform: translateY(56px); } }
+@keyframes em-beep {
+  0%, 90% { opacity: 0; }
+  94% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Edu: the week's timetable fills class by class, then a new week starts */
+.em-day { fill: var(--foreground-muted); font-size: 9px; font-weight: 700; text-anchor: middle; }
+.em-slot { fill: color-mix(in srgb, var(--foreground-muted) 14%, transparent); animation: em-slot 8s var(--ease-out) infinite both; }
+.em-subject--0 { --subject: var(--rail); }
+.em-subject--1 { --subject: color-mix(in srgb, var(--rail) 60%, #fff); }
+.em-subject--2 { --subject: color-mix(in srgb, var(--rail) 55%, var(--surface-primary)); }
+
+@keyframes em-slot {
+  0% { fill: color-mix(in srgb, var(--foreground-muted) 14%, transparent); }
+  4%, 88% { fill: var(--subject); }
+  96%, 100% { fill: color-mix(in srgb, var(--foreground-muted) 14%, transparent); }
+}
+
+/* Care: a heartbeat with rings, and vitals that keep moving */
+.em-heart { fill: var(--rail); transform-box: fill-box; transform-origin: center; animation: em-beat 1.2s var(--ease-out) infinite; }
+.em-ring { fill: none; stroke: var(--rail); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: em-ring 1.2s ease-out infinite; }
+.em-ring--late { animation-delay: 0.3s; }
+.em-vital { fill: color-mix(in srgb, var(--rail) 60%, transparent); transform-box: fill-box; transform-origin: bottom; animation: em-vital 1.6s ease-in-out infinite alternate; }
+.em-vital--1 { animation-delay: -0.4s; animation-duration: 1.3s; }
+.em-vital--2 { animation-delay: -0.9s; animation-duration: 1.8s; }
+.em-vital--3 { animation-delay: -0.2s; animation-duration: 1.1s; }
+.em-vital--4 { animation-delay: -1.2s; animation-duration: 1.5s; }
+
+@keyframes em-beat {
+  0%, 40%, 100% { transform: scale(1); }
+  12% { transform: scale(1.14); }
+  24% { transform: scale(0.98); }
+}
+@keyframes em-ring {
+  from { transform: scale(1); opacity: 0.7; }
+  to { transform: scale(2); opacity: 0; }
+}
+@keyframes em-vital {
+  from { transform: scaleY(0.3); }
+  to { transform: scaleY(1); }
+}
+
+/* Hovering a card quickens its emblem */
+.product-card:hover .em-gear--big { animation-duration: 4s; }
+.product-card:hover .em-gear--small { animation-duration: 2.67s; }
+.product-card:hover .em-laser { animation-duration: 1.2s; }
+.product-card:hover .em-beep { animation-duration: 1.2s; }
+.product-card:hover .em-heart,
+.product-card:hover .em-ring { animation-duration: 0.8s; }
+
+/* ── Products hub: rollout step icons (components/RolloutIcon) ───────────── */
+.rollout-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 16px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface-primary));
+  border: 1px solid color-mix(in srgb, var(--accent-text) 30%, transparent);
+}
+
+.rollout-icon svg { width: 34px; height: 34px; overflow: visible; }
+
+.ri-stroke { fill: none; stroke: var(--accent-text); stroke-width: 2.4; stroke-linecap: round; }
+.ri-stroke--accent { stroke: var(--success); }
+.ri-dot { fill: color-mix(in srgb, var(--foreground-muted) 50%, transparent); }
+
+/* Map: the lens scans across the process */
+.ri-lens { animation: ri-scan 4s ease-in-out infinite; }
+@keyframes ri-scan {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(8px, -6px); }
+  66% { transform: translate(4px, 6px); }
+}
+
+/* Configure: the switches flip one by one */
+.ri-track { fill: color-mix(in srgb, var(--foreground-muted) 22%, transparent); }
+.ri-knob { fill: var(--foreground-strong); animation: ri-flip 4s var(--ease-out) infinite; }
+.ri-knob--1 { animation-delay: 0.4s; }
+.ri-knob--2 { animation-delay: 0.8s; }
+@keyframes ri-flip {
+  0%, 10% { transform: translateX(0); fill: var(--foreground-muted); }
+  25%, 85% { transform: translateX(24px); fill: var(--accent-text); }
+  100% { transform: translateX(0); fill: var(--foreground-muted); }
+}
+
+/* Migrate: records travel from the old system to the new */
+.ri-record { fill: var(--accent-text); opacity: 0; animation: ri-move 3s var(--ease-out) infinite; }
+.ri-record--1 { animation-delay: 1s; }
+.ri-record--2 { animation-delay: 2s; }
+@keyframes ri-move {
+  0% { transform: translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  80% { transform: translateX(26px); opacity: 1; }
+  100% { transform: translateX(26px); opacity: 0; }
+}
+
+/* Go live: the ring completes, then the tick */
+.ri-live-ring { fill: none; stroke: var(--border-strong); stroke-width: 2.4; }
+.ri-live-arc {
+  fill: none;
+  stroke: var(--success);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  transform: rotate(-90deg);
+  transform-origin: 24px 24px;
+  animation: ri-arc 4s var(--ease-out) infinite;
+}
+.ri-live-tick { fill: none; stroke: var(--success); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; animation: ri-tick 4s var(--ease-out) infinite; }
+@keyframes ri-arc {
+  0% { stroke-dashoffset: 1; }
+  45%, 90% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 1; }
+}
+@keyframes ri-tick {
+  0%, 45% { stroke-dashoffset: 1; }
+  60%, 90% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emblem *,
+  .rollout-icon * { animation: none !important; }
+  .em-slot { fill: var(--subject); }
+  .em-beep, .ri-record { opacity: 0; }
+}
+.em-slot--0 { animation-delay: 0.0s; }
+.em-slot--1 { animation-delay: 0.3s; }
+.em-slot--2 { animation-delay: 0.6s; }
+.em-slot--3 { animation-delay: 0.9s; }
+.em-slot--4 { animation-delay: 1.2s; }
+.em-slot--5 { animation-delay: 1.5s; }
+.em-slot--6 { animation-delay: 1.8s; }
+.em-slot--7 { animation-delay: 2.1s; }
+.em-slot--8 { animation-delay: 2.4s; }
+.em-slot--9 { animation-delay: 2.7s; }
+.em-slot--10 { animation-delay: 3.0s; }
+.em-slot--11 { animation-delay: 3.3s; }
+.em-slot--12 { animation-delay: 3.6s; }
+.em-slot--13 { animation-delay: 3.9s; }
+.em-slot--14 { animation-delay: 4.2s; }
+.em-slot--15 { animation-delay: 4.5s; }
+.em-slot--16 { animation-delay: 4.8s; }
+.em-slot--17 { animation-delay: 5.1s; }
+.em-slot--18 { animation-delay: 5.4s; }
+.em-slot--19 { animation-delay: 5.7s; }

@@ -4,6 +4,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionHeader from "@/components/SectionHeader";
 import ProductExplorer from "@/components/ProductExplorer";
+import ProductEmblem from "@/components/ProductEmblem";
+import RolloutIcon from "@/components/RolloutIcon";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
@@ -60,6 +62,7 @@ export default function ProductsPage() {
             {products.map((p) => (
               <Spotlight key={p.slug} className="lift-card product-card p-8 flex flex-col" style={{ "--rail": p.accent } as CSSProperties}>
                 <div className="product-card__bar" aria-hidden="true" />
+                <ProductEmblem slug={p.slug} />
                 <div className="flex items-center justify-between gap-4">
                   <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
                   <span className="text-xs font-mono uppercase tracking-wider text-foreground-muted">{p.sector}</span>
@@ -119,6 +122,7 @@ export default function ProductsPage() {
           <Stagger as="ol" className="rollout grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {rollout.map((step, i) => (
               <li key={step.name} className="rollout__step lift-card p-6">
+                <RolloutIcon step={i as 0 | 1 | 2 | 3} />
                 <span className="text-xs font-mono font-bold text-accent-text">Step {i + 1}</span>
                 <h3 className="mt-2 text-lg font-bold text-foreground-strong">{step.name}</h3>
                 <p className="mt-2 text-sm text-foreground-muted leading-relaxed">{step.text}</p>
