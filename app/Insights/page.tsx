@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PillTab from "@/components/PillTab";
 import { useHeroMotion } from "@/components/useHeroMotion";
+import { submitLead } from "@/lib/submitLead";
 
 import { featuredInsight, articles, categories } from "./insightsData";
 import type { InsightCategory } from "./insightsData";
@@ -15,21 +16,26 @@ export default function InsightsPage() {
   const heroMotion = useHeroMotion();
   const [selectedCategory, setSelectedCategory] = useState<InsightCategory>("all");
   const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "success">("idle");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success">("idle");
+  const [newsletterError, setNewsletterError] = useState<string | null>(null);
 
   const filteredArticles =
     selectedCategory === "all"
       ? articles
       : articles.filter((a) => a.category === selectedCategory);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newsletterEmail || !newsletterEmail.includes("@")) return;
-    setNewsletterStatus("success");
-    setTimeout(() => {
-      setNewsletterEmail("");
+    setNewsletterStatus("sending");
+    setNewsletterError(null);
+    const failure = await submitLead({ source: "newsletter", email: newsletterEmail });
+    if (failure) {
+      setNewsletterError(failure);
       setNewsletterStatus("idle");
-    }, 4000);
+      return;
+    }
+    setNewsletterStatus("success");
+    setNewsletterEmail("");
   };
 
   return (
@@ -284,9 +290,12 @@ export default function InsightsPage() {
               />
               <button
                 type="submit"
-                className="w-full sm:w-auto liquid-lime-btn text-xs py-3.5 px-6 whitespace-nowrap cursor-pointer"
+                disabled={newsletterStatus !== "idle"}
+                className="w-full sm:w-auto liquid-lime-btn text-xs py-3.5 px-6 whitespace-nowrap cursor-pointer disabled:opacity-60 disabled:cursor-default"
               >
-                <span>{newsletterStatus === "success" ? "Subscribed ✓" : "Get Briefings"}</span>
+                <span>
+                  {newsletterStatus === "success" ? "Subscribed ✓" : newsletterStatus === "sending" ? "Sending…" : "Get Briefings"}
+                </span>
                 <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
               </button>
             </form>
@@ -297,8 +306,13 @@ export default function InsightsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-xs font-mono text-emerald-400 mt-4"
               >
-                ✓ You have been enrolled in the quarterly engineering dispatch.
+                ✓ Thanks. You&apos;re on the list for our quarterly briefings.
               </motion.div>
+            )}
+            {newsletterError && (
+              <p role="alert" className="text-xs font-mono text-red-400 mt-4">
+                {newsletterError}
+              </p>
             )}
           </div>
         </section>

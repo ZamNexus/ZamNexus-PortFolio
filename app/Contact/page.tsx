@@ -8,10 +8,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PillTab from "@/components/PillTab";
 import { useHeroMotion } from "@/components/useHeroMotion";
+import { submitLead } from "@/lib/submitLead";
 
 // ─── Options & Data ──────────────────────────────────────────────────────────
 
-const OFFICIAL_EMAIL = "{{OFFICIAL_EMAIL}}";
+const OFFICIAL_EMAIL = "contact@zamnexus.com";
 
 const projectIntents = [
   { id: "ai", label: "AI & Copilots", icon: "🧠" },
@@ -234,6 +235,8 @@ export default function ContactPage() {
   const [selectedTimeline, setSelectedTimeline] = useState<string>(timelineOptions[1]);
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -241,6 +244,7 @@ export default function ContactPage() {
     company: "",
     phone: "",
     message: "",
+    website: "",
   });
 
   const toggleIntent = (id: string) => {
@@ -279,9 +283,19 @@ export default function ContactPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    setError(null);
+    const failure = await submitLead({
+      source: "contact",
+      ...formData,
+      interests: projectIntents.filter((i) => selectedIntents.includes(i.id)).map((i) => i.label),
+      timeline: selectedTimeline,
+    });
+    setSending(false);
+    if (failure) setError(failure);
+    else setSubmitted(true);
   };
 
   return (
@@ -600,6 +614,24 @@ export default function ContactPage() {
                       />
                     </div>
 
+                    {/* Honeypot: hidden from people, filled by bots */}
+                    <input
+                      type="text"
+                      name="website"
+                      value={formData.website}
+                      onChange={handleChange}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="absolute -left-[9999px] w-px h-px opacity-0"
+                    />
+
+                    {error && (
+                      <p role="alert" className="text-sm text-red-400 font-mono">
+                        {error}
+                      </p>
+                    )}
+
                     {/* Submit Button */}
                     <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
                       <div className="text-[11px] font-mono text-zinc-500">
@@ -609,9 +641,10 @@ export default function ContactPage() {
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.98 }}
                         type="submit"
-                        className="liquid-lime-btn text-sm py-3.5 px-8 cursor-pointer"
+                        disabled={sending}
+                        className="liquid-lime-btn text-sm py-3.5 px-8 cursor-pointer disabled:opacity-60 disabled:cursor-wait"
                       >
-                        <span>Transmit Project Brief</span>
+                        <span>{sending ? "Sending…" : "Transmit Project Brief"}</span>
                         <span className="arrow-icon w-7 h-7 text-xs" aria-hidden="true">→</span>
                       </motion.button>
                     </div>
@@ -643,7 +676,7 @@ export default function ContactPage() {
                         type="button"
                         onClick={() => {
                           setSubmitted(false);
-                          setFormData({ name: "", email: "", company: "", phone: "", message: "" });
+                          setFormData({ name: "", email: "", company: "", phone: "", message: "", website: "" });
                         }}
                         className="px-6 py-2.5 rounded-full border border-zinc-700 bg-zinc-800/80 text-zinc-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
                       >

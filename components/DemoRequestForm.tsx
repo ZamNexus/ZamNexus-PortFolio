@@ -2,6 +2,7 @@
 
 import { useState, useId } from "react";
 import type { FormEvent, ChangeEvent } from "react";
+import { submitLead } from "@/lib/submitLead";
 
 interface DemoRequestFormProps {
   productName: string;
@@ -14,6 +15,7 @@ interface FormData {
   company: string;
   role: string;
   message: string;
+  website: string;
 }
 
 export default function DemoRequestForm({
@@ -22,21 +24,29 @@ export default function DemoRequestForm({
 }: DemoRequestFormProps) {
   const uid = useId();
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState<FormData>({
     name: "",
     email: "",
     company: "",
     role: "",
     message: "",
+    website: "",
   });
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    setError(null);
+    const failure = await submitLead({ source: "demo", product: productName, ...form });
+    setSending(false);
+    if (failure) setError(failure);
+    else setSubmitted(true);
   };
 
   if (submitted) {
@@ -190,13 +200,32 @@ export default function DemoRequestForm({
         />
       </div>
 
+      {/* Honeypot: hidden from people, filled by bots */}
+      <input
+        type="text"
+        name="website"
+        value={form.website}
+        onChange={handleChange}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] w-px h-px opacity-0"
+      />
+
+      {error && (
+        <p role="alert" className="text-sm text-red-400 font-mono">
+          {error}
+        </p>
+      )}
+
       <button
         type="submit"
         id={`${uid}-submit`}
-        className="w-full py-4 rounded-full font-bold text-base text-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(37,99,235,0.35)]"
+        disabled={sending}
+        className="w-full py-4 rounded-full font-bold text-base text-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(37,99,235,0.35)] disabled:opacity-60 disabled:cursor-wait"
         style={{ background: accentColor }}
       >
-        Request Your {productName} Demo →
+        {sending ? "Sending…" : `Request Your ${productName} Demo →`}
       </button>
     </form>
   );
