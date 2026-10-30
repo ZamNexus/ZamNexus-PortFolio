@@ -45,6 +45,13 @@
   --transition-fast: 150ms var(--ease-out);
   --transition-base: 250ms var(--ease-out);
   --transition-slow: 450ms var(--ease-out);
+
+  /* ── Scroll and entrance motion (components/motion/) ── */
+  --motion-fast: 200ms;
+  --motion-base: 450ms;
+  --motion-slow: 800ms;
+  --reveal-distance: 20px;
+  --stagger: 70ms;
 }
 
 @theme inline {
@@ -2165,4 +2172,187 @@ h1, h2, h3, h4, h5, h6 {
   outline: 2px solid var(--accent-text);
   outline-offset: 4px;
   border-radius: 6px;
+}
+
+/* ── Motion system (components/motion/Reveal, Stagger, Parallax) ──────────────
+   Content is visible unless a Reveal has set data-state="out" after mounting, so a
+   failed script or observer can never leave anything hidden. Transform and opacity only. */
+@media (max-width: 767px) {
+  :root { --reveal-distance: 12px; }
+}
+
+[data-reveal="rise"],
+[data-reveal="fade"],
+[data-reveal="group"] > * {
+  transition:
+    opacity var(--motion-slow) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out);
+  transition-delay: calc(var(--reveal-delay, 0ms) + var(--i, 0) * var(--stagger));
+}
+
+[data-reveal="rise"][data-state="out"],
+[data-reveal="group"][data-state="out"] > * {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+}
+
+[data-reveal="fade"][data-state="out"] { opacity: 0; }
+
+[data-reveal="group"] > :nth-child(2) { --i: 1; }
+[data-reveal="group"] > :nth-child(3) { --i: 2; }
+[data-reveal="group"] > :nth-child(4) { --i: 3; }
+[data-reveal="group"] > :nth-child(5) { --i: 4; }
+[data-reveal="group"] > :nth-child(6) { --i: 5; }
+[data-reveal="group"] > :nth-child(7) { --i: 6; }
+[data-reveal="group"] > :nth-child(8) { --i: 7; }
+[data-reveal="group"] > :nth-child(9) { --i: 8; }
+[data-reveal="group"] > :nth-child(n + 10) { --i: 9; }
+
+/* Page-load entrance: one orchestrated sequence per page. Pure CSS, so it plays before
+   hydration and ends visible even if scripts never load. */
+@keyframes enter-rise {
+  from { opacity: 0; transform: translateY(24px); }
+}
+
+[data-enter] {
+  animation: enter-rise var(--motion-slow) var(--ease-out) both;
+  animation-delay: calc(var(--enter-step, 0) * 120ms + 80ms);
+}
+
+[data-enter="2"] { --enter-step: 1; }
+[data-enter="3"] { --enter-step: 2; }
+[data-enter="4"] { --enter-step: 3; }
+[data-enter="5"] { --enter-step: 4; }
+
+/* System map: on first view the line draws, then the stops light up in order */
+[data-reveal="draw"] .system-map__track::before {
+  transform-origin: top;
+  transition: transform 900ms var(--ease-out);
+}
+
+[data-reveal="draw"][data-state="out"] .system-map__track::before { transform: scaleY(0); }
+
+[data-reveal="draw"] .system-map__stop {
+  transition: opacity var(--motion-base) var(--ease-out), transform var(--motion-base) var(--ease-out);
+  transition-delay: calc(250ms + var(--i, 0) * 110ms);
+}
+
+[data-reveal="draw"][data-state="out"] .system-map__stop {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+[data-reveal="draw"][data-state="out"] .system-map__pulse,
+[data-reveal="draw"][data-state="out"] .system-map__track::after { opacity: 0; }
+
+.system-map__stop:nth-child(2) { --i: 1; }
+.system-map__stop:nth-child(3) { --i: 2; }
+.system-map__stop:nth-child(4) { --i: 3; }
+.system-map__stop:nth-child(5) { --i: 4; }
+
+@media (min-width: 768px) {
+  [data-reveal="draw"] .system-map__track::before { transform-origin: left; }
+  [data-reveal="draw"][data-state="out"] .system-map__track::before { transform: scaleX(0); }
+}
+
+/* Soft light in the active sector's colour behind the map; drifts with scroll on desktop */
+.system-map { position: relative; isolation: isolate; }
+
+.system-map__glow-layer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.system-map__glow {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 22%;
+  height: 60%;
+  border-radius: 50%;
+  background-color: var(--signal);
+  opacity: 0.09;
+  filter: blur(90px);
+  transition: background-color var(--motion-slow) var(--ease-out);
+}
+
+/* Product rails light up as each product appears */
+.product-rail::before {
+  transform-origin: left;
+  transition: transform var(--motion-slow) var(--ease-out);
+  transition-delay: calc(200ms + var(--i, 0) * var(--stagger));
+}
+
+[data-reveal="group"][data-state="out"] .product-rail::before { transform: scaleX(0); }
+
+/* Service rows: each divider draws as the row arrives; the name nudges on hover */
+.service-item { position: relative; }
+
+.service-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--border-subtle);
+  transform-origin: left;
+  transition: transform 900ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+
+[data-reveal="group"][data-state="out"] .service-item::after { transform: scaleX(0); }
+
+.service-row__name {
+  display: inline-block;
+  transition: color var(--motion-base) var(--ease-out), transform var(--motion-base) var(--ease-out);
+}
+
+.service-row:hover .service-row__name,
+.service-row:focus-visible .service-row__name {
+  color: var(--accent-text);
+  transform: translateX(4px);
+}
+
+/* Buttons answer the press, not only the hover */
+.liquid-lime-btn:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: var(--motion-fast);
+}
+
+.liquid-lime-btn:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-enter] { animation: none; }
+  [data-reveal],
+  [data-reveal] *,
+  .product-rail::before,
+  .service-item::after,
+  .service-row__name,
+  .system-map__glow { transition: none !important; }
+  .service-row:hover .service-row__name { transform: none; }
+}
+
+/* Closing call-to-action band: one soft light from the brand blue, top left */
+.final-cta__glow {
+  position: absolute;
+  top: -6rem;
+  left: -6rem;
+  width: 20rem;
+  height: 20rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  opacity: 0.35;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+/* Entrance safety: no animation where it can't be watched or might never start */
+@media (scripting: none), print {
+  [data-enter] { animation: none; }
 }

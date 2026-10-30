@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { flows, products } from "@/lib/catalog";
+import Parallax from "@/components/motion/Parallax";
 
 const STEP_MS = 2600;
 
@@ -73,6 +74,9 @@ export default function SystemMap() {
       className="system-map"
       style={{ "--signal": product.accent, "--progress": progress } as CSSProperties}
     >
+      <Parallax className="system-map__glow-layer">
+        <span className="system-map__glow" />
+      </Parallax>
       <div className="system-map__head">
         <div role="tablist" aria-label="Choose a sector" className="system-map__tabs">
           {flows.map((f, i) => (

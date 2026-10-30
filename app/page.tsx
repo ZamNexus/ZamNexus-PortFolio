@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionHeader from "@/components/SectionHeader";
 import SystemMap from "@/components/SystemMap";
+import Reveal from "@/components/motion/Reveal";
+import Stagger from "@/components/motion/Stagger";
 import { products, services } from "@/lib/catalog";
 import { clients, company, confirmed } from "@/lib/siteFacts";
 import { featuredInsight } from "./insights/insightsData";
@@ -35,16 +37,17 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-end">
             <h1
               id="home-hero-heading"
+              data-enter="1"
               className="lg:col-span-8 font-heading text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-[4.4rem] font-bold tracking-[-0.035em] text-foreground-strong text-balance"
             >
               Software that runs your operations, and the engineers who build the rest.
             </h1>
             <div className="lg:col-span-4 lg:pb-3">
-              <p className="text-lg text-foreground-muted leading-relaxed">
+              <p data-enter="2" className="text-lg text-foreground-muted leading-relaxed">
                 Four platforms for manufacturing, retail, education and healthcare, plus custom AI, cloud, Microsoft and
                 Salesforce work for organisations in the UK, Pakistan and the UAE.
               </p>
-              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <div data-enter="3" className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
                 <Link href="/contact" className="liquid-lime-btn text-base py-3.5 px-7">
                   Book a consultation
                 </Link>
@@ -52,7 +55,7 @@ export default function HomePage() {
                   See the products
                 </Link>
               </div>
-              <p className="mt-8 text-sm text-foreground-muted">{proof}</p>
+              <p data-enter="4" className="mt-8 text-sm text-foreground-muted">{proof}</p>
             </div>
           </div>
         </section>
@@ -62,7 +65,9 @@ export default function HomePage() {
           <h2 id="map-heading" className="sr-only">
             How a ZamNexus platform handles one event
           </h2>
-          <SystemMap />
+          <Reveal variant="draw">
+            <SystemMap />
+          </Reveal>
         </section>
 
         {/* ── PRODUCTS ─────────────────────────────────────────────────────── */}
@@ -72,7 +77,7 @@ export default function HomePage() {
             title="Four platforms, ready to deploy."
             intro="Each covers one sector end to end and can be configured to the way you work."
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-14">
+          <Stagger className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-14">
             {products.map((p) => (
               <article key={p.slug} className="product-rail" style={{ "--rail": p.accent } as CSSProperties}>
                 <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
@@ -83,7 +88,7 @@ export default function HomePage() {
                 </Link>
               </article>
             ))}
-          </div>
+          </Stagger>
         </section>
 
         {/* ── SERVICES ─────────────────────────────────────────────────────── */}
@@ -93,18 +98,18 @@ export default function HomePage() {
             title="When you need something built."
             intro="Six engineering services from one senior team."
           />
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-12 border-t border-[var(--border-subtle)]">
+          <Stagger as="ul" className="grid grid-cols-1 md:grid-cols-2 gap-x-12 border-t border-[var(--border-subtle)]">
             {services.map((s) => (
-              <li key={s.id} className="border-b border-[var(--border-subtle)]">
-                <Link href={`/services#${s.id}`} className="service-row group">
-                  <span className="text-lg font-semibold text-foreground-strong group-hover:text-accent-text transition-colors duration-300">
+              <li key={s.id} className="service-item">
+                <Link href={`/services#${s.id}`} className="service-row">
+                  <span className="service-row__name text-lg font-semibold text-foreground-strong">
                     {s.name}
                   </span>
                   <span className="text-foreground-muted">{s.short}</span>
                 </Link>
               </li>
             ))}
-          </ul>
+          </Stagger>
           <p className="mt-10 max-w-2xl text-foreground-muted leading-relaxed">
             Financial services, professional services, property or public sector? These services cover you too.{" "}
             <Link href="/contact" className={textLink}>
@@ -116,14 +121,14 @@ export default function HomePage() {
         {/* ── HOW WE WORK ──────────────────────────────────────────────────── */}
         <section aria-labelledby="home-how" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <SectionHeader id="home-how" title="One accountable team, from first call to go-live." />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {principles.map((p) => (
               <div key={p.title}>
                 <h3 className="text-lg font-semibold text-foreground-strong">{p.title}</h3>
                 <p className="mt-2 text-foreground-muted leading-relaxed">{p.text}</p>
               </div>
             ))}
-          </div>
+          </Stagger>
           <Link href="/services#process" className={`mt-10 inline-block ${textLink}`}>
             See how an engagement runs
           </Link>
@@ -136,12 +141,14 @@ export default function HomePage() {
           <h2 id="home-insight" className="text-foreground-muted text-lg">
             From our engineering notes
           </h2>
+          <Reveal variant="fade">
           <Link href={`/insights/${featuredInsight.id}`} className="group mt-4 block max-w-4xl">
             <span className="block font-heading text-2xl sm:text-4xl font-bold tracking-tight leading-tight text-foreground-strong group-hover:text-accent-text transition-colors duration-300">
               {featuredInsight.title}
             </span>
             <span className="mt-4 block text-foreground-muted leading-relaxed max-w-3xl">{featuredInsight.subtitle}</span>
           </Link>
+          </Reveal>
           <Link href="/insights" className={`mt-8 inline-block ${textLink}`}>
             All insights
           </Link>
