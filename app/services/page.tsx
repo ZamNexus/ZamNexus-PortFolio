@@ -5,6 +5,7 @@ import SectionHeader from "@/components/SectionHeader";
 import ServiceIndex from "@/components/ServiceIndex";
 import ProcessTimeline from "@/components/ProcessTimeline";
 import ServiceDiagram from "@/components/ServiceDiagram";
+import ServiceExplorer from "@/components/ServiceExplorer";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
@@ -87,6 +88,9 @@ export default function ServicesPage() {
             <Link href="/contact" className="liquid-lime-btn text-base py-3.5 px-7">
               Book a consultation
             </Link>
+          </div>
+          <div data-enter="7" className="mt-16">
+            <ServiceExplorer />
           </div>
         </section>
 

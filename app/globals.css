@@ -3663,3 +3663,137 @@ h1, h2, h3, h4, h5, h6 {
   .footer-link,
   .footer-rule > span { transition: none; }
 }
+
+/* ── Diagrams that play on mount (keyed remounts replay them) ────────────── */
+.dg-play .dg-line { animation: pf-draw 1000ms var(--ease-out) 80ms both; transition: none; }
+.dg-play .dg-node,
+.dg-play .dg-panel { animation: pf-pop 520ms var(--ease-out) both; transition: none; }
+.dg-play .dg-d1 { animation-delay: 60ms; }
+.dg-play .dg-d2 { animation-delay: 160ms; }
+.dg-play .dg-d3 { animation-delay: 260ms; }
+.dg-play .dg-d4 { animation-delay: 360ms; }
+.dg-play .dg-d5 { animation-delay: 460ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dg-play .dg-line,
+  .dg-play .dg-node,
+  .dg-play .dg-panel { animation: none; }
+}
+
+/* ── Services explorer ───────────────────────────────────────────────────── */
+.explorer {
+  display: grid;
+  gap: 24px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 28px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--surface-primary) 55%, transparent);
+}
+
+@media (min-width: 1024px) {
+  .explorer { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); padding: 16px; }
+}
+
+.explorer__tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.explorer__tabs::-webkit-scrollbar { display: none; }
+
+@media (min-width: 1024px) {
+  .explorer__tabs { flex-direction: column; overflow: visible; }
+}
+
+.explorer__tab {
+  position: relative;
+  flex: 0 0 auto;
+  display: grid;
+  gap: 4px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  text-align: left;
+  color: var(--foreground-muted);
+  cursor: pointer;
+  overflow: hidden;
+  transition: background-color var(--motion-base) var(--ease-out), color var(--motion-base) var(--ease-out);
+}
+
+.explorer__tab:hover { color: var(--foreground); background: color-mix(in srgb, var(--surface-primary) 70%, transparent); }
+
+.explorer__tab[aria-selected="true"] {
+  color: var(--foreground-strong);
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface-primary));
+}
+
+.explorer__tab:focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; }
+
+.explorer__tab-name { font-weight: 600; white-space: nowrap; }
+
+.explorer__tab-short {
+  display: none;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--foreground-muted);
+}
+
+@media (min-width: 1024px) {
+  .explorer__tab-short { display: block; }
+  .explorer__tab:not([aria-selected="true"]) .explorer__tab-short { display: none; }
+}
+
+/* The timer: fills under the current tab, then moves to the next service */
+.explorer__timer {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 6px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent-text);
+  transform-origin: left;
+  animation: explorer-timer 6s linear both;
+}
+
+@keyframes explorer-timer { from { transform: scaleX(0); } }
+
+.explorer:hover .explorer__timer,
+.explorer:focus-within .explorer__timer { animation-play-state: paused; }
+
+.explorer__panel {
+  display: grid;
+  align-items: center;
+  min-height: 340px;
+  padding: 8px 8px 16px;
+}
+
+.explorer__stage { display: grid; justify-items: center; gap: 20px; text-align: center; }
+
+.explorer__stage .service-diagram { max-width: 460px; }
+
+.explorer__outcome {
+  max-width: 54ch;
+  color: var(--foreground);
+  line-height: 1.6;
+  animation: enter-rise var(--motion-base) var(--ease-out) 300ms both;
+}
+
+.explorer__more {
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent-text) 40%, transparent);
+  text-underline-offset: 5px;
+  animation: enter-rise var(--motion-base) var(--ease-out) 420ms both;
+}
+
+.explorer__more:hover { text-decoration-color: var(--accent-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .explorer__timer { display: none; }
+  .explorer__outcome,
+  .explorer__more { animation: none; }
+  .explorer__tab { transition: none; }
+}

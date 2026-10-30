@@ -7,6 +7,13 @@ import type { JSX } from "react";
 
 interface ServiceDiagramProps {
   id: string;
+  // Where this copy sits, so ids stay unique when a diagram is shown more than once
+  instance?: string;
+}
+
+interface DiagramProps {
+  // Prefix for the SVG ids, so the same diagram can appear twice on a page
+  uid: string;
 }
 
 interface BoxProps {
@@ -37,14 +44,14 @@ function Box({ x, y, w, h, label, sub, accent, delay = 1 }: BoxProps) {
   );
 }
 
-function AiAutomation() {
+function AiAutomation({ uid }: DiagramProps) {
   return (
     <svg viewBox="0 0 360 200" role="img" aria-label="A document passes through an AI agent, waits for a person to approve it, then is posted to the ERP.">
-      <path id="dg-ai-path" d="M45 100 H315" pathLength={1} className="dg-line dg-line--flow" />
+      <path id={`${uid}-ai-path`} d="M45 100 H315" pathLength={1} className="dg-line dg-line--flow" />
       {/* The document travels, waits at the human checkpoint, then continues */}
       <circle r={5} className="dg-anim dg-pulse">
         <animateMotion dur="4.5s" repeatCount="indefinite" keyPoints="0;0.667;0.667;1" keyTimes="0;0.45;0.75;1" calcMode="linear">
-          <mpath href="#dg-ai-path" />
+          <mpath href={`#${uid}-ai-path`} />
         </animateMotion>
       </circle>
       <Box x={45} y={100} w={78} h={48} label="Document" sub="Invoice in" delay={1} />
@@ -63,14 +70,14 @@ function AiAutomation() {
   );
 }
 
-function Saas() {
+function Saas({ uid }: DiagramProps) {
   const tenants = [60, 180, 300];
   return (
     <svg viewBox="0 0 360 200" role="img" aria-label="One product serves three customers, each with its own isolated data.">
       {tenants.map((x, i) => (
         <path
           key={x}
-          id={`dg-saas-path-${i}`}
+          id={`${uid}-saas-path-${i}`}
           d={`M180 58 C180 100 ${x} 96 ${x} 128`}
           pathLength={1}
           className="dg-line dg-line--flow"
@@ -80,7 +87,7 @@ function Saas() {
       {tenants.map((x, i) => (
         <circle key={x} r={4} className="dg-anim dg-pulse">
           <animateMotion dur="2.4s" begin={`${i * 0.8}s`} repeatCount="indefinite">
-            <mpath href={`#dg-saas-path-${i}`} />
+            <mpath href={`#${uid}-saas-path-${i}`} />
           </animateMotion>
         </circle>
       ))}
@@ -92,13 +99,13 @@ function Saas() {
   );
 }
 
-function Cloud() {
+function Cloud({ uid }: DiagramProps) {
   const servers = [44, 80, 116, 152];
   return (
     <svg viewBox="0 0 360 200" role="img" aria-label="As traffic rises, more servers start; as it falls, they stop.">
       <path d="M14 172 H206" className="dg-axis dg-node dg-d1" />
       <path
-        id="dg-cloud-path"
+        id={`${uid}-cloud-path`}
         d="M14 160 C60 160 70 56 110 56 S160 160 206 152"
         pathLength={1}
         className="dg-line dg-line--flow"
@@ -108,7 +115,7 @@ function Cloud() {
       </text>
       <circle r={5} className="dg-anim dg-pulse">
         <animateMotion dur="5s" repeatCount="indefinite">
-          <mpath href="#dg-cloud-path" />
+          <mpath href={`#${uid}-cloud-path`} />
         </animateMotion>
       </circle>
       {servers.map((y, i) => {
@@ -143,19 +150,19 @@ function Cloud() {
   );
 }
 
-function Integration() {
+function Integration({ uid }: DiagramProps) {
   return (
     <svg viewBox="0 0 360 200" role="img" aria-label="ERP and CRM are connected through an API layer, so data entered in one appears in the other.">
-      <path id="dg-int-path" d="M58 96 H302" pathLength={1} className="dg-line dg-line--flow" />
+      <path id={`${uid}-int-path`} d="M58 96 H302" pathLength={1} className="dg-line dg-line--flow" />
       {/* Records travel both ways, passing under the boxes */}
       <circle r={4.5} className="dg-anim dg-pulse">
         <animateMotion dur="2.8s" repeatCount="indefinite">
-          <mpath href="#dg-int-path" />
+          <mpath href={`#${uid}-int-path`} />
         </animateMotion>
       </circle>
       <circle r={4.5} className="dg-anim dg-pulse dg-pulse--alt">
         <animateMotion dur="2.8s" begin="1.4s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear">
-          <mpath href="#dg-int-path" />
+          <mpath href={`#${uid}-int-path`} />
         </animateMotion>
       </circle>
       <Box x={58} y={96} w={92} h={56} label="ERP" sub="Finance, stock" delay={1} />
@@ -230,7 +237,7 @@ function Salesforce() {
   );
 }
 
-const diagrams: Record<string, () => JSX.Element> = {
+const diagrams: Record<string, (props: DiagramProps) => JSX.Element> = {
   "ai-automation": AiAutomation,
   saas: Saas,
   cloud: Cloud,
@@ -239,11 +246,11 @@ const diagrams: Record<string, () => JSX.Element> = {
   salesforce: Salesforce,
 };
 
-export default function ServiceDiagram({ id }: ServiceDiagramProps) {
+export default function ServiceDiagram({ id, instance = "dg" }: ServiceDiagramProps) {
   const Diagram = diagrams[id];
   return Diagram ? (
     <div className="service-diagram">
-      <Diagram />
+      <Diagram uid={`${instance}-${id}`} />
     </div>
   ) : null;
 }
