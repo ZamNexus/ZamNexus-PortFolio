@@ -3,6 +3,8 @@
 import { useState, useId } from "react";
 import type { FormEvent, ChangeEvent } from "react";
 import { submitLead } from "@/lib/submitLead";
+import { validateLead, type FieldErrors, type LeadField } from "@/lib/validateLead";
+import FieldError, { errorProps } from "@/components/FieldError";
 
 interface DemoRequestFormProps {
   productName: string;
@@ -26,6 +28,7 @@ export default function DemoRequestForm({
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [form, setForm] = useState<FormData>({
     name: "",
     email: "",
@@ -37,10 +40,20 @@ export default function DemoRequestForm({
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  ) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFieldErrors((prev) => ({ ...prev, [e.target.name]: undefined }));
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const errors = validateLead(form, ["name", "email", "company"]);
+    setFieldErrors(errors);
+    const firstInvalid = (["name", "email", "company"] as LeadField[]).find((f) => errors[f]);
+    if (firstInvalid) {
+      document.getElementById(`${uid}-${firstInvalid}`)?.focus();
+      return;
+    }
     setSending(true);
     setError(null);
     const failure = await submitLead({ source: "demo", product: productName, ...form });
@@ -84,6 +97,7 @@ export default function DemoRequestForm({
   return (
     <form
       onSubmit={handleSubmit}
+      noValidate
       className="space-y-5"
       style={{ "--demo-accent": accentColor } as React.CSSProperties}
     >
@@ -97,14 +111,16 @@ export default function DemoRequestForm({
           </label>
           <input
             id={`${uid}-name`}
+            {...errorProps(`${uid}-name`, fieldErrors.name)}
             type="text"
             name="name"
             required
             value={form.name}
             onChange={handleChange}
             placeholder="Jane Smith"
-            className={inputClass}
+            className={`${inputClass} data-[invalid]:border-danger`}
           />
+          <FieldError id={`${uid}-name`} message={fieldErrors.name} />
         </div>
         <div>
           <label
@@ -115,14 +131,16 @@ export default function DemoRequestForm({
           </label>
           <input
             id={`${uid}-email`}
+            {...errorProps(`${uid}-email`, fieldErrors.email)}
             type="email"
             name="email"
             required
             value={form.email}
             onChange={handleChange}
             placeholder="jane@company.com"
-            className={inputClass}
+            className={`${inputClass} data-[invalid]:border-danger`}
           />
+          <FieldError id={`${uid}-email`} message={fieldErrors.email} />
         </div>
       </div>
 
@@ -136,14 +154,16 @@ export default function DemoRequestForm({
           </label>
           <input
             id={`${uid}-company`}
+            {...errorProps(`${uid}-company`, fieldErrors.company)}
             type="text"
             name="company"
             required
             value={form.company}
             onChange={handleChange}
             placeholder="Acme Corp"
-            className={inputClass}
+            className={`${inputClass} data-[invalid]:border-danger`}
           />
+          <FieldError id={`${uid}-company`} message={fieldErrors.company} />
         </div>
         <div>
           <label

@@ -1,7 +1,8 @@
 import { stream, type ChatMessage } from "@/lib/llm";
 import { SYSTEM } from "@/lib/knowledge";
 import { limited } from "@/lib/rateLimit";
-import { saveLead, crossOrigin, clientIp, EMAIL, PHONE } from "@/lib/leads";
+import { saveLead, crossOrigin, clientIp } from "@/lib/leads";
+import { EMAIL, PHONE } from "@/lib/validateLead";
 
 const TOOLS = [
   {

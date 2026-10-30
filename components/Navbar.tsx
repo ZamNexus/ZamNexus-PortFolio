@@ -3,10 +3,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 
 const ANNOUNCEMENT_BAR_HEIGHT = 36;
 const ANNOUNCEMENT_DISMISS_KEY = "zn_announcement_dismissed";
+
+function subscribeToStorage(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  return () => window.removeEventListener("storage", onChange);
+}
+
+function readDismissed(): boolean {
+  try {
+    return window.localStorage.getItem(ANNOUNCEMENT_DISMISS_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
 const DROPDOWN_CLOSE_DELAY_MS = 0;
 
 interface DropdownItem {
@@ -78,7 +91,10 @@ export default function Navbar() {
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [visible, setVisible] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-  const [barDismissed, setBarDismissed] = useState(true);
+  // Hidden on the server and until the stored choice is read, so it never flashes for people who closed it.
+  const storedDismissed = useSyncExternalStore(subscribeToStorage, readDismissed, () => true);
+  const [dismissedNow, setDismissedNow] = useState(false);
+  const barDismissed = storedDismissed || dismissedNow;
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [openIdx, setOpenIdx] = useState<number | null>(null);
   const [indicator, setIndicator] = useState<IndicatorStyle>({ left: 0, width: 0, opacity: 0 });
@@ -88,14 +104,13 @@ export default function Navbar() {
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    const dismissed = window.localStorage.getItem(ANNOUNCEMENT_DISMISS_KEY) === "true";
-    setBarDismissed(dismissed);
-  }, []);
-
   const dismissBar = () => {
-    setBarDismissed(true);
-    window.localStorage.setItem(ANNOUNCEMENT_DISMISS_KEY, "true");
+    setDismissedNow(true);
+    try {
+      window.localStorage.setItem(ANNOUNCEMENT_DISMISS_KEY, "true");
+    } catch {
+      // Storage blocked (private mode): the bar stays closed for this visit only.
+    }
   };
 
   // ── Scroll: full hide on scroll-down / reveal on scroll-up ──

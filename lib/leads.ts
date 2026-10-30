@@ -15,9 +15,6 @@ export interface Lead {
   message?: string;
 }
 
-export const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-export const PHONE = /^\+?[\d\s().-]{7,20}$/;
-
 // Sends the lead to LEAD_WEBHOOK_URL (Slack, Zapier, Make, Power Automate, CRM inbound hook).
 // The payload carries a readable `text` line for chat webhooks plus every field for automation tools.
 // Without a webhook it falls back to a local file in dev and the function logs on Vercel (read-only disk).

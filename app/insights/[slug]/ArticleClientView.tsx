@@ -10,6 +10,59 @@ import type { InsightArticle } from "../insightsData";
 import { allInsights } from "../insightsData";
 import { company } from "@/lib/siteFacts";
 
+interface RelatedOffer {
+  name: string;
+  text: string;
+  href: string;
+  cta: string;
+}
+
+// The product or service each article supports, shown before the closing call to action.
+const relatedOffer: Record<string, RelatedOffer> = {
+  "zero-downtime-retail-mesh": {
+    name: "ZNXePOS",
+    text: "Retail point of sale that keeps trading offline, with stock synced across every branch.",
+    href: "/products/znxepos",
+    cta: "See ZNXePOS",
+  },
+  "sub-second-multi-currency-ledgers": {
+    name: "ZNXERP",
+    text: "One ERP for finance, production, inventory and quality control, built for manufacturers and pharma plants.",
+    href: "/products/znxerp",
+    cta: "See ZNXERP",
+  },
+  "agentic-ai-regulated-supply-chains": {
+    name: "AI & Automation",
+    text: "Put AI to work inside the processes you already run, with a person in control where it matters.",
+    href: "/services#ai-automation",
+    cta: "See the service",
+  },
+  "biometric-campus-iot-latency": {
+    name: "ZNXEdu",
+    text: "Admissions, fees, attendance, timetables and a parent app in one system for schools and campuses.",
+    href: "/products/znxedu",
+    cta: "See ZNXEdu",
+  },
+  "hl7-pacs-clinical-automation": {
+    name: "ZNXCare",
+    text: "Patient records, lab machines, pharmacy and billing connected, for hospitals and clinics.",
+    href: "/products/znxcare",
+    cta: "See ZNXCare",
+  },
+  "strangler-fig-legacy-modernization": {
+    name: "Integration & Modernisation",
+    text: "Connect your systems and replace legacy software step by step, without a risky big-bang switch-over.",
+    href: "/services#integration",
+    cta: "See the service",
+  },
+  "aws-serverless-scaling-postmortem": {
+    name: "SaaS Product Development",
+    text: "Turn a product idea or internal tool into a secure multi-tenant SaaS product customers pay for.",
+    href: "/services#saas",
+    cta: "See the service",
+  },
+};
+
 interface ArticleClientViewProps {
   article: InsightArticle;
 }
@@ -42,6 +95,8 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
   const byline = company.articleAuthorsAreStaff
     ? { name: article.author, role: article.authorRole }
     : { name: "ZamNexus Engineering", role: "Zamooq Limited" };
+
+  const related = relatedOffer[article.id];
 
   // Related insights (first 2 from other articles)
   const relatedInsights = allInsights
@@ -286,18 +341,37 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
             </div>
           </section>
 
+          {/* ── RELATED PRODUCT OR SERVICE ─────────────────────────────────── */}
+          {related ? (
+            <section aria-labelledby="article-related-heading" className="mb-12">
+              <Link
+                href={related.href}
+                className="group block p-8 rounded-3xl bg-surface/80 border border-[var(--border-subtle)] hover:border-[var(--border-strong)] transition-all duration-300"
+              >
+                <span className="text-xs font-mono uppercase tracking-widest font-bold text-accent-text">Related</span>
+                <h2 id="article-related-heading" className="mt-2 text-xl sm:text-2xl font-bold text-foreground-strong">
+                  {related.name}
+                </h2>
+                <p className="mt-2 text-foreground-muted leading-relaxed">{related.text}</p>
+                <span className="mt-4 inline-block text-sm font-semibold text-accent-text group-hover:underline">
+                  {related.cta} →
+                </span>
+              </Link>
+            </section>
+          ) : null}
+
           {/* ── BOTTOM CALL TO ACTION ──────────────────────────────────────── */}
           <FinalCTA
             id="article-cta-heading"
-            eyebrow="Enterprise Deployment"
-            headline="Ready to implement this architecture in your organisation?"
-            description="Our Senior Principal Architects review technical landscapes, evaluate existing bottlenecks, and design turnkey production rollouts."
+            eyebrow="Let's talk"
+            headline="Want this working in your organisation?"
+            description="Send a short brief and a senior engineer will reply within one business day."
             primaryButton={{
-              label: "Book Architecture Consultation",
+              label: "Book a consultation",
               href: "/contact",
             }}
             secondaryButton={{
-              label: "Explore More Blueprints",
+              label: "More insights",
               href: "/insights",
             }}
             containerClassName="max-w-none px-0 py-0"

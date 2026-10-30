@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 interface Nexus3DBackgroundProps {
@@ -13,7 +13,6 @@ export default function Nexus3DBackground({
   className = "",
 }: Nexus3DBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -44,7 +43,6 @@ export default function Nexus3DBackground({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
 
     container.appendChild(renderer.domElement);
-    setIsReady(true);
 
     // ─── Floating 3D Cosmic Data Field (Stars / Data Nodes) ──────────────────
     const particleCount = 1400;

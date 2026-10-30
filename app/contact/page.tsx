@@ -9,6 +9,8 @@ import Footer from "@/components/Footer";
 import PillTab from "@/components/PillTab";
 import { useHeroMotion } from "@/components/useHeroMotion";
 import { submitLead } from "@/lib/submitLead";
+import { validateLead, type FieldErrors, type LeadField } from "@/lib/validateLead";
+import FieldError, { errorProps } from "@/components/FieldError";
 
 // ─── Options & Data ──────────────────────────────────────────────────────────
 
@@ -237,6 +239,7 @@ export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   const [formData, setFormData] = useState({
     name: "",
@@ -281,10 +284,18 @@ export default function ContactPage() {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFieldErrors((prev) => ({ ...prev, [e.target.name]: undefined }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const errors = validateLead(formData, ["name", "email", "message"]);
+    setFieldErrors(errors);
+    const firstInvalid = (["name", "email", "phone", "message"] as LeadField[]).find((f) => errors[f]);
+    if (firstInvalid) {
+      document.getElementById(`contact-${firstInvalid}`)?.focus();
+      return;
+    }
     setSending(true);
     setError(null);
     const failure = await submitLead({
@@ -440,6 +451,7 @@ export default function ContactPage() {
                   <motion.form
                     key="contact-form"
                     onSubmit={handleSubmit}
+                    noValidate
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
@@ -512,12 +524,14 @@ export default function ContactPage() {
                             type="text"
                             required
                             id="contact-name"
+                            {...errorProps("contact-name", fieldErrors.name)}
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="Your name"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors"
+                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors data-[invalid]:border-danger"
                           />
+                          <FieldError id="contact-name" message={fieldErrors.name} />
                         </div>
 
                         <div>
@@ -526,12 +540,14 @@ export default function ContactPage() {
                             type="email"
                             required
                             id="contact-email"
+                            {...errorProps("contact-email", fieldErrors.email)}
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="you@company.com"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors"
+                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors data-[invalid]:border-danger"
                           />
+                          <FieldError id="contact-email" message={fieldErrors.email} />
                         </div>
 
                         <div>
@@ -552,12 +568,14 @@ export default function ContactPage() {
                           <input
                             type="tel"
                             id="contact-phone"
+                            {...errorProps("contact-phone", fieldErrors.phone)}
                             name="phone"
                             value={formData.phone}
                             onChange={handleChange}
                             placeholder="+44 …"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors"
+                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors data-[invalid]:border-danger"
                           />
+                          <FieldError id="contact-phone" message={fieldErrors.phone} />
                         </div>
                       </div>
                     </div>
@@ -571,12 +589,14 @@ export default function ContactPage() {
                         required
                         rows={4}
                         id="contact-message"
+                        {...errorProps("contact-message", fieldErrors.message)}
                         name="message"
                         value={formData.message}
                         onChange={handleChange}
                         placeholder="What are you trying to achieve, and what systems do you use today?"
-                        className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors resize-none"
+                        className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors resize-none data-[invalid]:border-danger"
                       />
+                      <FieldError id="contact-message" message={fieldErrors.message} />
                     </div>
 
                     {/* Honeypot: hidden from people, filled by bots */}

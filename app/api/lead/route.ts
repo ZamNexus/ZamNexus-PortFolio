@@ -1,5 +1,6 @@
 import { limited } from "@/lib/rateLimit";
-import { saveLead, crossOrigin, clientIp, EMAIL, PHONE, type Lead, type LeadSource } from "@/lib/leads";
+import { saveLead, crossOrigin, clientIp, type Lead, type LeadSource } from "@/lib/leads";
+import { EMAIL, PHONE } from "@/lib/validateLead";
 
 const MAX_BODY = 10_000;
 const SOURCES: LeadSource[] = ["contact", "demo", "newsletter"];

@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ZamNexus website
 
-## Getting Started
+Marketing site for ZamNexus, the technology brand of Zamooq Limited. Next.js 16 (App Router), React 19, TypeScript and Tailwind CSS 4.
 
-First, run the development server:
+## Run it locally
+
+Requires Node.js 20.9 or newer.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then fill in the values below
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Production build, run locally:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Checks before every push: `npm run lint` and `npm run build`, both with no errors.
 
-## Learn More
+## Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Needed for | Without it |
+| --- | --- | --- |
+| `OPENROUTER_API_KEY` | The chat assistant | The chat replies "Chat is unavailable right now" |
+| `OPENROUTER_MODEL` | Optional: the chat model (default `anthropic/claude-haiku-4.5`) | Default model is used |
+| `LEAD_WEBHOOK_URL` | Delivering contact, demo, newsletter and chat leads (Slack incoming webhook, Zapier/Make hook, Power Automate trigger or CRM inbound URL) | Locally, leads go to `.leads.jsonl`. **On Vercel they only reach the function logs, so set this before going live.** |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Set the same variables in Vercel under Project → Settings → Environment Variables.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Where things live
 
-## Deploy on Vercel
+| Path | What it is |
+| --- | --- |
+| `app/` | Pages. Route folders are lowercase (`/services`, `/products/znxerp`) |
+| `proxy.ts` | Redirects old and mixed-case URLs in one hop. Add a moved page to its `MOVED` map |
+| `lib/catalog.ts` | Product and service copy shared by Home, Products and Services |
+| `lib/siteFacts.ts` | Client figures, client names, founding year, company number. Each shows on the site only when `confirmed: true` |
+| `lib/seo.ts` | `pageMetadata()` for titles, descriptions, canonicals and social tags |
+| `lib/leads.ts`, `app/api/lead` | Lead delivery for the forms |
+| `docs/audit/` | The 2026 site audit, new structure, content plan and client report |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See `CLAUDE.md` and `AGENTS.md` for coding conventions.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy
+
+Vercel builds the `main` branch. Before the first deploy of this version, work through the pre-launch checklist in `docs/audit/phase-5-client-report.md`.
