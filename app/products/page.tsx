@@ -56,33 +56,35 @@ export default function ProductsPage() {
           </div>
         </section>
 
-        {/* ── PRODUCT CARDS ────────────────────────────────────────────────── */}
+        {/* ── PRODUCTS: one block each, its animation beside it, sides alternating ── */}
         <section aria-label="Products" className="max-w-6xl mx-auto px-4 sm:px-6 pb-20 sm:pb-24">
-          <Stagger className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Stagger className="grid grid-cols-1 gap-8">
             {products.map((p) => (
-              <Spotlight key={p.slug} className="lift-card product-card p-8 flex flex-col" style={{ "--rail": p.accent } as CSSProperties}>
+              <Spotlight key={p.slug} className="lift-card product-card product-row p-6 sm:p-10" style={{ "--rail": p.accent } as CSSProperties}>
                 <div className="product-card__bar" aria-hidden="true" />
                 <ProductEmblem slug={p.slug} />
-                <div className="flex items-center justify-between gap-4">
-                  <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
-                  <span className="text-xs font-mono uppercase tracking-wider text-foreground-muted">{p.sector}</span>
-                </div>
-                <h2 className="mt-6 text-xl sm:text-2xl font-bold text-foreground-strong">
-                  {p.code}: {p.category}
-                </h2>
-                <p className="mt-3 text-foreground-muted leading-relaxed">{p.purpose}</p>
-                <ul className="mt-5 space-y-2 flex-1">
-                  {p.outcomes.map((o) => (
-                    <li key={o} className="flex gap-3 text-sm text-foreground">
-                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: p.accent }} aria-hidden="true" />
-                      {o}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Link href={`/products/${p.slug}`} className="product-card__link text-sm font-semibold text-accent-text hover:underline">
-                    See {p.code} <span aria-hidden="true">→</span>
-                  </Link>
+                <div className="product-row__text">
+                  <div className="flex items-center justify-between gap-4">
+                    <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
+                    <span className="text-xs font-mono uppercase tracking-wider text-foreground-muted">{p.sector}</span>
+                  </div>
+                  <h2 className="mt-6 text-xl sm:text-2xl font-bold text-foreground-strong">
+                    {p.code}: {p.category}
+                  </h2>
+                  <p className="mt-3 text-foreground-muted leading-relaxed">{p.purpose}</p>
+                  <ul className="mt-5 space-y-2">
+                    {p.outcomes.map((o) => (
+                      <li key={o} className="flex gap-3 text-sm text-foreground">
+                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: p.accent }} aria-hidden="true" />
+                        {o}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-8 flex flex-wrap gap-3">
+                    <Link href={`/products/${p.slug}`} className="product-card__link text-sm font-semibold text-accent-text hover:underline">
+                      See {p.code} <span aria-hidden="true">→</span>
+                    </Link>
+                  </div>
                 </div>
               </Spotlight>
             ))}
