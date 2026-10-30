@@ -11,6 +11,7 @@ import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import Spotlight from "@/components/motion/Spotlight";
+import PipelineDiagram from "@/components/PipelineDiagram";
 import { submitLead } from "@/lib/submitLead";
 import { company } from "@/lib/siteFacts";
 import { jsonLd, breadcrumbs } from "@/lib/seo";
@@ -140,6 +141,10 @@ export default function InsightsPage() {
               {featuredInsight.subtitle}
             </p>
 
+            <div className="featured-pipeline mb-8">
+              <PipelineDiagram steps={featuredInsight.pipeline} accent={featuredInsight.accent} uid="featured" />
+            </div>
+
             {/* Key Takeaways */}
             <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               {featuredInsight.keyTakeaways.map((point, i) => (
@@ -221,6 +226,7 @@ export default function InsightsPage() {
                   style={{ "--rail": article.accent } as CSSProperties}
                 >
                   <div className="product-card__bar" aria-hidden="true" />
+                  <PipelineDiagram steps={article.pipeline} accent={article.accent} uid={`card-${article.id}`} compact />
                   <div>
                     {/* Category & Read Time */}
                     <div className="flex items-center justify-between mb-4">

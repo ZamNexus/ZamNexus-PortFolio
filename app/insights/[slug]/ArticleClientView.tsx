@@ -7,6 +7,9 @@ import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import Spotlight from "@/components/motion/Spotlight";
+import Walkthrough from "@/components/Walkthrough";
+import ServiceIndex from "@/components/ServiceIndex";
+import PipelineDiagram from "@/components/PipelineDiagram";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FinalCTA from "@/components/FinalCTA";
@@ -102,6 +105,14 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
 
   const related = relatedOffer[article.id];
 
+  const sections = [
+    { id: "overview", name: "Overview" },
+    { id: "problem", name: "Problem and fix" },
+    { id: "deep-dive", name: "Deep dive" },
+    { id: "how-it-works", name: "How it works" },
+    { id: "takeaways", name: "Takeaways" },
+  ];
+
   // Related insights (first 2 from other articles)
   const relatedInsights = allInsights
     .filter((item) => item.id !== article.id)
@@ -131,8 +142,15 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
       <ScrollProgress />
       <Navbar />
 
-      <main className="relative z-10 max-w-5xl mx-auto px-6 pt-36 pb-28">
-        <article className="space-y-12">
+      <main className="relative z-10 max-w-6xl mx-auto px-6 pt-36 pb-28 xl:grid xl:grid-cols-[210px_minmax(0,1fr)] xl:gap-14">
+        {/* Sticky contents with reading progress (wide screens) */}
+        <aside className="hidden xl:block">
+          <div className="sticky top-32">
+            <ServiceIndex label="In this article" items={sections} />
+          </div>
+        </aside>
+
+        <article className="space-y-12 min-w-0">
           {/* ── TOP BREADCRUMB & BACK LINK ─────────────────────────────────── */}
           <nav aria-label="Breadcrumb" data-enter="1" className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800/60 pb-6 text-xs font-mono">
             <Link
@@ -206,7 +224,7 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
           </header>
 
           {/* ── QUICK SYSTEM SPECS RIBBON (Scannable Metrics) ──────────────── */}
-          <section aria-labelledby="specs-heading" data-enter="6" className="p-6 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 shadow-xl">
+          <section id="overview" aria-labelledby="specs-heading" data-enter="6" className="scroll-mt-28 p-6 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 shadow-xl">
             <h2 id="specs-heading" className="text-xs font-mono uppercase tracking-widest text-foreground-muted font-bold mb-4">
               Production Architecture Benchmark Targets
             </h2>
@@ -223,7 +241,7 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
           </section>
 
           {/* ── THE PROBLEM & THE SOLUTION (Side-by-Side Cards) ─────────────── */}
-          <Stagger as="section" className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Stagger as="section" id="problem" className="scroll-mt-28 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* The Challenge Card */}
             <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 space-y-4">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">
@@ -270,7 +288,7 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
           </Stagger>
 
           {/* ── FULL SUMMARY / EXECUTIVE NARRATIVE ─────────────────────────── */}
-          <Reveal as="section" variant="words" replay={false} className="p-8 rounded-3xl bg-zinc-950/70 border border-zinc-800/80 space-y-4">
+          <Reveal as="section" id="deep-dive" variant="words" replay={false} className="scroll-mt-28 p-8 rounded-3xl bg-zinc-950/70 border border-zinc-800/80 space-y-4">
             <span className="reveal-sub text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold block">
               Architectural Deep-Dive
             </span>
@@ -283,42 +301,20 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
           </Reveal>
 
           {/* ── SEQUENTIAL ARCHITECTURE PIPELINE FLOW ──────────────────────── */}
-          <section aria-labelledby="pipeline-heading" className="space-y-6">
-            <Reveal variant="words" replay={false}>
-              <span className="reveal-sub text-xs font-mono uppercase tracking-widest text-foreground-muted font-bold block mb-1">
-                System Sequence
-              </span>
-              <h2 id="pipeline-heading" className="text-2xl font-bold text-white">
-                <SplitWords text="Step-by-Step Data & Logic Flow" />
-              </h2>
+          <section id="how-it-works" aria-labelledby="pipeline-heading" className="scroll-mt-28">
+            <Reveal variant="draw" className="mb-12">
+              <PipelineDiagram steps={article.pipeline} accent={article.accent} uid={`article-${article.id}`} />
             </Reveal>
-
-            <Stagger className="rollout rollout--tight grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {article.pipeline.map((step) => (
-                <div
-                  key={step.step}
-                  className="rollout__step lift-card p-5 flex flex-col justify-between space-y-3 group"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-extrabold font-mono" style={{ color: article.accent }}>
-                      {step.step}
-                    </span>
-                    <span className="text-[10px] font-mono text-foreground-muted uppercase tracking-wider">
-                      {step.phase}
-                    </span>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-bold text-white mb-1.5">{step.title}</h3>
-                    <p className="text-xs text-zinc-400 leading-relaxed">{step.detail}</p>
-                  </div>
-                </div>
-              ))}
-            </Stagger>
+            <Walkthrough
+              headingId="pipeline-heading"
+              title="Step-by-step data and logic flow."
+              intro="The pipeline in order, from the first event to the final posting."
+              steps={article.pipeline.map((p) => ({ code: p.step, name: p.title, detail: p.detail }))}
+            />
           </section>
 
           {/* ── KEY TAKEAWAYS CALLOUT ──────────────────────────────────────── */}
-          <section className="p-8 rounded-3xl bg-zinc-900/60 border border-zinc-800 space-y-6">
+          <section id="takeaways" className="scroll-mt-28 p-8 rounded-3xl bg-zinc-900/60 border border-zinc-800 space-y-6">
             <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest font-bold" style={{ color: article.accent }}>
               <span>★</span>
               <span>Principal Architect Takeaways</span>

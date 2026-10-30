@@ -4,12 +4,13 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 interface ServiceIndexProps {
   items: { id: string; name: string }[];
+  label?: string;
 }
 
 // Sticky table of contents for the services page (desktop). A highlight slides to the service
 // being read, each entry fills a thin line as that service is read, and finished ones get a tick.
 // Every entry is a plain anchor, so it works without JavaScript too.
-export default function ServiceIndex({ items }: ServiceIndexProps) {
+export default function ServiceIndex({ items, label = "Services on this page" }: ServiceIndexProps) {
   const [active, setActive] = useState(0);
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
@@ -60,7 +61,7 @@ export default function ServiceIndex({ items }: ServiceIndexProps) {
   }, [items]);
 
   return (
-    <nav aria-label="Services on this page" className="service-index" style={{ "--active": active } as CSSProperties}>
+    <nav aria-label={label} className="service-index" style={{ "--active": active } as CSSProperties}>
       <span className="service-index__marker" aria-hidden="true" />
       <ul>
         {items.map((item, i) => (

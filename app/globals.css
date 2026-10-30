@@ -4260,3 +4260,33 @@ h1, h2, h3, h4, h5, h6 {
   .service-preview { transition: none; }
   .stage__scene { animation: none; }
 }
+
+/* ── Article pipelines (components/PipelineDiagram) ──────────────────────────
+   In the article colour (--rail). The full diagram draws in with its Reveal;
+   the compact one on index cards only runs its pulse while the card is hovered. */
+.pipeline { --accent-text: color-mix(in srgb, var(--rail, var(--accent)) 70%, #fff); width: 100%; }
+
+.pipeline svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--font-sans); }
+
+.pl-line { stroke: color-mix(in srgb, var(--rail, var(--accent)) 45%, transparent); }
+.pl-node { fill: var(--surface-primary); stroke: var(--border-strong); stroke-width: 1.5; }
+.pl-lit { fill: color-mix(in srgb, var(--rail, var(--accent)) 24%, transparent); stroke: var(--rail, var(--accent)); stroke-width: 1.5; }
+.pl-pulse { fill: #fff; filter: drop-shadow(0 0 6px var(--rail, var(--accent))); }
+.pl-step { fill: var(--foreground-strong); font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-anchor: middle; }
+
+.featured-pipeline {
+  max-width: 640px;
+  padding: 20px 16px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-primary) 50%, transparent);
+}
+
+.pipeline--compact { margin: -4px 0 14px; max-width: 220px; }
+.pipeline--compact .pl-node { stroke: color-mix(in srgb, var(--rail, var(--accent)) 50%, transparent); }
+.pipeline--compact .pl-pulse,
+.pipeline--compact .pl-lit { visibility: hidden; }
+.product-card:hover .pipeline--compact .pl-pulse,
+.product-card:hover .pipeline--compact .pl-lit,
+.product-card:focus-within .pipeline--compact .pl-pulse,
+.product-card:focus-within .pipeline--compact .pl-lit { visibility: visible; }
