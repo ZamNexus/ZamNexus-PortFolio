@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import FinalCTA from "@/components/FinalCTA";
+import Reveal from "@/components/motion/Reveal";
+import Stagger from "@/components/motion/Stagger";
 import { company } from "@/lib/siteFacts";
 
 interface FooterLink {
@@ -72,7 +74,7 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
 
         {/* Links Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
-          <div className="lg:col-span-5 space-y-5">
+          <Reveal className="lg:col-span-5 space-y-5">
             <Link href="/" className="inline-flex items-center" aria-label="ZamNexus home">
               <Image
                 src="/znx_logo_clean.png"
@@ -88,16 +90,17 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
             </p>
             <a
               href="mailto:contact@zamnexus.com"
-              className="inline-block text-sm text-[var(--foreground)] hover:text-[var(--accent-text)] transition-colors"
+              className="footer-link text-sm text-[var(--foreground)]"
             >
               contact@zamnexus.com
             </a>
             <p className="text-xs">
               Built on {technologies.join(" · ")}
             </p>
-          </div>
+          </Reveal>
 
-          <nav aria-label="Footer" className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-8">
+          <nav aria-label="Footer" className="lg:col-span-7">
+            <Stagger className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {columns.map((column) => (
               <div key={column.heading}>
                 <h2 className="text-xs font-mono uppercase tracking-widest text-[var(--foreground-strong)] font-bold mb-4">
@@ -106,7 +109,7 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
                 <ul className="space-y-2.5 text-sm">
                   {column.links.map((link) => (
                     <li key={link.href + link.label}>
-                      <Link href={link.href} className="hover:text-[var(--accent-text)] transition-colors">
+                      <Link href={link.href} className="footer-link">
                         {link.label}
                       </Link>
                     </li>
@@ -114,11 +117,16 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
                 </ul>
               </div>
             ))}
+            </Stagger>
           </nav>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-zinc-800/80 pt-8 pb-10 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-4">
+        {/* The rule draws across as the bottom bar arrives */}
+        <Reveal variant="draw" className="footer-rule">
+          <span aria-hidden="true" />
+        </Reveal>
+        <div className="pt-8 pb-10 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-4">
           <div className="space-y-1">
             <p>© ZamNexus, a technology brand of {company.legalName}. All rights reserved.</p>
             <p>
@@ -128,10 +136,10 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
             </p>
           </div>
           <div className="flex items-center gap-6">
-            <Link href="/privacy" className="hover:text-[var(--foreground)] transition-colors">
+            <Link href="/privacy" className="footer-link">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-[var(--foreground)] transition-colors">
+            <Link href="/terms" className="footer-link">
               Terms of Service
             </Link>
           </div>

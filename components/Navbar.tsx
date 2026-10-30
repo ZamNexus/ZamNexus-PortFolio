@@ -428,13 +428,12 @@ export default function Navbar() {
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-drawer"
             >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                {mobileOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
+              {/* Three lines that fold into a cross */}
+              <span className={`nav-burger ${mobileOpen ? "nav-burger--open" : ""}`} aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </span>
             </button>
           </div>
         </div>
@@ -445,7 +444,8 @@ export default function Navbar() {
           role="dialog"
           aria-modal="true"
           aria-label="Mobile Navigation Menu"
-          className={`lg:hidden fixed inset-0 top-0 left-0 right-0 bottom-0 w-full h-[100dvh] min-h-screen bg-[#090b10] z-40 flex flex-col transition-transform duration-[220ms] ease-out will-change-transform ${
+          data-open={mobileOpen}
+          className={`nav-drawer lg:hidden fixed inset-0 top-0 left-0 right-0 bottom-0 w-full h-[100dvh] min-h-screen bg-[#090b10] z-40 flex flex-col transition-transform duration-[220ms] ease-out will-change-transform ${
             mobileOpen
               ? "translate-x-0 pointer-events-auto visible"
               : "translate-x-full pointer-events-none invisible"
@@ -456,7 +456,7 @@ export default function Navbar() {
         >
           {/* Scrollable Nav Content */}
           <div className="flex-1 overflow-y-auto px-6 py-6 space-y-2 overscroll-contain flex flex-col justify-between">
-            <div className="space-y-1">
+            <div className="nav-drawer__links space-y-1">
               {navLinks.map((link) => {
                 const isActive =
                   link.href !== "/"
@@ -526,7 +526,7 @@ export default function Navbar() {
             </div>
 
             {/* Bottom Drawer Actions & Enterprise Links */}
-            <div className="pt-6 pb-8 space-y-4">
+            <div className="nav-drawer__actions pt-6 pb-8 space-y-4">
               <Link
                 href="/contact"
                 onClick={() => setMobileOpen(false)}
