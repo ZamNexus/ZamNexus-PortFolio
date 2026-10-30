@@ -164,6 +164,8 @@ const simulatorTabs = [
 
 export default function ZNXERPPage() {
   const [activeWorkflowIdx, setActiveWorkflowIdx] = useState(0);
+  // The lifecycle plays through on its own until someone picks a stage
+  const [stageTouched, setStageTouched] = useState(false);
   const [activeTabId, setActiveTabId] = useState(simulatorTabs[0].id);
   const activeTab = simulatorTabs.find((t) => t.id === activeTabId) || simulatorTabs[0];
   const activeFlow = industrialWorkflow[activeWorkflowIdx];
@@ -260,7 +262,7 @@ export default function ZNXERPPage() {
         <section
           id="workflow-section"
           aria-labelledby="workflow-heading"
-          className="max-w-7xl mx-auto px-6 py-20 border-t border-zinc-800/60"
+          className="stage-auto max-w-7xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <Reveal variant="words" replay={false} className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-mono uppercase tracking-widest text-blue-400 font-bold">
@@ -284,7 +286,10 @@ export default function ZNXERPPage() {
               return (
                 <button
                   key={item.step}
-                  onClick={() => setActiveWorkflowIdx(idx)}
+                  onClick={() => {
+                    setActiveWorkflowIdx(idx);
+                    setStageTouched(true);
+                  }}
                   className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer relative overflow-hidden group ${
                     isCurrent
                       ? "bg-zinc-900/90 shadow-xl"
@@ -313,6 +318,13 @@ export default function ZNXERPPage() {
                   <div className="text-xs font-bold font-mono text-white whitespace-normal break-words">
                     {item.phase}
                   </div>
+                  {isCurrent && !stageTouched ? (
+                    <span
+                      className="explorer__timer stage-timer"
+                      aria-hidden="true"
+                      onAnimationEnd={() => setActiveWorkflowIdx((activeWorkflowIdx + 1) % industrialWorkflow.length)}
+                    />
+                  ) : null}
                 </button>
               );
             })}
@@ -441,6 +453,8 @@ export default function ZNXERPPage() {
               </div>
             </div>
 
+            <span key={activeTab.id} className="console-scan" aria-hidden="true" />
+
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeTab.id}
@@ -500,9 +514,10 @@ export default function ZNXERPPage() {
             </p>
           </Reveal>
 
-          <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {modules.map((mod) => (
-              <Spotlight key={mod.label} as="div" className="lift-card p-6 flex flex-col justify-between group">
+          <div className="module-map">
+          <Stagger className="module-map__row module-map__row--top grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {modules.slice(0, 4).map((mod) => (
+              <Spotlight key={mod.label} as="div" className="lift-card module-card p-6 flex flex-col justify-between group">
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-2xl p-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800" aria-hidden="true">
@@ -532,6 +547,59 @@ export default function ZNXERPPage() {
               </Spotlight>
             ))}
           </Stagger>
+
+          {/* The shared core every module reads and writes; its ports light as a module is hovered */}
+          <div className="module-core">
+            <div className="module-core__ports" aria-hidden="true">
+              <span className="module-core__port module-core__port--t1" />
+              <span className="module-core__port module-core__port--t2" />
+              <span className="module-core__port module-core__port--t3" />
+              <span className="module-core__port module-core__port--t4" />
+              <span className="module-core__port module-core__port--b1" />
+              <span className="module-core__port module-core__port--b2" />
+              <span className="module-core__port module-core__port--b3" />
+              <span className="module-core__port module-core__port--b4" />
+            </div>
+            <span className="module-core__pulse" aria-hidden="true" />
+            <p className="module-core__text">
+              <strong>ZNXERP core</strong>
+              <span>Every module works on the same records, so nothing is entered twice.</span>
+            </p>
+          </div>
+
+          <Stagger className="module-map__row module-map__row--bottom grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {modules.slice(4).map((mod) => (
+              <Spotlight key={mod.label} as="div" className="lift-card module-card p-6 flex flex-col justify-between group">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-2xl p-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800" aria-hidden="true">
+                      {mod.icon}
+                    </span>
+                    <span className="text-[10px] font-mono text-foreground-muted font-bold group-hover:text-blue-400">
+                      {mod.code}
+                    </span>
+                  </div>
+
+                  <h3 className="text-base font-bold text-white mb-2 group-hover:text-white transition-colors">
+                    {mod.label}
+                  </h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed mb-6">
+                    {mod.desc}
+                  </p>
+                </div>
+
+                <div className="space-y-1 pt-4 border-t border-zinc-800/60">
+                  {mod.bullets.map((bullet) => (
+                    <div key={bullet} className="flex items-center gap-2 text-[11px] font-mono text-zinc-400">
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} />
+                      <span>{bullet}</span>
+                    </div>
+                  ))}
+                </div>
+              </Spotlight>
+            ))}
+          </Stagger>
+          </div>
         </section>
 
         {/* ── CLIENTS (confirmed only), AUDIENCE, FAQ ─────────────────────── */}

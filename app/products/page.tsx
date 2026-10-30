@@ -3,6 +3,7 @@ import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionHeader from "@/components/SectionHeader";
+import ProductExplorer from "@/components/ProductExplorer";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
@@ -47,6 +48,9 @@ export default function ProductsPage() {
               <span>Request a demo</span>
               <span className="arrow-icon w-8 h-8 text-sm" aria-hidden="true">→</span>
             </Link>
+          </div>
+          <div data-enter="6" className="mt-16">
+            <ProductExplorer />
           </div>
         </section>
 

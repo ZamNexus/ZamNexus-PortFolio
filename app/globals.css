@@ -4290,3 +4290,181 @@ h1, h2, h3, h4, h5, h6 {
 .product-card:hover .pipeline--compact .pl-lit,
 .product-card:focus-within .pipeline--compact .pl-pulse,
 .product-card:focus-within .pipeline--compact .pl-lit { visibility: visible; }
+
+/* ── Products hub explorer: the services explorer, in each product's colour ── */
+.explorer--products .explorer__tab[aria-selected="true"] {
+  background: color-mix(in srgb, var(--rail) 16%, var(--surface-primary));
+}
+
+.explorer--products .explorer__timer { background: var(--rail); animation-duration: 8s; }
+
+.explorer__swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 10px;
+  border-radius: 999px;
+  background: var(--rail);
+  box-shadow: 0 0 10px var(--rail);
+  vertical-align: middle;
+}
+
+.explorer__stage--product { gap: 28px; text-align: left; justify-items: stretch; }
+
+/* Scene beside the text when the panel is wide: tablets (tabs on top) and large desktops */
+@media (min-width: 768px) and (max-width: 1023px), (min-width: 1280px) {
+  .explorer__stage--product { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; }
+}
+
+.explorer__stage--product .product-scene { animation: stage-in 600ms var(--ease-out) both; }
+
+.explorer__copy { display: grid; gap: 14px; justify-items: start; }
+
+.explorer__copy .explorer__outcome { max-width: none; }
+
+.explorer__points { display: grid; gap: 8px; animation: enter-rise var(--motion-base) var(--ease-out) 360ms both; }
+
+.explorer__points li { position: relative; padding-left: 18px; color: var(--foreground); line-height: 1.5; }
+
+.explorer__points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--rail);
+}
+
+/* ── Product pages: the lifecycle plays through on its own ───────────────── */
+.stage-timer { left: 16px; right: 16px; bottom: 6px; background: var(--rail); animation-duration: 7s; }
+
+.stage-auto:hover .stage-timer,
+.stage-auto:focus-within .stage-timer { animation-play-state: paused; }
+
+/* ── Product pages: a scan sweeps the console each time the view changes ── */
+.console-scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--rail) 16%, transparent) 48%, color-mix(in srgb, var(--rail) 40%, transparent) 50%, transparent 52%);
+  transform: translateY(-100%);
+  animation: console-scan 900ms var(--ease-out) both;
+}
+
+@keyframes console-scan {
+  to { transform: translateY(100%); }
+}
+
+/* ── Product pages: modules around a shared core ─────────────────────────── */
+.module-map { display: grid; gap: 16px; }
+
+.module-core {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 18px 24px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--rail) 45%, transparent);
+  background:
+    radial-gradient(60% 140% at 50% 50%, color-mix(in srgb, var(--rail) 18%, transparent), transparent 70%),
+    color-mix(in srgb, var(--surface-primary) 80%, transparent);
+  transition: box-shadow var(--motion-base) var(--ease-out), border-color var(--motion-base) var(--ease-out);
+}
+
+.module-core__text { display: grid; gap: 2px; text-align: center; }
+.module-core__text strong { color: var(--foreground-strong); font-weight: 700; }
+.module-core__text span { color: var(--foreground-muted); font-size: 0.875rem; }
+
+.module-core__pulse {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--rail);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--rail) 60%, transparent);
+  animation: core-pulse 2.4s var(--ease-out) infinite;
+}
+
+@keyframes core-pulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--rail) 60%, transparent); }
+  100% { box-shadow: 0 0 0 14px transparent; }
+}
+
+/* A module being hovered lights the core */
+.module-map:has(.module-card:hover) .module-core {
+  border-color: var(--rail);
+  box-shadow: 0 0 40px -8px var(--rail);
+}
+
+.module-core__ports { display: none; }
+
+@media (min-width: 1024px) {
+  .module-map { gap: 36px; }
+
+  .module-core__ports { display: block; position: absolute; inset: 0; pointer-events: none; }
+
+  /* Ports: short lines from the core to each module column, with data flowing in */
+  .module-core__port {
+    position: absolute;
+    width: 2px;
+    height: 36px;
+    margin-left: -1px;
+    background: color-mix(in srgb, var(--rail) 25%, transparent);
+    overflow: hidden;
+    transition: background-color var(--motion-base) var(--ease-out);
+  }
+
+  .module-core__port::after {
+    content: "";
+    position: absolute;
+    left: -1px;
+    width: 4px;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--rail);
+    box-shadow: 0 0 8px var(--rail);
+  }
+
+  [class*="module-core__port--t"] { bottom: 100%; }
+  [class*="module-core__port--b"] { top: 100%; }
+  [class*="module-core__port--t"]::after { animation: port-down 2.4s linear infinite; }
+  [class*="module-core__port--b"]::after { animation: port-up 2.4s linear infinite; }
+
+  .module-core__port--t1, .module-core__port--b1 { left: 12.5%; }
+  .module-core__port--t2, .module-core__port--b2 { left: 37.5%; }
+  .module-core__port--t3, .module-core__port--b3 { left: 62.5%; }
+  .module-core__port--t4, .module-core__port--b4 { left: 87.5%; }
+  .module-core__port--t2::after, .module-core__port--b3::after { animation-delay: -0.6s; }
+  .module-core__port--t3::after, .module-core__port--b1::after { animation-delay: -1.2s; }
+  .module-core__port--t4::after, .module-core__port--b2::after { animation-delay: -1.8s; }
+
+  /* Hovering a module lights its own port */
+  .module-map:has(.module-map__row--top > :nth-child(1):hover) .module-core__port--t1,
+  .module-map:has(.module-map__row--top > :nth-child(2):hover) .module-core__port--t2,
+  .module-map:has(.module-map__row--top > :nth-child(3):hover) .module-core__port--t3,
+  .module-map:has(.module-map__row--top > :nth-child(4):hover) .module-core__port--t4,
+  .module-map:has(.module-map__row--bottom > :nth-child(1):hover) .module-core__port--b1,
+  .module-map:has(.module-map__row--bottom > :nth-child(2):hover) .module-core__port--b2,
+  .module-map:has(.module-map__row--bottom > :nth-child(3):hover) .module-core__port--b3,
+  .module-map:has(.module-map__row--bottom > :nth-child(4):hover) .module-core__port--b4 {
+    background: var(--rail);
+    box-shadow: 0 0 10px var(--rail);
+  }
+}
+
+@keyframes port-down { from { top: -8px; } to { top: 100%; } }
+@keyframes port-up { from { top: 100%; } to { top: -8px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .console-scan { display: none; }
+  .module-core__pulse,
+  .module-core__port::after,
+  .explorer__stage--product .product-scene,
+  .explorer__points { animation: none; }
+  .module-core,
+  .module-core__port { transition: none; }
+}
