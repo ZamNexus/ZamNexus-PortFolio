@@ -1,13 +1,17 @@
 "use client";
 
-import { useState, useRef } from "react";
-import type { FormEvent, ChangeEvent } from "react";
+import { useState } from "react";
+import type { FormEvent, ChangeEvent, CSSProperties } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PillTab from "@/components/PillTab";
-import { useHeroMotion } from "@/components/useHeroMotion";
+import ScrollProgress from "@/components/motion/ScrollProgress";
+import Reveal from "@/components/motion/Reveal";
+import Stagger from "@/components/motion/Stagger";
+import SplitWords from "@/components/motion/SplitWords";
+import Spotlight from "@/components/motion/Spotlight";
 import { submitLead } from "@/lib/submitLead";
 import { validateLead, type FieldErrors, type LeadField } from "@/lib/validateLead";
 import FieldError, { errorProps } from "@/components/FieldError";
@@ -133,50 +137,40 @@ const offices = [
 // ─── Office Locations Section Component ───────────────────────────────────────
 
 function OfficeLocationsSection() {
-  const ref = useRef<HTMLElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-60px" });
-
   return (
     <section
-      ref={ref}
       aria-labelledby="offices-heading"
       className="max-w-7xl mx-auto px-6 pb-24 border-t border-zinc-800/60 pt-20"
     >
       {/* Section header */}
-      <div className="mb-10">
-        <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
+      <Reveal variant="words" replay={false} className="mb-10">
+        <span className="reveal-sub text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
           Global Presence
         </span>
         <h2
           id="offices-heading"
           className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-2"
         >
-          Our Offices
+          <SplitWords text="Our Offices" />
         </h2>
-        <p className="mt-2 text-sm text-foreground-muted max-w-md">
+        <p className="reveal-sub mt-2 text-sm text-foreground-muted max-w-md">
           Reach us at either office, or by email. We reply within one business day.
         </p>
-      </div>
+      </Reveal>
 
       {/* Cards grid: 1-col mobile → 3-col desktop */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {offices.map((office, i) => {
+      <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {offices.map((office) => {
           const FlagIcon = flagComponents[office.country];
           return (
-            <motion.div
+            <Spotlight
               key={office.country}
-              initial={{ opacity: 0, y: 16 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-              transition={{ duration: 0.3, ease: "easeOut", delay: i * 0.08 }}
-              className="relative p-6 rounded-3xl bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-md shadow-xl overflow-hidden group"
+              as="div"
+              className="lift-card p-6 group"
+              style={{ "--rail": office.accent } as CSSProperties}
             >
-              {/* Accent top bar */}
-              <div
-                className="absolute top-0 left-0 right-0 h-[2px]"
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${office.accent}, transparent)`,
-                }}
-              />
+              {/* Accent top bar, drawn as the card arrives */}
+              <div className="product-card__bar" aria-hidden="true" />
 
               {/* Subtle corner glow on hover */}
               <div
@@ -221,10 +215,10 @@ function OfficeLocationsSection() {
                 </p>
               )}
             </div>
-          </motion.div>
+          </Spotlight>
         );
       })}
-      </div>
+      </Stagger>
     </section>
   );
 }
@@ -232,7 +226,6 @@ function OfficeLocationsSection() {
 // ─── Main Page Component ──────────────────────────────────────────────────────
 
 export default function ContactPage() {
-  const heroMotion = useHeroMotion();
   const [selectedIntents, setSelectedIntents] = useState<string[]>(["ai-automation"]);
   const [selectedTimeline, setSelectedTimeline] = useState<string>(timelineOptions[1]);
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -249,6 +242,16 @@ export default function ContactPage() {
     message: "",
     website: "",
   });
+
+  // Live progress through the four steps (drives the meter above the form)
+  const live = validateLead(formData, ["name", "email", "message"]);
+  const progress = [
+    { label: "Services", done: selectedIntents.length > 0 },
+    { label: "Timing", done: Boolean(selectedTimeline) },
+    { label: "Details", done: !live.name && !live.email && !live.phone },
+    { label: "Project", done: !live.message },
+  ];
+  const doneCount = progress.filter((p) => p.done).length;
 
   const toggleIntent = (id: string) => {
     if (selectedIntents.includes(id)) {
@@ -312,7 +315,7 @@ export default function ContactPage() {
   return (
     <div
       suppressHydrationWarning
-      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-hidden"
+      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-clip"
     >
       {/* Dynamic Background Network */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -330,6 +333,7 @@ export default function ContactPage() {
         <div className="absolute top-[40%] left-[5%] w-[650px] h-[650px] rounded-full bg-violet-600/[0.05] blur-[180px] pointer-events-none" />
       </div>
 
+      <ScrollProgress />
       <Navbar />
 
       <main className="relative z-10">
@@ -340,32 +344,31 @@ export default function ContactPage() {
           className="max-w-7xl mx-auto px-6 pt-40 pb-16 text-center flex flex-col items-center"
         >
           {/* Top Category Badge */}
-          <motion.div
-            {...heroMotion.badge}
+          <div
+            data-enter="1"
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-[11px] sm:text-xs font-mono font-medium text-[var(--accent-hover)] mb-6 sm:mb-8 backdrop-blur-xl shadow-lg max-w-full text-center"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
             <span>Contact</span>
-          </motion.div>
+          </div>
 
           {/* Heading */}
-          <motion.h1
+          <h1
             id="contact-hero-heading"
-            {...heroMotion.heading}
             className="text-2xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.12] break-words"
           >
-            Tell us what you need.
-          </motion.h1>
+            <SplitWords mode="load" text="Tell us what you need." />
+          </h1>
 
-          <motion.p
-            {...heroMotion.paragraph}
+          <p
+            data-enter="4"
             className="mt-6 text-base sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed"
           >
             Send a short brief and a senior engineer will reply within one business day. Prefer email?{" "}
             <a href={`mailto:${OFFICIAL_EMAIL}`} className="text-accent-text hover:underline">
               {OFFICIAL_EMAIL}
             </a>
-          </motion.p>
+          </p>
         </section>
 
         {/* ── INTERACTIVE BRIEF BUILDER + DIRECT CHANNELS ──────────────────── */}
@@ -376,7 +379,7 @@ export default function ContactPage() {
           <h2 id="brief-builder-heading" className="sr-only">Send us a brief</h2>
 
           {/* Left Column: Direct VIP Communication Channels & SLA Guarantee */}
-          <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-32">
+          <div data-enter="5" className="lg:col-span-4 space-y-6 lg:sticky lg:top-32">
             {/* Direct Channel Card */}
             <div className="p-5 sm:p-8 rounded-3xl bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-md shadow-xl space-y-6 relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--accent-hover)] to-transparent" />
@@ -444,9 +447,9 @@ export default function ContactPage() {
           </div>
 
           {/* Right Column: Interactive Brief Builder Form */}
-          <div className="lg:col-span-8">
+          <div data-enter="6" className="lg:col-span-8">
             <div className="p-8 sm:p-12 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 backdrop-blur-md shadow-2xl relative overflow-hidden">
-              <AnimatePresence mode="wait">
+              <AnimatePresence mode="wait" initial={false}>
                 {!submitted ? (
                   <motion.form
                     key="contact-form"
@@ -458,6 +461,24 @@ export default function ContactPage() {
                     transition={{ duration: 0.4 }}
                     className="space-y-8"
                   >
+                    {/* Progress meter: each step ticks as it is completed */}
+                    <div className="brief-progress" aria-hidden="true">
+                      <ol className="brief-progress__steps">
+                        {progress.map((p) => (
+                          <li key={p.label} data-done={p.done} className="brief-progress__step">
+                            <svg viewBox="0 0 20 20" className="brief-progress__tick">
+                              <circle cx={10} cy={10} r={9} />
+                              <path d="M5.5 10.5l3 3 6-7" />
+                            </svg>
+                            {p.label}
+                          </li>
+                        ))}
+                      </ol>
+                      <div className="brief-progress__rail">
+                        <span style={{ "--p": doneCount / progress.length } as CSSProperties} />
+                      </div>
+                    </div>
+
                     {/* Step 1: Interactive Intent Selector */}
                     <div>
                       <p id="intent-label" className="text-xs font-mono uppercase tracking-wider text-foreground font-bold mb-3 flex items-center justify-between">
@@ -529,7 +550,7 @@ export default function ContactPage() {
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="Your name"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors data-[invalid]:border-danger"
+                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input data-[invalid]:border-danger"
                           />
                           <FieldError id="contact-name" message={fieldErrors.name} />
                         </div>
@@ -545,7 +566,7 @@ export default function ContactPage() {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="you@company.com"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors data-[invalid]:border-danger"
+                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input data-[invalid]:border-danger"
                           />
                           <FieldError id="contact-email" message={fieldErrors.email} />
                         </div>
@@ -559,7 +580,7 @@ export default function ContactPage() {
                             value={formData.company}
                             onChange={handleChange}
                             placeholder="Company name"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors"
+                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input"
                           />
                         </div>
 
@@ -573,7 +594,7 @@ export default function ContactPage() {
                             value={formData.phone}
                             onChange={handleChange}
                             placeholder="+44 …"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors data-[invalid]:border-danger"
+                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input data-[invalid]:border-danger"
                           />
                           <FieldError id="contact-phone" message={fieldErrors.phone} />
                         </div>
@@ -594,7 +615,7 @@ export default function ContactPage() {
                         value={formData.message}
                         onChange={handleChange}
                         placeholder="What are you trying to achieve, and what systems do you use today?"
-                        className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] transition-colors resize-none data-[invalid]:border-danger"
+                        className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input resize-none data-[invalid]:border-danger"
                       />
                       <FieldError id="contact-message" message={fieldErrors.message} />
                     </div>
@@ -631,7 +652,9 @@ export default function ContactPage() {
                         className="liquid-lime-btn text-sm py-3.5 px-8 cursor-pointer disabled:opacity-60 disabled:cursor-wait"
                       >
                         <span>{sending ? "Sending…" : "Send brief"}</span>
-                        <span className="arrow-icon w-7 h-7 text-xs" aria-hidden="true">→</span>
+                        <span className={`arrow-icon w-7 h-7 text-xs ${sending ? "brief-sending" : ""}`} aria-hidden="true">
+                          {sending ? "" : "→"}
+                        </span>
                       </motion.button>
                     </div>
                   </motion.form>
@@ -643,9 +666,10 @@ export default function ContactPage() {
                     transition={{ duration: 0.5 }}
                     className="py-16 text-center space-y-6"
                   >
-                    <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/60 text-emerald-400 text-3xl mx-auto flex items-center justify-center">
-                      ✓
-                    </div>
+                    <svg viewBox="0 0 64 64" className="brief-success mx-auto" aria-hidden="true">
+                      <circle cx={32} cy={32} r={30} pathLength={1} />
+                      <path d="M20 33l8 8 16-18" pathLength={1} />
+                    </svg>
                     <div className="text-xs font-mono text-emerald-400 font-bold uppercase tracking-widest">
                       Brief received
                     </div>

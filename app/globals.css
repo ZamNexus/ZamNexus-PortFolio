@@ -3402,3 +3402,134 @@ h1, h2, h3, h4, h5, h6 {
   .details__row::after { transition: none; }
   .office-status--soon .office-status__dot { animation: none; }
 }
+
+/* ── Contact ─────────────────────────────────────────────────────────────── */
+
+/* Brief progress: each step ticks as it is completed, and the rail fills */
+.brief-progress__steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.brief-progress__step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--foreground-muted);
+  transition: color var(--motion-base) var(--ease-out);
+}
+
+.brief-progress__step[data-done="true"] { color: var(--foreground-strong); }
+
+.brief-progress__tick {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.brief-progress__tick circle {
+  stroke: var(--border-strong);
+  fill: transparent;
+  transition: stroke var(--motion-base) var(--ease-out), fill var(--motion-base) var(--ease-out);
+}
+
+.brief-progress__tick path {
+  stroke: var(--success);
+  stroke-width: 2.2;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset 450ms var(--ease-out) 100ms;
+}
+
+.brief-progress__step[data-done="true"] circle {
+  stroke: color-mix(in srgb, var(--success) 60%, transparent);
+  fill: color-mix(in srgb, var(--success) 14%, transparent);
+}
+
+.brief-progress__step[data-done="true"] path { stroke-dashoffset: 0; }
+
+.brief-progress__rail {
+  position: relative;
+  margin-top: 12px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+
+.brief-progress__rail > span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--accent), var(--success));
+  transform-origin: left;
+  transform: scaleX(var(--p, 0));
+  transition: transform var(--motion-slow) var(--ease-out);
+}
+
+@media (max-width: 479px) {
+  .brief-progress__step { flex-direction: column; gap: 6px; font-size: 0.75rem; text-align: center; }
+}
+
+/* Inputs: the border shifts and a soft ring grows on focus */
+.brief-input {
+  transition: border-color var(--motion-fast) var(--ease-out), box-shadow var(--motion-base) var(--ease-out);
+}
+
+.brief-input:focus { box-shadow: 0 0 0 4px var(--accent-glow-soft); }
+
+/* Submit: the arrow becomes a small spinner while the brief is sending */
+.brief-sending::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: brief-spin 700ms linear infinite;
+}
+
+@keyframes brief-spin { to { transform: rotate(360deg); } }
+
+/* Success: the ring and tick draw themselves */
+.brief-success {
+  width: 72px;
+  height: 72px;
+  fill: none;
+  stroke: var(--success);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.brief-success circle {
+  fill: color-mix(in srgb, var(--success) 12%, transparent);
+  stroke-dasharray: 1;
+  animation: brief-draw 700ms var(--ease-out) both;
+}
+
+.brief-success path {
+  stroke-width: 3.5;
+  stroke-dasharray: 1;
+  animation: brief-draw 450ms var(--ease-out) 550ms both;
+}
+
+@keyframes brief-draw { from { stroke-dashoffset: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .brief-progress__step,
+  .brief-progress__tick circle,
+  .brief-progress__tick path,
+  .brief-progress__rail > span,
+  .brief-input { transition: none; }
+  .brief-success circle,
+  .brief-success path { animation: none; }
+  .brief-sending::after { animation-duration: 2s; }
+}
