@@ -83,10 +83,10 @@ export default function PrivacyPolicyPage() {
           <div className="text-xs font-mono text-zinc-400 shrink-0">
             <span>DPO Contact: </span>
             <a
-              href="mailto:{{OFFICIAL_EMAIL}}"
+              href="mailto:contact@zamnexus.com"
               className="text-[var(--accent-hover)] hover:underline"
             >
-              {"{{OFFICIAL_EMAIL}}"}
+              {"contact@zamnexus.com"}
             </a>
           </div>
         </div>
@@ -111,8 +111,8 @@ export default function PrivacyPolicyPage() {
             </nav>
             <div className="mt-6 pt-4 border-t border-zinc-800/80 text-[11px] text-zinc-500 font-mono">
               Need assistance? Email{" "}
-              <a href="mailto:{{OFFICIAL_EMAIL}}" className="text-zinc-400 hover:text-white underline">
-                {"{{OFFICIAL_EMAIL}}"}
+              <a href="mailto:contact@zamnexus.com" className="text-zinc-400 hover:text-white underline">
+                {"contact@zamnexus.com"}
               </a>
             </div>
           </aside>
@@ -384,8 +384,8 @@ export default function PrivacyPolicyPage() {
               </ul>
               <p className="pt-2">
                 To exercise any of these rights, submit your request to{" "}
-                <a href="mailto:{{OFFICIAL_EMAIL}}" className="text-[var(--accent-hover)] hover:underline">
-                  {"{{OFFICIAL_EMAIL}}"}
+                <a href="mailto:contact@zamnexus.com" className="text-[var(--accent-hover)] hover:underline">
+                  {"contact@zamnexus.com"}
                 </a>
                 . We respond to all verified statutory requests within one (1) calendar month free of charge.
               </p>
@@ -429,8 +429,8 @@ export default function PrivacyPolicyPage() {
                 Our services, products, and website are directed exclusively to business enterprises and professionals aged 18 and older.
                 We do not knowingly collect or solicit personal data from children. If you believe that a minor has provided us with personal information,
                 please contact us immediately at{" "}
-                <a href="mailto:{{OFFICIAL_EMAIL}}" className="text-[var(--accent-hover)] hover:underline">
-                  {"{{OFFICIAL_EMAIL}}"}
+                <a href="mailto:contact@zamnexus.com" className="text-[var(--accent-hover)] hover:underline">
+                  {"contact@zamnexus.com"}
                 </a>{" "}
                 so we can investigate and promptly delete the records.
               </p>
@@ -475,8 +475,8 @@ export default function PrivacyPolicyPage() {
                 <div className="text-zinc-400">Address: 34 Beaconsfield, Luton, Bedfordshire, LU2 0RW, United Kingdom</div>
                 <div className="text-zinc-400">
                   Email:{" "}
-                  <a href="mailto:{{OFFICIAL_EMAIL}}" className="text-[var(--accent-hover)] underline">
-                    {"{{OFFICIAL_EMAIL}}"}
+                  <a href="mailto:contact@zamnexus.com" className="text-[var(--accent-hover)] underline">
+                    {"contact@zamnexus.com"}
                   </a>
                 </div>
                 <div className="text-zinc-400">Phone / WhatsApp Advisory: +44 7859 043361</div>

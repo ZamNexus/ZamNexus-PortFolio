@@ -13,7 +13,7 @@ import {
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FinalCTA from "@/components/FinalCTA";
-import ParticleNetwork from "@/components/ParticleNetwork";
+import Nexus3DBackground from "@/components/Nexus3DBackground";
 import PillTab from "@/components/PillTab";
 import { useHeroMotion } from "@/components/useHeroMotion";
 
@@ -477,22 +477,9 @@ export default function HomePage() {
         style={{ scaleX }}
       />
 
-      {/* Cyber Background Mesh */}
+      {/* 3D Quantum Nexus WebGL Background Engine */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        <ParticleNetwork />
-        <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="home-grid" width="48" height="48" patternUnits="userSpaceOnUse">
-              <path d="M 48 0 L 0 0 0 48" fill="none" stroke="white" strokeWidth="0.5" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#home-grid)" />
-        </svg>
-
-        {/* Ambient Halo Glows */}
-        <div className="absolute top-[12%] left-[5%] w-[650px] h-[650px] rounded-full bg-blue-600/[0.05] blur-[180px] pointer-events-none" />
-        <div className="absolute top-[35%] right-[5%] w-[650px] h-[650px] rounded-full bg-violet-600/[0.05] blur-[180px] pointer-events-none" />
-        <div className="absolute bottom-[20%] left-[8%] w-[650px] h-[650px] rounded-full bg-emerald-600/[0.04] blur-[180px] pointer-events-none" />
+        <Nexus3DBackground />
       </div>
 
       <Navbar />
@@ -573,68 +560,11 @@ export default function HomePage() {
           </motion.div>
         </section>
 
-        {/* ── FLAGSHIP PRODUCTS 3D GYROSCOPE SHOWCASE ──────────────────────── */}
+        {/* ── FLAGSHIP PRODUCTS SHOWCASE ──────────────────────────────────── */}
         <section
           aria-labelledby="flagship-products-heading"
           className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
         >
-          {/* Live Connected Enterprise Workflow Highway */}
-          <div className="mb-14 p-5 sm:p-6 rounded-3xl bg-zinc-950/80 border border-zinc-800/90 shadow-2xl relative overflow-hidden">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-800/70 pb-3.5 mb-5">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full animate-ping bg-[var(--accent-hover)]" />
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-white">
-                  ZamNexus Unified Enterprise Highway // Live Telemetry Stream
-                </span>
-              </div>
-              <span className="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Zero-Downtime Mesh Synced
-              </span>
-            </div>
-
-            {/* Visual 4-Core Workflow Stream with Moving Energy Packets */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 relative z-10">
-              {[
-                { code: "ZNXERP", step: "01. Industrial MES", stat: "99.2% Yield", accent: "#3B82F6" },
-                { code: "ZNXePOS", step: "02. Retail Tills", stat: "0.08s Scan", accent: "#F59E0B" },
-                { code: "ZNXEdu", step: "03. Campus Ops", stat: "1.2s Alerts", accent: "#8B5CF6" },
-                { code: "ZNXCare", step: "04. Hospital EHR", stat: "0 Error Dispense", accent: "#10B981" },
-              ].map((node, i) => (
-                <div
-                  key={node.code}
-                  className="p-3.5 rounded-2xl bg-zinc-900/60 border border-zinc-800/80 flex flex-col justify-between"
-                  style={{ borderLeftWidth: "3px", borderLeftColor: node.accent }}
-                >
-                  <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 mb-1">
-                    <span className="font-bold text-white">{node.code}</span>
-                    <span style={{ color: node.accent }}>{node.stat}</span>
-                  </div>
-                  <div className="text-xs font-mono text-zinc-300 font-semibold">{node.step}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Glowing Pipeline Connector Beam */}
-            <div className="hidden lg:block relative mt-4 h-[2px] bg-zinc-800 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full rounded-full"
-                style={{
-                  background: "linear-gradient(90deg, #3B82F6, #F59E0B, #8B5CF6, #10B981)",
-                  boxShadow: "0 0 12px #3B82F6",
-                }}
-                animate={{
-                  x: ["-100%", "100%"],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 3,
-                  ease: "linear",
-                }}
-              />
-            </div>
-          </div>
-
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
               Proprietary Technology Cores

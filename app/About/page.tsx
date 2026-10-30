@@ -43,50 +43,16 @@ interface PhilosophyPrinciple {
 
 // ─── Static Data ─────────────────────────────────────────────────────────────
 
-// ─── Team Members (Dummy Placeholders — Add names and photos when available) ────
+// ─── Executive Leadership & Governance ────────────────────────────────────────
 
-const teamMembers: TeamMember[] = [
-  {
-    id: "cto",
-    name: "[Name Pending]",
-    role: "Chief Technology Officer",
-    specialty: "Enterprise Architecture & AI Systems",
-    photo: "", // Add photo path here (e.g. /team/cto.jpg) in the future
-    accent: "#8B5CF6",
-  },
-  {
-    id: "principal-architect",
-    name: "[Name Pending]",
-    role: "Principal Systems Architect",
-    specialty: "Cloud-Native Infrastructure & Mesh",
-    photo: "", // Add photo path here in the future
-    accent: "#6366F1",
-  },
-  {
-    id: "head-ai",
-    name: "[Name Pending]",
-    role: "Head of AI Research",
-    specialty: "Autonomous Multi-Agent Systems",
-    photo: "", // Add photo path here in the future
-    accent: "#06B6D4",
-  },
-  {
-    id: "iot-lead",
-    name: "[Name Pending]",
-    role: "IoT & Systems Lead",
-    specialty: "Edge Infrastructure & POS Platforms",
-    photo: "", // Add photo path here in the future
-    accent: "#F59E0B",
-  },
-  {
-    id: "clinical-advisor",
-    name: "[Name Pending]",
-    role: "Clinical Systems Advisor",
-    specialty: "Healthcare Informatics & Compliance",
-    photo: "", // Add photo path here in the future
-    accent: "#10B981",
-  },
-];
+const executiveLeadership = {
+  name: "Mir Mujeeb Ul Hassan",
+  role: "Founder & Chief Executive Officer",
+  company: "Zamooq Limited",
+  quote:
+    "Enterprise systems must be deterministic, transparent, and resilient under the heaviest operational loads. We do not build fragile prototypes; we engineer the permanent foundation upon which modern businesses scale.",
+  focus: "Steering technical architecture and international delivery across the UK, Pakistan, and the UAE since 2009.",
+};
 
 const capabilities: CapabilityItem[] = [
   {
@@ -626,106 +592,121 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── LEADERSHIP & ARCHITECTURE TEAM ───────────────────────────────── */}
+        {/* ── LEADERSHIP & ENGINEERING GOVERNANCE ───────────────────────────── */}
         <section
           aria-labelledby="team-heading"
           className="max-w-7xl mx-auto px-6 py-24 border-t border-zinc-800/60"
         >
           <div className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-              Leadership &amp; Engineering
+              Leadership &amp; Governance
             </span>
             <h2
               id="team-heading"
               className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-3 leading-tight"
             >
-              The Minds Behind the Architecture
+              Enterprise Engineering Governance
             </h2>
             <p className="mt-4 text-zinc-400 text-sm sm:text-base leading-relaxed">
-              Senior engineering leadership with decades of experience in high-throughput enterprise systems,
-              AI governance, and mission-critical cloud infrastructure.
+              Operating continuously since 2009 under Zamooq Limited. Directed by senior enterprise practitioners with deep domain expertise in mission-critical architectures.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {teamMembers.map((member, idx) => (
-              <motion.div
-                key={member.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, margin: "-40px" }}
-                transition={{
-                  duration: 0.45,
-                  delay: idx * 0.08, // ~80ms light stagger fade-in on scroll
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                whileHover={{ y: -6, borderColor: member.accent }}
-                className="group relative rounded-3xl bg-zinc-900/40 border border-zinc-800/80 hover:bg-zinc-900/70 p-6 backdrop-blur-sm transition-all duration-300 flex flex-col items-center text-center shadow-xl justify-between h-full min-h-[340px]"
-              >
-                {/* Subtle top accent gradient on hover */}
-                <div
-                  className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: `linear-gradient(90deg, transparent, ${member.accent}, transparent)` }}
-                />
-
-                <div className="flex flex-col items-center w-full">
-                  {/* Team Portrait / Dummy Placeholder */}
-                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-2xl overflow-hidden mb-4 border border-zinc-800 bg-zinc-950/80 group-hover:border-zinc-700 transition-colors flex flex-col items-center justify-center shrink-0 shadow-inner">
-                    {member.photo ? (
-                      <Image
-                        src={member.photo}
-                        alt={`${member.name} - ${member.role}`}
-                        fill
-                        unoptimized
-                        priority
-                        sizes="(max-width: 640px) 112px, 128px"
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center text-zinc-500 group-hover:text-zinc-400 transition-colors p-2 select-none">
-                        <svg
-                          className="w-12 h-12 mb-1.5 opacity-40 group-hover:opacity-70 transition-opacity"
-                          fill="currentColor"
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span className="text-[10px] font-mono tracking-widest uppercase opacity-60">
-                          Photo Pending
-                        </span>
-                      </div>
-                    )}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            {/* Founder & CEO Spotlight Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-40px" }}
+              transition={{ duration: 0.5 }}
+              className="lg:col-span-7 rounded-3xl bg-zinc-900/50 border border-zinc-800 p-8 sm:p-10 backdrop-blur-md relative overflow-hidden flex flex-col justify-between shadow-2xl"
+            >
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-sky-500 via-indigo-500 to-transparent" />
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 text-xl font-mono font-bold shadow-inner">
+                    MH
                   </div>
-
-                  {/* Dummy Name Placeholder */}
-                  <h3 className="text-sm sm:text-base font-mono font-medium text-zinc-300 tracking-tight transition-colors">
-                    {member.name}
-                  </h3>
-
-                  {/* Concise Role Badge — 100% visible, high contrast, clean fit */}
-                  <div
-                    className="mt-2.5 px-3 py-1 rounded-full text-xs font-mono font-semibold tracking-tight border inline-flex items-center justify-center text-center"
-                    style={{
-                      color: member.accent,
-                      borderColor: `${member.accent}40`,
-                      backgroundColor: `${member.accent}14`,
-                    }}
-                  >
-                    {member.role}
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                      {executiveLeadership.name}
+                    </h3>
+                    <p className="text-xs font-mono text-sky-400 uppercase tracking-wider mt-0.5">
+                      {executiveLeadership.role} — {executiveLeadership.company}
+                    </p>
                   </div>
                 </div>
 
-                {/* Specialization Discipline (fully visible, natural text wrapping, no truncation) */}
-                <div className="mt-4 pt-3.5 border-t border-zinc-800/60 w-full text-xs font-mono text-zinc-400 leading-relaxed">
-                  {member.specialty}
+                <blockquote className="text-zinc-300 text-base sm:text-lg leading-relaxed italic border-l-2 border-sky-500/50 pl-4 py-1 mb-6">
+                  &ldquo;{executiveLeadership.quote}&rdquo;
+                </blockquote>
+
+                <p className="text-zinc-400 text-sm leading-relaxed">
+                  {executiveLeadership.focus}
+                </p>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-zinc-800/80 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-xs font-mono text-zinc-400">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Active Principal Engineering Governance
                 </div>
-              </motion.div>
-            ))}
+                <Link
+                  href="/Contact"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-sky-400 hover:text-sky-300 transition-colors"
+                >
+                  Schedule Executive Briefing →
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Practice Pillars */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="lg:col-span-5 rounded-3xl bg-zinc-950/60 border border-zinc-800/80 p-8 backdrop-blur-md flex flex-col justify-between shadow-xl"
+            >
+              <div>
+                <h4 className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-bold mb-6 pb-3 border-b border-zinc-800">
+                  Global Engineering Footprint
+                </h4>
+                <div className="space-y-6">
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🇬🇧</span>
+                    <div>
+                      <h5 className="text-sm font-bold text-white">United Kingdom (London / Luton)</h5>
+                      <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+                        Corporate governance, European client delivery, and statutory compliance.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🇵🇰</span>
+                    <div>
+                      <h5 className="text-sm font-bold text-white">Pakistan (Lahore / Islamabad)</h5>
+                      <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+                        Core engineering center of excellence, high-throughput cloud R&amp;D, and 24/7 technical ops.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl">🇦🇪</span>
+                    <div>
+                      <h5 className="text-sm font-bold text-white">United Arab Emirates (Dubai)</h5>
+                      <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+                        Middle East regional operations, enterprise client advisory, and trade platform integrations.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-zinc-800/80 text-[11px] font-mono text-zinc-500">
+                Zamooq Limited · Established 2009 · Enterprise Engineering
+              </div>
+            </motion.div>
           </div>
         </section>
 

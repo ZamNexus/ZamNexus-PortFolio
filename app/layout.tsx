@@ -101,6 +101,43 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://zamnexus.com/#organization",
+                  name: "ZamNexus",
+                  alternateName: "Zamooq Limited",
+                  url: "https://zamnexus.com",
+                  logo: "https://zamnexus.com/znx_logo_clean.png",
+                  foundingDate: "2009",
+                  founder: {
+                    "@type": "Person",
+                    name: "Mir Mujeeb Ul Hassan",
+                  },
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    contactType: "Customer Support & Enterprise Inquiries",
+                    email: "contact@zamnexus.com",
+                  },
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://zamnexus.com/#website",
+                  url: "https://zamnexus.com",
+                  name: "ZamNexus",
+                  publisher: {
+                    "@id": "https://zamnexus.com/#organization",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         {children}

@@ -83,10 +83,10 @@ export default function TermsOfServicePage() {
           <div className="text-xs font-mono text-zinc-400 shrink-0">
             <span>Legal Notices: </span>
             <a
-              href="mailto:{{OFFICIAL_EMAIL}}"
+              href="mailto:contact@zamnexus.com"
               className="text-[var(--accent-hover)] hover:underline"
             >
-              {"{{OFFICIAL_EMAIL}}"}
+              {"contact@zamnexus.com"}
             </a>
           </div>
         </div>
@@ -111,8 +111,8 @@ export default function TermsOfServicePage() {
             </nav>
             <div className="mt-6 pt-4 border-t border-zinc-800/80 text-[11px] text-zinc-500 font-mono">
               Enterprise counsel inquiries:{" "}
-              <a href="mailto:{{OFFICIAL_EMAIL}}" className="text-zinc-400 hover:text-white underline">
-                {"{{OFFICIAL_EMAIL}}"}
+              <a href="mailto:contact@zamnexus.com" className="text-zinc-400 hover:text-white underline">
+                {"contact@zamnexus.com"}
               </a>
             </div>
           </aside>
@@ -197,7 +197,7 @@ export default function TermsOfServicePage() {
                 <li>Designating authorized users and maintaining strict confidentiality over all login credentials and API keys.</li>
                 <li>Enforcing multi-factor authentication (MFA) across all administrative access endpoints.</li>
                 <li>All activities, data transfers, and operational actions occurring under Customer&apos;s authorized credentials.</li>
-                <li>Immediately notifying ZamNexus at <a href="mailto:{{OFFICIAL_EMAIL}}" className="text-[var(--accent-hover)] underline">{"{{OFFICIAL_EMAIL}}"}</a> upon discovering any credential compromise or security breach.</li>
+                <li>Immediately notifying ZamNexus at <a href="mailto:contact@zamnexus.com" className="text-[var(--accent-hover)] underline">{"contact@zamnexus.com"}</a> upon discovering any credential compromise or security breach.</li>
               </ul>
             </section>
 
@@ -443,8 +443,8 @@ export default function TermsOfServicePage() {
                 <div className="text-zinc-400">Address: 34 Beaconsfield, Luton, Bedfordshire, LU2 0RW, United Kingdom</div>
                 <div className="text-zinc-400">
                   Email:{" "}
-                  <a href="mailto:{{OFFICIAL_EMAIL}}" className="text-[var(--accent-hover)] underline">
-                    {"{{OFFICIAL_EMAIL}}"}
+                  <a href="mailto:contact@zamnexus.com" className="text-[var(--accent-hover)] underline">
+                    {"contact@zamnexus.com"}
                   </a>
                 </div>
                 <div className="text-zinc-400">Phone / WhatsApp Advisory: +44 7859 043361</div>

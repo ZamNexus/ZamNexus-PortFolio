@@ -38,40 +38,35 @@ const navLinks: NavItem[] = [
       { label: "Intelligent Automation", href: "/Services#intelligent-automation" },
       { label: "SaaS Product Development", href: "/Services#saas-development" },
       { label: "Cloud-Native Engineering", href: "/Services#cloud-native" },
-      { label: "Connected Enterprise", href: "/Services#connected-enterprise" },
-      { label: "Digital Transformation", href: "/Services#digital-transformation" },
-      { label: "Microsoft Solutions", href: "/Services#microsoft-solutions" },
-      { label: "Salesforce Solutions", href: "/Services#salesforce-solutions" },
+      { label: "Microsoft Dynamics & Power Platform", href: "/Services#microsoft-solutions" },
+      { label: "Salesforce Architecture", href: "/Services#salesforce-solutions" },
     ],
   },
   {
     label: "Products",
     href: "/Products",
     dropdown: [
-      { label: "ZNXERP", href: "/Products/znxerp" },
-      { label: "ZNXePOS", href: "/Products/znxepos" },
-      { label: "ZNXEdu", href: "/Products/znxedu" },
-      { label: "ZNXCare", href: "/Products/znxcare" },
-      { label: "Platforms", href: "/Products/Platforms" },
-      { label: "Industries", href: "/Products/Industries" },
+      { label: "ZNXERP — Enterprise Resource Planning", href: "/Products/znxerp" },
+      { label: "ZNXePOS — Omni-Channel Point of Sale", href: "/Products/znxepos" },
+      { label: "ZNXEdu — Academic Institution Suite", href: "/Products/znxedu" },
+      { label: "ZNXCare — Clinical Healthcare EHR", href: "/Products/znxcare" },
     ],
+  },
+  {
+    label: "Industries",
+    href: "/Industries",
   },
   {
     label: "Insights",
     href: "/Insights",
-    dropdown: [
-      { label: "Engineering Research", href: "/Insights" },
-      { label: "Technical Case Studies", href: "/Insights" },
-      { label: "Executive Briefings", href: "/Insights" },
-    ],
   },
   {
     label: "About",
     href: "/About",
-    dropdown: [
-      { label: "Our Story", href: "/About" },
-      { label: "Contact", href: "/Contact" },
-    ],
+  },
+  {
+    label: "Contact",
+    href: "/Contact",
   },
 ];
 
@@ -402,7 +397,7 @@ export default function Navbar() {
           {/* ── RIGHT: CTA ── */}
           <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
             <Link href="/Contact" className="nav-cta">
-              <span>Talk to Us</span>
+              <span>Schedule Consultation</span>
               <span className="nav-cta-arrow" aria-hidden="true">→</span>
             </Link>
           </div>
@@ -410,7 +405,7 @@ export default function Navbar() {
           {/* ── MOBILE / TABLET CONTROLS ── */}
           <div className="lg:hidden flex items-center gap-2">
             <Link href="/Contact" className="nav-cta nav-cta--compact">
-              <span>Talk to Us</span>
+              <span>Schedule Consultation</span>
             </Link>
 
             <button
@@ -524,7 +519,7 @@ export default function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 className="liquid-lime-btn w-full justify-center text-sm py-3.5"
               >
-                <span>Talk to Us</span>
+                <span>Schedule Consultation</span>
                 <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
               </Link>
 

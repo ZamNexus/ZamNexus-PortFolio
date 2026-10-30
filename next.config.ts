@@ -1,16 +1,26 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   async redirects() {
     return [
+      // Duplicate consolidation
       {
         source: "/Platforms",
-        destination: "/Products/Platforms",
+        destination: "/Services#platforms",
         permanent: true,
       },
+      {
+        source: "/Products/Platforms",
+        destination: "/Services#platforms",
+        permanent: true,
+      },
+      {
+        source: "/Products/Industries",
+        destination: "/Industries",
+        permanent: true,
+      },
+
+      // Legacy solution aliases
       {
         source: "/Solutions/ai-powered-business",
         destination: "/Services#ai-intelligent",
@@ -66,11 +76,8 @@ const nextConfig: NextConfig = {
         destination: "/Services",
         permanent: true,
       },
-      {
-        source: "/Industries",
-        destination: "/Products/Industries",
-        permanent: true,
-      },
+
+      // Legal aliases
       {
         source: "/privacy-policy",
         destination: "/Privacy",

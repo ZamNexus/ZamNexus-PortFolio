@@ -73,10 +73,10 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
             <div className="pt-1 flex items-center gap-2 text-xs font-mono">
               <span className="text-zinc-500 uppercase tracking-wider">Inquiries:</span>
               <a
-                href="mailto:{{OFFICIAL_EMAIL}}"
+                href="mailto:contact@zamnexus.com"
                 className="text-zinc-300 hover:text-[var(--accent-hover)] transition-colors"
               >
-                {"{{OFFICIAL_EMAIL}}"}
+                contact@zamnexus.com
               </a>
             </div>
           </div>

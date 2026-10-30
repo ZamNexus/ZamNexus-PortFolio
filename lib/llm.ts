@@ -35,7 +35,11 @@ export async function* stream(messages: ChatMessage[], tools: unknown[], signal?
     },
     body: JSON.stringify({ model: MODEL, messages, tools, max_tokens: 1500, stream: true }),
   });
-  if (!res.ok || !res.body) throw new Error(`LLM ${res.status}`);
+  if (!res.ok || !res.body) {
+    const errBody = await res.text().catch(() => "");
+    console.error(`LLM error ${res.status}:`, errBody);
+    throw new Error(`LLM ${res.status}`);
+  }
 
   const message: ChatMessage = { role: "assistant", content: "" };
   const calls: ToolCall[] = [];

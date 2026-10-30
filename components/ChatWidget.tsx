@@ -18,7 +18,7 @@ function Rich({ text }: { text: string }) {
   return text.split(/(\[[^\]]+\]\(\/[^)\s]*\))/g).map((part, i) => {
     const m = part.match(/^\[([^\]]+)\]\((\/[^)\s]*)\)$/);
     return m ? (
-      <Link key={i} href={m[2]} className="font-semibold text-[#D0FF71] underline">
+      <Link key={i} href={m[2]} className="font-semibold text-sky-400 hover:text-sky-300 underline">
         {m[1]}
       </Link>
     ) : (
@@ -86,16 +86,19 @@ export default function ChatWidget() {
   return (
     <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-3">
       {open && (
-        <div className="flex h-[28rem] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-3xl border border-zinc-800/80 bg-[#11141D]/95 shadow-2xl backdrop-blur-2xl">
-          <div className="border-b border-zinc-800 px-5 py-3 text-xs font-mono font-bold uppercase tracking-widest text-[#D0FF71]">
-            ZamNexus Assistant
+        <div className="flex h-[28rem] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-3xl border border-zinc-800/80 bg-[#0F1523]/95 shadow-2xl backdrop-blur-2xl">
+          <div className="border-b border-zinc-800 px-5 py-3 text-xs font-mono font-bold uppercase tracking-widest text-sky-400 flex items-center justify-between">
+            <span>ZamNexus Enterprise Assistant</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 text-sm" aria-live="polite">
             {msgs.map((m, i) => (
               <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start"}>
                 <span
                   className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2 ${
-                    m.role === "user" ? "bg-[#D0FF71] text-black" : "bg-zinc-900 text-zinc-300"
+                    m.role === "user"
+                      ? "bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-medium shadow-md"
+                      : "bg-slate-900/90 text-slate-200 border border-slate-800"
                   }`}
                 >
                   {m.role === "assistant" ? <Rich text={m.content} /> : m.content}
@@ -103,22 +106,22 @@ export default function ChatWidget() {
               </div>
             ))}
             {busy && msgs.at(-1)?.role === "user" && (
-              <p className="animate-pulse text-xs text-zinc-500">Thinking…</p>
+              <p className="animate-pulse text-xs text-sky-400 font-mono">Consulting architecture knowledge base…</p>
             )}
             <div ref={end} />
           </div>
-          <form onSubmit={send} className="flex gap-2 border-t border-zinc-800 p-3">
+          <form onSubmit={send} className="flex gap-2 border-t border-zinc-800 p-3 bg-zinc-950/40">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               maxLength={2000}
-              placeholder="Type your message"
+              placeholder="Ask an architectural question…"
               aria-label="Message"
-              className="min-w-0 flex-1 rounded-full border border-zinc-800 bg-[#090b10] px-4 py-2 text-sm text-white outline-none focus:border-[#D0FF71]/60"
+              className="min-w-0 flex-1 rounded-full border border-zinc-800 bg-[#080B11] px-4 py-2 text-sm text-white outline-none focus:border-sky-500/60 placeholder:text-zinc-600"
             />
             <button
               disabled={busy}
-              className="rounded-full bg-[#D0FF71] px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
+              className="rounded-full bg-sky-500 hover:bg-sky-400 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_15px_rgba(56,189,248,0.3)] disabled:opacity-50 transition-colors"
             >
               Send
             </button>
@@ -128,8 +131,9 @@ export default function ChatWidget() {
       <button
         onClick={() => setOpen(!open)}
         aria-label={open ? "Close chat" : "Open chat"}
-        className="rounded-full bg-[#D0FF71] px-5 py-3 text-sm font-semibold text-black shadow-[0_0_25px_rgba(208,255,113,0.25)]"
+        className="rounded-full bg-gradient-to-r from-sky-500 via-indigo-600 to-sky-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_0_25px_rgba(56,189,248,0.35)] hover:shadow-[0_0_35px_rgba(56,189,248,0.55)] transition-all duration-300 flex items-center gap-2"
       >
+        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
         {open ? "Close" : "Chat with us"}
       </button>
     </div>
