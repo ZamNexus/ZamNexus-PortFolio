@@ -2914,3 +2914,202 @@ h1, h2, h3, h4, h5, h6 {
   .faq__icon::before,
   .faq__icon::after { transition: none; }
 }
+
+/* ── Service diagrams (components/ServiceDiagram) ─────────────────────────────
+   Drawn in when the section enters (Reveal variant="draw"); loops on .dg-anim only. */
+.service-diagram { width: 100%; max-width: 420px; }
+
+.service-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-sans);
+}
+
+.dg-box { fill: var(--surface-primary); stroke: var(--border-subtle); stroke-width: 1.5; }
+.dg-box--accent { stroke: color-mix(in srgb, var(--accent-text) 70%, transparent); }
+.dg-frame { fill: color-mix(in srgb, var(--surface-primary) 45%, transparent); stroke: var(--border-subtle); stroke-width: 1.5; }
+.dg-column {
+  fill: color-mix(in srgb, var(--surface-primary) 50%, transparent);
+  stroke: var(--border-subtle);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 5;
+}
+
+.dg-label { fill: var(--foreground-strong); font-size: 12px; font-weight: 600; text-anchor: middle; }
+.dg-label--start { text-anchor: start; }
+.dg-sub { fill: var(--foreground-muted); font-size: 10px; text-anchor: middle; }
+.dg-sub--strong { fill: var(--foreground); font-size: 11px; font-weight: 600; }
+.dg-sub--end { text-anchor: end; }
+.dg-caption { fill: var(--accent-text); font-size: 11px; font-weight: 600; text-anchor: middle; }
+
+.dg-axis { fill: none; stroke: var(--border-subtle); stroke-width: 1.5; stroke-linecap: round; }
+.dg-led { fill: var(--success); }
+
+.dg-line {
+  fill: none;
+  stroke: var(--border-subtle);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1100ms var(--ease-out) 150ms;
+}
+
+.dg-line--flow { stroke: color-mix(in srgb, var(--accent-text) 45%, transparent); }
+
+.dg-pulse { fill: #fff; filter: drop-shadow(0 0 6px var(--accent-text)); }
+.dg-pulse--alt { fill: var(--accent-text); }
+.dg-halo { fill: color-mix(in srgb, var(--accent-text) 18%, transparent); }
+.dg-sweep { fill: var(--accent-text); }
+
+/* Nodes settle in one after another */
+.dg-node {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
+}
+
+.dg-d1 { transition-delay: 100ms; }
+.dg-d2 { transition-delay: 220ms; }
+.dg-d3 { transition-delay: 340ms; }
+.dg-d4 { transition-delay: 460ms; }
+.dg-d5 { transition-delay: 580ms; }
+
+[data-reveal="draw"][data-state="out"] .dg-node {
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+[data-reveal="draw"][data-state="out"] .dg-line { stroke-dashoffset: 1; }
+[data-reveal="draw"][data-state="out"] .dg-anim { opacity: 0; }
+
+/* Microsoft: three separate panels slide together into one workspace */
+.dg-panel {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 900ms var(--ease-out), opacity 600ms var(--ease-out);
+}
+
+[data-reveal="draw"][data-state="out"] .dg-panel { opacity: 0; }
+[data-reveal="draw"][data-state="out"] .dg-panel--0 { transform: translate(-34px, 18px) rotate(-6deg); }
+[data-reveal="draw"][data-state="out"] .dg-panel--1 { transform: translateY(28px); }
+[data-reveal="draw"][data-state="out"] .dg-panel--2 { transform: translate(34px, 18px) rotate(6deg); }
+
+/* Salesforce: a deal moves Lead → Opportunity → Won, then starts again */
+@keyframes dg-deal {
+  0%, 14% { transform: translateX(0); opacity: 1; }
+  30%, 46% { transform: translateX(116px); }
+  62%, 86% { transform: translateX(232px); opacity: 1; }
+  92% { transform: translateX(232px); opacity: 0; }
+  93% { transform: translateX(0); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.dg-deal { animation: dg-deal 7s var(--ease-out) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dg-anim { display: none; }
+  .dg-deal { animation: none; }
+  .dg-node,
+  .dg-line,
+  .dg-panel { transition: none; }
+}
+
+/* Process sign-off: slides out beside each step as the timeline reaches it */
+.process__signoff {
+  grid-column: 2;
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-self: start;
+  padding: 6px 12px 6px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--success) 35%, transparent);
+  background: color-mix(in srgb, var(--success) 10%, transparent);
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: opacity var(--motion-base) var(--ease-out) 150ms, transform var(--motion-base) var(--ease-out) 150ms;
+}
+
+.process__signoff svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--success);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.process__signoff path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 500ms var(--ease-out) 300ms;
+}
+
+.process__step[data-lit="false"] .process__signoff {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.process__step[data-lit="false"] .process__signoff path { stroke-dashoffset: 20; }
+
+@media (prefers-reduced-motion: reduce) {
+  .process__signoff,
+  .process__signoff path { transition: none; }
+}
+
+/* Service index: per-service reading progress and a tick once finished */
+.service-index__link {
+  position: relative;
+  gap: 8px;
+}
+
+.service-index__name { flex: 0 1 auto; }
+
+.service-index__read {
+  position: absolute;
+  left: 0;
+  right: 18px;
+  bottom: 8px;
+  height: 2px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--accent-text) 55%, transparent);
+  transform: scaleX(var(--read, 0));
+  transform-origin: left;
+  opacity: 0.8;
+}
+
+.service-index__link[data-done="true"] .service-index__read { opacity: 0; transition: opacity var(--motion-base) var(--ease-out); }
+
+.service-index__tick {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--success);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transition: opacity var(--motion-base) var(--ease-out);
+}
+
+.service-index__tick path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset 500ms var(--ease-out) 100ms;
+}
+
+.service-index__link[data-done="true"] .service-index__tick { opacity: 1; }
+.service-index__link[data-done="true"] .service-index__tick path { stroke-dashoffset: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .service-index__tick,
+  .service-index__tick path,
+  .service-index__read { transition: none; }
+}

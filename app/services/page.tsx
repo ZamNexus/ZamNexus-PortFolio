@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import SectionHeader from "@/components/SectionHeader";
 import ServiceIndex from "@/components/ServiceIndex";
 import ProcessTimeline from "@/components/ProcessTimeline";
+import ServiceDiagram from "@/components/ServiceDiagram";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
@@ -13,12 +14,16 @@ import { services } from "@/lib/catalog";
 import { jsonLd } from "@/lib/seo";
 
 const steps = [
-  { name: "Discover", text: "We map your processes, systems and goals, and agree what success looks like." },
-  { name: "Design", text: "Architecture, scope and a fixed milestone plan you sign off." },
-  { name: "Build", text: "Working software at regular intervals, demonstrated to you." },
-  { name: "Integrate & test", text: "Connected to your systems and tested with your data." },
-  { name: "Go live", text: "A planned cut-over with a rollback plan." },
-  { name: "Support & improve", text: "Monitoring, fixes and a roadmap after launch." },
+  {
+    name: "Discover",
+    text: "We map your processes, systems and goals, and agree what success looks like.",
+    signoff: "Agreed goals and success measures",
+  },
+  { name: "Design", text: "Architecture, scope and a fixed milestone plan you sign off.", signoff: "Signed-off scope and milestone plan" },
+  { name: "Build", text: "Working software at regular intervals, demonstrated to you.", signoff: "Each demo reviewed with you" },
+  { name: "Integrate & test", text: "Connected to your systems and tested with your data.", signoff: "Test results you approve" },
+  { name: "Go live", text: "A planned cut-over with a rollback plan.", signoff: "Approved cut-over and rollback plan" },
+  { name: "Support & improve", text: "Monitoring, fixes and a roadmap after launch.", signoff: "Agreed support and roadmap" },
 ];
 
 // Answers marked as pending client confirmation in Phase 3 are left out until confirmed.
@@ -105,12 +110,17 @@ export default function ServicesPage() {
                 {s.aliases.map((alias) => (
                   <span key={alias} id={alias} className="absolute -top-28" aria-hidden="true" />
                 ))}
-                <Reveal variant="words" replay={false} className="max-w-2xl">
-                  <h2 id={`${s.id}-heading`} className="font-heading text-3xl sm:text-[2.75rem] font-bold tracking-tight leading-[1.08] text-foreground-strong">
-                    <SplitWords text={s.name} />
-                  </h2>
-                  <p className="reveal-sub mt-5 text-lg text-foreground-muted leading-relaxed">{s.outcome}</p>
-                </Reveal>
+                <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-10 items-center">
+                  <Reveal variant="words" replay={false} className="max-w-2xl">
+                    <h2 id={`${s.id}-heading`} className="font-heading text-3xl sm:text-[2.75rem] font-bold tracking-tight leading-[1.08] text-foreground-strong">
+                      <SplitWords text={s.name} />
+                    </h2>
+                    <p className="reveal-sub mt-5 text-lg text-foreground-muted leading-relaxed">{s.outcome}</p>
+                  </Reveal>
+                  <Reveal variant="draw">
+                    <ServiceDiagram id={s.id} />
+                  </Reveal>
+                </div>
 
                 <Spotlight as="div" className="deliverables mt-10">
                   <h3 className="text-base font-semibold text-foreground-strong">What you get</h3>

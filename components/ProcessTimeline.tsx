@@ -4,11 +4,12 @@ import { useRef, useState } from "react";
 import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
 
 interface ProcessTimelineProps {
-  steps: { name: string; text: string }[];
+  // signoff: what the client approves before the next step starts.
+  steps: { name: string; text: string; signoff: string }[];
 }
 
 // A sequence told in order: the line fills as the reader scrolls through it, and each step
-// lights when the line reaches it. Rendered fully lit on the server and under reduced motion.
+// lights when the line reaches it, revealing what the client signs off at that step. Rendered fully lit on the server and under reduced motion.
 export default function ProcessTimeline({ steps }: ProcessTimelineProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -33,6 +34,13 @@ export default function ProcessTimeline({ steps }: ProcessTimelineProps) {
             </span>
             <h3 className="process__name">{step.name}</h3>
             <p className="process__text">{step.text}</p>
+            <p className="process__signoff">
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M4 10.5l4 4 8-9" />
+              </svg>
+              <span className="sr-only">Sign-off: </span>
+              {step.signoff}
+            </p>
           </li>
         ))}
       </ol>
