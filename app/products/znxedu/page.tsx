@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import DemoRequestForm from "@/components/DemoRequestForm";
+import ProductFlow from "@/components/ProductFlow";
+import ScrollProgress from "@/components/motion/ScrollProgress";
+import Reveal from "@/components/motion/Reveal";
+import Stagger from "@/components/motion/Stagger";
+import SplitWords from "@/components/motion/SplitWords";
+import Spotlight from "@/components/motion/Spotlight";
 import { ProductStats, ProductClients, ProductAudience, ProductFaq, IllustrativeNote } from "@/components/ProductSections";
 
 const ACCENT = "#8B5CF6";
@@ -164,7 +170,8 @@ export default function ZNXEduPage() {
   return (
     <div
       suppressHydrationWarning
-      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#8B5CF6] selection:text-white overflow-x-hidden"
+      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#8B5CF6] selection:text-white overflow-x-clip"
+      style={{ "--rail": ACCENT } as CSSProperties}
     >
       {/* Background Cyber Grid */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
@@ -182,6 +189,7 @@ export default function ZNXEduPage() {
         <div className="absolute bottom-[20%] right-[8%] w-[600px] h-[600px] rounded-full bg-purple-600/[0.04] blur-[180px] pointer-events-none" />
       </div>
 
+      <ScrollProgress />
       <Navbar />
 
       <main className="relative z-10">
@@ -191,7 +199,7 @@ export default function ZNXEduPage() {
           aria-labelledby="edu-hero-heading"
           className="max-w-7xl mx-auto px-6 pt-40 pb-16"
         >
-          <div className="flex items-center gap-3 mb-6">
+          <div data-enter="1" className="flex items-center gap-3 mb-6">
             <Link
               href="/products"
               className="text-xs font-mono text-foreground-muted hover:text-zinc-300 transition-colors"
@@ -206,7 +214,7 @@ export default function ZNXEduPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-xs font-mono font-bold text-violet-400 mb-6">
+              <div data-enter="2" className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-xs font-mono font-bold text-violet-400 mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
                 ZNXEdu · School & campus management
               </div>
@@ -215,14 +223,14 @@ export default function ZNXEduPage() {
                 id="edu-hero-heading"
                 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.08] mb-6"
               >
-                One system for every campus, classroom and parent.
+                <SplitWords mode="load" text="One system for every campus, classroom and parent." />
               </h1>
 
-              <p className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-2xl mb-8">
+              <p data-enter="4" className="text-zinc-400 text-base sm:text-lg leading-relaxed max-w-2xl mb-8">
                 ZNXEdu brings admissions, fees, attendance, exams, timetables and parent communication together, so your staff stop reconciling spreadsheets and parents always know what&apos;s happening.
               </p>
 
-              <div className="flex flex-wrap items-center gap-4">
+              <div data-enter="5" className="flex flex-wrap items-center gap-4">
                 <a href="#demo-form" className="liquid-lime-btn text-sm py-3.5 px-7">
                   <span>Request a ZNXEdu demo</span>
                   <span className="arrow-icon w-7 h-7 text-xs" aria-hidden="true">→</span>
@@ -236,8 +244,11 @@ export default function ZNXEduPage() {
               </div>
             </div>
 
-            {/* Confirmed figures only (lib/siteFacts.ts) */}
-            <ProductStats slug="znxedu" accent={ACCENT} />
+            {/* The product's event flow, then confirmed figures only (lib/siteFacts.ts) */}
+            <div data-enter="6" className="lg:col-span-5 space-y-6">
+              <ProductFlow slug="znxedu" />
+              <ProductStats slug="znxedu" accent={ACCENT} />
+            </div>
           </div>
         </section>
 
@@ -247,7 +258,7 @@ export default function ZNXEduPage() {
           aria-labelledby="workflow-heading"
           className="max-w-7xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <Reveal variant="words" replay={false} className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-mono uppercase tracking-widest text-violet-400 font-bold">
               Academic & Operational Lifecycle
             </span>
@@ -255,15 +266,15 @@ export default function ZNXEduPage() {
               id="workflow-heading"
               className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-2"
             >
-              The Modern Campus Operational Pipeline
+              <SplitWords text="The Modern Campus Operational Pipeline" />
             </h2>
-            <p className="text-zinc-400 text-sm sm:text-base mt-3">
+            <p className="reveal-sub text-zinc-400 text-sm sm:text-base mt-3">
               How ZNXEdu automates student admissions, generates clash-free schedules, alerts parents upon campus entry, and reconciles tuition fees directly with banks.
             </p>
-          </div>
+          </Reveal>
 
           {/* Stepper Buttons */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
             {campusWorkflow.map((item, idx) => {
               const isCurrent = idx === activeWorkflowIdx;
               return (
@@ -301,6 +312,11 @@ export default function ZNXEduPage() {
                 </button>
               );
             })}
+          </div>
+
+          {/* Progress through the lifecycle, up to the stage being shown */}
+          <div className="stage-rail mb-8" aria-hidden="true">
+            <span style={{ "--p": (activeWorkflowIdx + 1) / campusWorkflow.length } as CSSProperties} />
           </div>
 
           {/* Active Stage Deep-Dive Card */}
@@ -344,7 +360,7 @@ export default function ZNXEduPage() {
                   <span className="text-[11px] font-mono uppercase tracking-wider text-foreground-muted font-bold block mb-2">
                     Subsystems Synchronized:
                   </span>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="stage-items flex flex-wrap gap-2">
                     {activeFlow.subsystems.map((sub) => (
                       <span
                         key={sub}
@@ -360,7 +376,7 @@ export default function ZNXEduPage() {
                   <span className="text-[11px] font-mono uppercase tracking-wider text-foreground-muted font-bold block mb-2">
                     Automated Campus Outputs:
                   </span>
-                  <div className="space-y-1.5">
+                  <div className="stage-items space-y-1.5">
                     {activeFlow.outputs.map((out) => (
                       <div key={out} className="flex items-center gap-2 text-xs font-mono text-zinc-300">
                         <span className="w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} />
@@ -379,7 +395,7 @@ export default function ZNXEduPage() {
           aria-labelledby="simulator-heading"
           className="max-w-7xl mx-auto px-6 py-16 border-t border-zinc-800/60"
         >
-          <div className="text-center max-w-3xl mx-auto mb-12">
+          <Reveal variant="words" replay={false} className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-xs font-mono uppercase tracking-widest text-violet-400 font-bold">
               Campus Telemetry Engine
             </span>
@@ -387,13 +403,13 @@ export default function ZNXEduPage() {
               id="simulator-heading"
               className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mt-2"
             >
-              Interactive Campus Operations Console
+              <SplitWords text="Interactive Campus Operations Console" />
             </h2>
-            <p className="text-zinc-400 text-sm mt-3">
+            <p className="reveal-sub text-zinc-400 text-sm mt-3">
               Simulate algorithmic timetable generation, automated fee reconciliations, and parent app check-in notifications.
             </p>
             <IllustrativeNote />
-          </div>
+          </Reveal>
 
           <div className="max-w-4xl mx-auto p-8 rounded-3xl bg-zinc-950/80 border border-zinc-800/90 shadow-2xl relative overflow-hidden">
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800/60 pb-4 mb-6">
@@ -438,7 +454,7 @@ export default function ZNXEduPage() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                <div className="stage-items grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                   {Object.entries(activeTab.data).map(([k, v]) => (
                     <div
                       key={k}
@@ -465,7 +481,7 @@ export default function ZNXEduPage() {
           aria-labelledby="modules-heading"
           className="max-w-7xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <Reveal variant="words" replay={false} className="text-center max-w-3xl mx-auto mb-16">
             <span className="text-xs font-mono uppercase tracking-widest text-violet-400 font-bold">
               Subsystem Grid
             </span>
@@ -473,20 +489,16 @@ export default function ZNXEduPage() {
               id="modules-heading"
               className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mt-2"
             >
-              Eight Integrated Campus Modules
+              <SplitWords text="Eight Integrated Campus Modules" />
             </h2>
-            <p className="text-zinc-400 text-sm sm:text-base mt-3">
+            <p className="reveal-sub text-zinc-400 text-sm sm:text-base mt-3">
               Eliminating administrative redundancy across academic affairs, finance, exams, and parent communications.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {modules.map((mod) => (
-              <motion.div
-                key={mod.label}
-                whileHover={{ y: -4, borderColor: ACCENT }}
-                className="p-6 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 hover:bg-zinc-900/70 backdrop-blur-sm transition-all duration-300 shadow-xl flex flex-col justify-between group"
-              >
+              <Spotlight key={mod.label} as="div" className="lift-card p-6 flex flex-col justify-between group">
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-2xl p-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800" aria-hidden="true">
@@ -513,9 +525,9 @@ export default function ZNXEduPage() {
                     </div>
                   ))}
                 </div>
-              </motion.div>
+              </Spotlight>
             ))}
-          </div>
+          </Stagger>
         </section>
 
         {/* ── CLIENTS (confirmed only), AUDIENCE, FAQ ─────────────────────── */}
@@ -547,17 +559,17 @@ export default function ZNXEduPage() {
           className="max-w-4xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <div className="p-8 sm:p-14 rounded-3xl bg-zinc-900/50 border border-zinc-800 shadow-2xl">
-            <div className="text-center mb-10">
+            <Reveal variant="words" replay={false} className="text-center mb-10">
               <span className="text-xs font-mono uppercase tracking-widest text-violet-400 font-bold">
                 Deploy ZNXEdu
               </span>
               <h2 id="demo-heading" className="text-3xl font-extrabold text-white mt-2">
-                Request a ZNXEdu demo
+                <SplitWords text="Request a ZNXEdu demo" />
               </h2>
-              <p className="text-zinc-400 text-sm mt-3">
+              <p className="reveal-sub text-zinc-400 text-sm mt-3">
                 Tell us about your campuses and student numbers.
               </p>
-            </div>
+            </Reveal>
 
             <DemoRequestForm productName="ZNXEdu" />
           </div>

@@ -3113,3 +3113,166 @@ h1, h2, h3, h4, h5, h6 {
   .service-index__tick path,
   .service-index__read { transition: none; }
 }
+
+/* ── Products ────────────────────────────────────────────────────────────────
+   --rail is the product's colour, set on each product page. */
+
+/* Cards that lift and take the product colour on hover. Inside a Stagger the reveal keeps its
+   own staggered timing, while hover answers immediately. */
+.lift-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-primary) 70%, transparent);
+  transition:
+    translate var(--motion-base) var(--ease-out),
+    border-color var(--motion-base) var(--ease-out);
+}
+
+[data-reveal="group"] > .lift-card {
+  transition:
+    opacity var(--motion-slow) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out),
+    translate var(--motion-base) var(--ease-out),
+    border-color var(--motion-base) var(--ease-out);
+  transition-delay:
+    calc(var(--reveal-delay, 0ms) + var(--i, 0) * var(--stagger)),
+    calc(var(--reveal-delay, 0ms) + var(--i, 0) * var(--stagger)),
+    0ms,
+    0ms;
+}
+
+.lift-card:hover {
+  translate: 0 -4px;
+  border-color: color-mix(in srgb, var(--rail, var(--accent)) 60%, transparent);
+}
+
+.lift-card.spotlight::after { border-radius: 24px; }
+
+/* Product hero: the event flow draws itself on load, then a pulse lights each module in turn */
+.product-flow {
+  --accent-text: color-mix(in srgb, var(--rail, var(--accent)) 70%, #fff);
+  width: 100%;
+  max-width: 460px;
+  padding: 20px 16px 12px;
+  border-radius: 24px;
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface-primary) 60%, transparent);
+}
+
+.product-flow svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: var(--font-sans);
+}
+
+.product-flow .dg-sub { font-size: 11px; }
+.product-flow .dg-sub--strong { font-size: 12.5px; }
+.product-flow .dg-caption { font-size: 12px; }
+.pf-code { fill: var(--foreground-strong); font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-anchor: middle; }
+.pf-lit { fill: color-mix(in srgb, var(--accent-text) 22%, transparent); stroke: var(--accent-text); stroke-width: 1.5; }
+
+@keyframes pf-draw { from { stroke-dashoffset: 1; } }
+@keyframes pf-pop { from { opacity: 0; transform: scale(0.92); } }
+@keyframes pf-fade { from { opacity: 0; } }
+
+.product-flow .dg-line { animation: pf-draw 1100ms var(--ease-out) 700ms both; transition: none; }
+.product-flow .dg-node { animation: pf-pop 600ms var(--ease-out) both; transition: none; }
+.product-flow .pf-late { animation: pf-fade 400ms var(--ease-out) 1700ms both; }
+.product-flow .dg-d1 { animation-delay: 700ms; }
+.product-flow .dg-d2 { animation-delay: 820ms; }
+.product-flow .dg-d3 { animation-delay: 940ms; }
+.product-flow .dg-d4 { animation-delay: 1060ms; }
+.product-flow .dg-d5 { animation-delay: 1180ms; }
+
+@media (scripting: none), print {
+  .product-flow .dg-line,
+  .product-flow .dg-node,
+  .product-flow .pf-late { animation: none; }
+}
+
+/* Lifecycle stepper: a rail fills up to the stage being shown */
+.stage-rail {
+  position: relative;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+
+.stage-rail > span {
+  position: absolute;
+  inset: 0;
+  background: var(--rail, var(--accent));
+  transform-origin: left;
+  transform: scaleX(var(--p, 0));
+  transition: transform var(--motion-slow) var(--ease-out);
+}
+
+/* A stage's or console tab's contents arrive one after another each time they change */
+.stage-items > * {
+  animation: enter-rise var(--motion-base) var(--ease-out) both;
+  animation-delay: calc(150ms + var(--i, 0) * var(--stagger));
+}
+
+.stage-items > :nth-child(2) { --i: 1; }
+.stage-items > :nth-child(3) { --i: 2; }
+.stage-items > :nth-child(4) { --i: 3; }
+.stage-items > :nth-child(5) { --i: 4; }
+
+/* Products hub: each card's colour bar draws as it arrives; the arrow nudges on hover */
+.product-card__bar {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--rail, var(--accent));
+  transform-origin: left;
+  transition: transform 900ms var(--ease-out);
+  transition-delay: calc(200ms + var(--i, 0) * var(--stagger));
+}
+
+[data-reveal="group"][data-state="out"] .product-card__bar { transform: scaleX(0); }
+
+.product-card__link span {
+  display: inline-block;
+  transition: transform var(--motion-base) var(--ease-out);
+}
+
+.product-card:hover .product-card__link span { transform: translateX(4px); }
+
+/* Products hub: the rollout steps join up as they arrive */
+.rollout__step.lift-card { overflow: visible; }
+
+@media (min-width: 1024px) {
+  .rollout__step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 34px;
+    left: calc(100% + 1px);
+    width: 22px;
+    height: 2px;
+    background: color-mix(in srgb, var(--accent-text) 55%, transparent);
+    transform-origin: left;
+    transition: transform var(--motion-base) var(--ease-out);
+    transition-delay: calc(300ms + var(--i, 0) * var(--stagger));
+  }
+
+  [data-reveal="group"][data-state="out"] .rollout__step::after { transform: scaleX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lift-card,
+  [data-reveal="group"] > .lift-card,
+  .stage-rail > span,
+  .rollout__step::after,
+  .product-card__bar,
+  .product-card__link span { transition: none; }
+  .lift-card:hover { translate: none; }
+  .product-flow .dg-line,
+  .product-flow .dg-node,
+  .stage-items > * { animation: none; }
+}
