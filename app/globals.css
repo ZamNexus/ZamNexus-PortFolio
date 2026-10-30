@@ -4118,3 +4118,145 @@ h1, h2, h3, h4, h5, h6 {
   .walk__name,
   .walk__step { transition: none; }
 }
+
+/* ── Homepage product stage (components/ProductStage) ────────────────────── */
+.stage { display: grid; gap: 56px; }
+
+.stage__list { display: grid; gap: 64px; }
+
+.stage__item { position: relative; padding-left: 20px; }
+
+.stage__item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--rail);
+  opacity: 0.35;
+  transform-origin: top;
+  transition: opacity var(--motion-base) var(--ease-out), transform var(--motion-slow) var(--ease-out);
+}
+
+.stage__outcomes { margin-top: 20px; display: grid; gap: 8px; color: var(--foreground); }
+
+.stage__outcomes li { position: relative; padding-left: 18px; line-height: 1.5; }
+
+.stage__outcomes li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--rail);
+}
+
+.stage__link {
+  margin-top: 20px;
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent-text) 40%, transparent);
+  text-underline-offset: 5px;
+  transition: text-decoration-color var(--motion-base) var(--ease-out);
+}
+
+.stage__link:hover { text-decoration-color: var(--accent-text); }
+
+.stage__inline { margin-top: 28px; }
+
+.stage__sticky { display: none; }
+
+@media (min-width: 1024px) {
+  .stage { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 72px; }
+
+  .stage__list { gap: 0; }
+
+  .stage__item {
+    min-height: 72vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: opacity var(--motion-slow) var(--ease-out);
+  }
+
+  .stage__item[data-active="false"] { opacity: 0.35; }
+  .stage__item[data-active="true"]::before { opacity: 1; }
+
+  .stage__inline { display: none; }
+
+  .stage__sticky {
+    position: sticky;
+    top: calc(50vh - 190px);
+    align-self: start;
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    margin-top: 14vh;
+  }
+
+  .stage__scene { width: 100%; display: grid; justify-items: center; gap: 14px; animation: stage-in 600ms var(--ease-out) both; }
+  .stage__scene .product-scene { max-width: 560px; }
+}
+
+.stage__caption { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; color: var(--foreground); }
+
+.stage__dot { width: 8px; height: 8px; border-radius: 999px; background: var(--rail); box-shadow: 0 0 10px var(--rail); }
+
+.stage__pips { display: flex; gap: 8px; }
+
+.stage__pips span {
+  width: 22px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--border-strong);
+  transition: background-color var(--motion-base) var(--ease-out), width var(--motion-base) var(--ease-out);
+}
+
+.stage__pips span[data-active="true"] { width: 40px; background: var(--rail); }
+
+@keyframes stage-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+}
+
+/* ── Homepage service preview (components/ServiceRows) ───────────────────── */
+.service-rows { position: relative; }
+
+.service-preview {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 300px;
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  background: color-mix(in srgb, var(--surface-primary) 92%, #000);
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  transform: translate(calc(var(--px, 0px) + 24px), calc(var(--py, 0px) - 50%)) scale(0.92);
+  transition: opacity var(--motion-fast) var(--ease-out), transform 160ms var(--ease-out);
+}
+
+.service-preview[data-visible="true"] {
+  opacity: 1;
+  transform: translate(calc(var(--px, 0px) + 24px), calc(var(--py, 0px) - 50%)) scale(1);
+}
+
+@media (hover: none), (max-width: 1023px) {
+  .service-preview { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage__item,
+  .stage__item::before,
+  .stage__pips span,
+  .service-preview { transition: none; }
+  .stage__scene { animation: none; }
+}

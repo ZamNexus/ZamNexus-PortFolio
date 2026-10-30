@@ -1,6 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
-import type { CSSProperties } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionHeader from "@/components/SectionHeader";
@@ -9,10 +7,10 @@ import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import ScrollProgress from "@/components/motion/ScrollProgress";
-import Spotlight from "@/components/motion/Spotlight";
 import HeroBackground from "@/components/HeroBackground";
 import TechMarquee from "@/components/TechMarquee";
-import { products, services } from "@/lib/catalog";
+import ProductStage from "@/components/ProductStage";
+import ServiceRows from "@/components/ServiceRows";
 import { clients, company, confirmed } from "@/lib/siteFacts";
 import { featuredInsight } from "./insights/insightsData";
 
@@ -33,7 +31,7 @@ export default function HomePage() {
     : `${company.foundingYear.confirmed ? `Established ${company.foundingYear.value}. ` : ""}Offices in Luton and Islamabad.`;
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground font-sans overflow-x-clip">
       <ScrollProgress />
       <HeroBackground />
       <Navbar />
@@ -83,18 +81,7 @@ export default function HomePage() {
             title="Four platforms, ready to deploy."
             intro="Each covers one sector end to end and can be configured to the way you work."
           />
-          <Stagger className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-14">
-            {products.map((p) => (
-              <Spotlight key={p.slug} className="product-rail" style={{ "--rail": p.accent } as CSSProperties}>
-                <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
-                <h3 className="mt-5 text-2xl font-bold tracking-tight text-foreground-strong">{p.category}</h3>
-                <p className="mt-3 text-foreground-muted leading-relaxed max-w-[46ch]">{p.purpose}</p>
-                <Link href={`/products/${p.slug}`} className={`mt-5 inline-block ${textLink}`}>
-                  See {p.code}
-                </Link>
-              </Spotlight>
-            ))}
-          </Stagger>
+          <ProductStage />
         </section>
 
         {/* ── SERVICES ─────────────────────────────────────────────────────── */}
@@ -104,18 +91,7 @@ export default function HomePage() {
             title="When you need something built."
             intro="Six engineering services from one senior team."
           />
-          <Stagger as="ul" className="grid grid-cols-1 md:grid-cols-2 gap-x-12 border-t border-[var(--border-subtle)]">
-            {services.map((s) => (
-              <li key={s.id} className="service-item">
-                <Link href={`/services#${s.id}`} className="service-row">
-                  <span className="service-row__name text-lg font-semibold text-foreground-strong">
-                    {s.name}
-                  </span>
-                  <span className="text-foreground-muted">{s.short}</span>
-                </Link>
-              </li>
-            ))}
-          </Stagger>
+          <ServiceRows />
           <p className="mt-10 max-w-2xl text-foreground-muted leading-relaxed">
             Financial services, professional services, property or public sector? These services cover you too.{" "}
             <Link href="/contact" className={textLink}>
