@@ -96,7 +96,7 @@ export default function PillTab({
               {label}
             </span>
             {sublabel && (
-              <span className="text-[11px] font-mono text-zinc-500 whitespace-normal break-words mt-0.5 block">
+              <span className="text-[11px] font-mono text-foreground-muted whitespace-normal break-words mt-0.5 block">
                 {sublabel}
               </span>
             )}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Sora, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
+import { pageMetadata, SITE_URL } from "@/lib/seo";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -18,17 +19,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Homepage metadata; every other route sets its own title, description and canonical in its layout.
 export const metadata: Metadata = {
-  title: "ZamNexus — Connecting Intelligence. Enabling Action.",
-  description:
-    "ZamNexus, a technology brand of Zamooq Limited. We design and deliver intelligent solutions powered by AI, cloud-native engineering, SaaS, automation, Microsoft Dynamics 365, Power Platform and Salesforce.",
-  openGraph: {
-    title: "ZamNexus — Connecting Intelligence. Enabling Action.",
+  metadataBase: new URL(SITE_URL),
+  ...pageMetadata({
+    title: "ZamNexus | ERP, POS, EHR & Enterprise Software Engineering",
     description:
-      "Intelligent technology solutions: AI, SaaS, cloud-native engineering, automation and connected business platforms.",
-    type: "website",
-    siteName: "ZamNexus",
-  },
+      "Four ready-to-deploy business platforms, plus the engineers to build what you need next: AI, cloud, SaaS, Microsoft and Salesforce. Book a consultation.",
+    path: "/",
+  }),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -121,8 +120,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   },
                   contactPoint: {
                     "@type": "ContactPoint",
-                    contactType: "Customer Support & Enterprise Inquiries",
+                    contactType: "sales",
                     email: "contact@zamnexus.com",
+                    telephone: "+44 7859 043361",
+                    areaServed: ["GB", "PK", "AE"],
+                  },
+                  address: {
+                    "@type": "PostalAddress",
+                    streetAddress: "34 Beaconsfield",
+                    addressLocality: "Luton",
+                    postalCode: "LU2 0RW",
+                    addressCountry: "GB",
                   },
                 },
                 {

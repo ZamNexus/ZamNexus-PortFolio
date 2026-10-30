@@ -8,10 +8,10 @@
 
 ## Quick Context
 
-- **Project**: Zamooq — Premium software services & consulting platform website
+- **Project**: ZamNexus (the technology brand of Zamooq Limited): four business platforms + engineering services
 - **Owner & CEO**: Mir Mujeeb Ul Hassan
 - **Stack**: Next.js 16 (App Router) + React 19 + TypeScript 5 + Tailwind CSS 4
-- **Design**: Dark editorial (#090b10 bg) with signature lime (#D0FF71) accent, inspired by [Ziel Global](https://zielglobal.com/)
+- **Design**: Deep navy (#0A0F1E) with electric blue (#2563EB) accent. Tokens live in `app/globals.css`; it is the source of truth over any colour named elsewhere in these docs
 - **Goal**: Enterprise-grade website that wins high-value software project contracts ($50k–$500k+)
 
 ---
@@ -42,13 +42,18 @@ Client Components ("use client"):
 ```
 
 ### 3. Design System Enforcement
-- **Primary BG**: `#090b10` — Use `bg-[#090b10]` or `var(--background)`
-- **Accent**: `#D0FF71` — Use `text-[#D0FF71]` or `bg-[#D0FF71]`
-- **Surface**: `#11141D` — Use `bg-[#11141D]/85` with `backdrop-blur-2xl`
-- **Text**: `text-white` (headings), `text-zinc-400` (body), `text-zinc-500` (captions)
-- **Borders**: `border-zinc-800` (default), `border-[#D0FF71]/60` (hover active)
+Use the Tailwind tokens from `app/globals.css` (`@theme inline`), not raw hex values:
+- **Background / surfaces**: `bg-background`, `bg-surface`, `bg-surface-2`
+- **Text**: `text-foreground-strong` (headings), `text-foreground` (body), `text-foreground-muted` (captions, 7.5:1)
+- **Accent**: `bg-accent` for fills and buttons only (3.7:1 as text fails WCAG AA); `text-accent-text` (#60A5FA) for accent-coloured text
+- **Never** use `text-zinc-500`/`600`/`700` for text: they fail WCAG AA on the navy background
+- **Borders**: `border-[var(--border-subtle)]` (default), `border-[var(--border-strong)]` (hover/active)
 - **Radius**: `rounded-3xl` (cards), `rounded-full` (buttons, navbar)
-- **Shadows**: `shadow-2xl` (elevated), `shadow-[0_0_25px_rgba(208,255,113,0.25)]` (lime glow)
+
+### 3a. Content Rules
+- Every client-supplied figure, client name or credential lives in `lib/siteFacts.ts` and renders only when `confirmed: true`. Never hard-code one in a page.
+- Product and service copy shared across pages lives in `lib/catalog.ts`.
+- Page metadata comes from `pageMetadata()` in `lib/seo.ts` (title ≤ 60 chars, description ≤ 155, self-canonical).
 
 ### 4. Code Quality Non-Negotiables
 - **ZERO `any` types** — Define TypeScript interfaces for ALL data structures
@@ -71,19 +76,26 @@ Client Components ("use client"):
 ## File Structure Quick Reference
 
 ```
-app/
-├── layout.tsx          → Root layout (fonts, metadata, html shell) — SERVER
-├── page.tsx            → Homepage — CLIENT (filter state)
-├── globals.css         → Design tokens, animations, utilities
-├── About/page.tsx      → Company info — CLIENT
-├── Services/page.tsx   → Service details — CLIENT
-├── Work/page.tsx       → Portfolio showcase — CLIENT
-├── Products/page.tsx   → Product catalog — CLIENT
-├── BLog/page.tsx       → Blog/insights — CLIENT
-├── Contact/page.tsx    → Contact form — CLIENT (form state)
+app/                      (route folders are lowercase; proxy.ts 308-redirects any mixed-case URL)
+├── layout.tsx            → Root layout + homepage metadata — SERVER
+├── page.tsx              → Homepage — SERVER
+├── globals.css           → Design tokens, animations, utilities
+├── services/page.tsx     → 6 services + process + FAQ — SERVER
+├── products/page.tsx     → Product hub + comparison — SERVER
+├── products/znx*/        → 4 product pages (interactive consoles) — CLIENT
+├── insights/             → Article index (CLIENT) + [slug] articles
+├── about/page.tsx        → Story, leadership, offices, company details — SERVER
+├── contact/page.tsx      → Brief form — CLIENT (form state)
+├── privacy/, terms/      → Legal
+├── api/lead, api/chat    → Lead pipeline (lib/leads.ts) and chatbot
+proxy.ts                  → Legacy and mixed-case URL redirects (next.config redirects match case-insensitively)
+lib/
+├── catalog.ts            → Shared product and service copy
+├── siteFacts.ts          → Client claims, gated by confirmed: true
+├── seo.ts                → pageMetadata(), JSON-LD helpers
 components/
-├── Navbar.tsx          → Floating capsule nav — CLIENT (mobile menu state)
-├── Footer.tsx          → Footer with CTA — SERVER
+├── Navbar.tsx            → Floating capsule nav — CLIENT (mobile menu state)
+├── Footer.tsx            → Footer with CTA
 ```
 
 ---

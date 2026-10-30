@@ -22,6 +22,9 @@
   --surface-secondary: #1E293B;       /* elevated surface (matches slate) */
   --border-subtle: rgba(148, 163, 184, 0.14);
   --border-strong: rgba(37, 99, 235, 0.45);
+  --accent-text: #60A5FA;             /* accent-coloured text at any size (7.5:1 on background; --accent is fills only) */
+  --success: #34D399;
+  --danger: #F87171;
 
   /* ── Spacing: 8px baseline grid ── */
   --space-1: 8px;
@@ -55,6 +58,9 @@
   --color-accent-active: var(--accent-active);
   --color-surface: var(--surface-primary);
   --color-surface-2: var(--surface-secondary);
+  --color-accent-text: var(--accent-text);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
 
   /* Typography hierarchy: Inter (body) + Sora (headings) + Geist Mono (labels/data) */
   --font-sans: var(--font-inter);

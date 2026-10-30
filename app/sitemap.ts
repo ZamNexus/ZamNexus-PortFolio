@@ -1,97 +1,38 @@
 import type { MetadataRoute } from "next";
-import { getAllInsightSlugs } from "./Insights/insightsData";
+import { allInsights } from "./insights/insightsData";
+import { SITE_URL } from "@/lib/seo";
+
+// Update a page's date when its content meaningfully changes; a build-time `new Date()`
+// would tell search engines every page changed on every deploy.
+const CONTENT_UPDATED = "2026-10-30";
+const LEGAL_UPDATED = "2026-03-01";
+
+const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+
+function articleDate(date: string): string {
+  const [month, year] = date.toLowerCase().split(" ");
+  const m = MONTHS.indexOf(month);
+  return m >= 0 && year ? `${year}-${String(m + 1).padStart(2, "0")}-01` : CONTENT_UPDATED;
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://zamnexus.com";
-  const now = new Date();
-
-  const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}/`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 1.0,
-    },
-    {
-      url: `${baseUrl}/Services`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/Products`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/Products/znxerp`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/Products/znxepos`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/Products/znxedu`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/Products/znxcare`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/Industries`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/Insights`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/About`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/Contact`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/Privacy`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${baseUrl}/Terms`,
-      lastModified: now,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
+  const pages: [path: string, lastModified: string][] = [
+    ["/", CONTENT_UPDATED],
+    ["/services", CONTENT_UPDATED],
+    ["/products", CONTENT_UPDATED],
+    ["/products/znxerp", CONTENT_UPDATED],
+    ["/products/znxepos", CONTENT_UPDATED],
+    ["/products/znxedu", CONTENT_UPDATED],
+    ["/products/znxcare", CONTENT_UPDATED],
+    ["/insights", CONTENT_UPDATED],
+    ["/about", CONTENT_UPDATED],
+    ["/contact", CONTENT_UPDATED],
+    ["/privacy", LEGAL_UPDATED],
+    ["/terms", LEGAL_UPDATED],
   ];
 
-  const insightRoutes: MetadataRoute.Sitemap = getAllInsightSlugs().map((slug) => ({
-    url: `${baseUrl}/Insights/${slug}`,
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.75,
-  }));
-
-  return [...staticRoutes, ...insightRoutes];
+  return [
+    ...pages.map(([path, lastModified]) => ({ url: `${SITE_URL}${path === "/" ? "" : path}`, lastModified })),
+    ...allInsights.map((a) => ({ url: `${SITE_URL}/insights/${a.id}`, lastModified: articleDate(a.date) })),
+  ];
 }

@@ -79,7 +79,7 @@ export default function DemoRequestForm({
   }
 
   const inputClass =
-    "w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 text-sm transition-colors outline-none focus:border-[var(--demo-accent)]";
+    "w-full px-4 py-3 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-400 text-sm transition-colors outline-none focus:border-[var(--demo-accent)]";
 
   return (
     <form
@@ -91,7 +91,7 @@ export default function DemoRequestForm({
         <div>
           <label
             htmlFor={`${uid}-name`}
-            className="block text-xs font-mono uppercase tracking-wider text-zinc-500 mb-2"
+            className="block text-xs font-mono uppercase tracking-wider text-foreground-muted mb-2"
           >
             Your Name *
           </label>
@@ -109,7 +109,7 @@ export default function DemoRequestForm({
         <div>
           <label
             htmlFor={`${uid}-email`}
-            className="block text-xs font-mono uppercase tracking-wider text-zinc-500 mb-2"
+            className="block text-xs font-mono uppercase tracking-wider text-foreground-muted mb-2"
           >
             Work Email *
           </label>
@@ -130,7 +130,7 @@ export default function DemoRequestForm({
         <div>
           <label
             htmlFor={`${uid}-company`}
-            className="block text-xs font-mono uppercase tracking-wider text-zinc-500 mb-2"
+            className="block text-xs font-mono uppercase tracking-wider text-foreground-muted mb-2"
           >
             Company *
           </label>
@@ -148,7 +148,7 @@ export default function DemoRequestForm({
         <div>
           <label
             htmlFor={`${uid}-role`}
-            className="block text-xs font-mono uppercase tracking-wider text-zinc-500 mb-2"
+            className="block text-xs font-mono uppercase tracking-wider text-foreground-muted mb-2"
           >
             Your Role
           </label>
@@ -166,7 +166,7 @@ export default function DemoRequestForm({
 
       {/* Pre-filled product badge */}
       <div>
-        <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 mb-2">
+        <div className="text-xs font-mono uppercase tracking-wider text-foreground-muted mb-2">
           Requesting Demo For
         </div>
         <div
@@ -185,7 +185,7 @@ export default function DemoRequestForm({
       <div>
         <label
           htmlFor={`${uid}-message`}
-          className="block text-xs font-mono uppercase tracking-wider text-zinc-500 mb-2"
+          className="block text-xs font-mono uppercase tracking-wider text-foreground-muted mb-2"
         >
           Tell Us About Your Business
         </label>

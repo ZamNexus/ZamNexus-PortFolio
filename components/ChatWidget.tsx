@@ -117,7 +117,7 @@ export default function ChatWidget() {
               maxLength={2000}
               placeholder="Ask an architectural question…"
               aria-label="Message"
-              className="min-w-0 flex-1 rounded-full border border-zinc-800 bg-[#080B11] px-4 py-2 text-sm text-white outline-none focus:border-sky-500/60 placeholder:text-zinc-600"
+              className="min-w-0 flex-1 rounded-full border border-zinc-800 bg-[#080B11] px-4 py-2 text-sm text-white outline-none focus:border-sky-500/60 placeholder:text-foreground-muted"
             />
             <button
               disabled={busy}

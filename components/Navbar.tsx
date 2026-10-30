@@ -31,42 +31,38 @@ interface NavItem {
 const navLinks: NavItem[] = [
   {
     label: "Services",
-    href: "/Services",
+    href: "/services",
     columns: 2,
     dropdown: [
-      { label: "AI & Intelligent Solutions", href: "/Services#ai-intelligent" },
-      { label: "Intelligent Automation", href: "/Services#intelligent-automation" },
-      { label: "SaaS Product Development", href: "/Services#saas-development" },
-      { label: "Cloud-Native Engineering", href: "/Services#cloud-native" },
-      { label: "Microsoft Dynamics & Power Platform", href: "/Services#microsoft-solutions" },
-      { label: "Salesforce Architecture", href: "/Services#salesforce-solutions" },
+      { label: "AI & Automation", href: "/services#ai-automation" },
+      { label: "SaaS Product Development", href: "/services#saas" },
+      { label: "Cloud-Native Engineering", href: "/services#cloud" },
+      { label: "Integration & Modernisation", href: "/services#integration" },
+      { label: "Microsoft Dynamics 365", href: "/services#microsoft" },
+      { label: "Salesforce", href: "/services#salesforce" },
     ],
   },
   {
     label: "Products",
-    href: "/Products",
+    href: "/products",
     dropdown: [
-      { label: "ZNXERP — Enterprise Resource Planning", href: "/Products/znxerp" },
-      { label: "ZNXePOS — Omni-Channel Point of Sale", href: "/Products/znxepos" },
-      { label: "ZNXEdu — Academic Institution Suite", href: "/Products/znxedu" },
-      { label: "ZNXCare — Clinical Healthcare EHR", href: "/Products/znxcare" },
+      { label: "ZNXERP: ERP for manufacturers", href: "/products/znxerp" },
+      { label: "ZNXePOS: Retail point of sale", href: "/products/znxepos" },
+      { label: "ZNXEdu: School & campus management", href: "/products/znxedu" },
+      { label: "ZNXCare: Hospital management & EHR", href: "/products/znxcare" },
     ],
   },
   {
-    label: "Industries",
-    href: "/Industries",
-  },
-  {
     label: "Insights",
-    href: "/Insights",
+    href: "/insights",
   },
   {
     label: "About",
-    href: "/About",
+    href: "/about",
   },
   {
     label: "Contact",
-    href: "/Contact",
+    href: "/contact",
   },
 ];
 
@@ -230,8 +226,10 @@ export default function Navbar() {
           className="sticky top-0 inset-x-0 z-[60] h-9 flex items-center justify-center gap-3 px-4 text-center bg-gradient-to-r from-[var(--accent)]/20 via-[#8B5CF6]/20 to-[var(--accent)]/20 border-b border-[var(--accent)]/25 backdrop-blur-sm"
         >
           <p className="text-xs sm:text-[13px] font-medium text-zinc-200 truncate">
-            <span aria-hidden="true">🚀</span>{" "}
-            Now serving <span className="font-bold text-[var(--accent-hover)]">9 industries</span> with AI-powered automation
+            Four platforms for manufacturing, retail, education and healthcare.{" "}
+            <Link href="/products" className="font-bold text-[var(--accent-text)] hover:underline">
+              See the products →
+            </Link>
           </p>
           <button
             type="button"
@@ -339,7 +337,7 @@ export default function Navbar() {
                         <div className="nav-dropdown-inner flex gap-6 min-w-[280px]">
                           {link.groups.map((group) => (
                             <div key={group.groupLabel} className="flex-1 min-w-[120px]">
-                              <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-600 font-bold px-2 pb-2 border-b border-zinc-800/60 mb-1">
+                              <div className="text-[10px] font-mono uppercase tracking-widest text-foreground-muted font-bold px-2 pb-2 border-b border-zinc-800/60 mb-1">
                                 {group.groupLabel}
                               </div>
                               {group.items.map((item) => (
@@ -396,16 +394,16 @@ export default function Navbar() {
 
           {/* ── RIGHT: CTA ── */}
           <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
-            <Link href="/Contact" className="nav-cta">
-              <span>Schedule Consultation</span>
+            <Link href="/contact" className="nav-cta">
+              <span>Book a consultation</span>
               <span className="nav-cta-arrow" aria-hidden="true">→</span>
             </Link>
           </div>
 
           {/* ── MOBILE / TABLET CONTROLS ── */}
           <div className="lg:hidden flex items-center gap-2">
-            <Link href="/Contact" className="nav-cta nav-cta--compact">
-              <span>Schedule Consultation</span>
+            <Link href="/contact" className="nav-cta nav-cta--compact">
+              <span>Book a consultation</span>
             </Link>
 
             <button
@@ -515,17 +513,17 @@ export default function Navbar() {
             {/* Bottom Drawer Actions & Enterprise Links */}
             <div className="pt-6 pb-8 space-y-4">
               <Link
-                href="/Contact"
+                href="/contact"
                 onClick={() => setMobileOpen(false)}
                 className="liquid-lime-btn w-full justify-center text-sm py-3.5"
               >
-                <span>Schedule Consultation</span>
+                <span>Book a consultation</span>
                 <span className="arrow-icon w-6 h-6 text-xs" aria-hidden="true">→</span>
               </Link>
 
-              <div className="flex items-center justify-between text-xs font-mono text-zinc-500 pt-2 border-t border-zinc-800/60">
+              <div className="flex items-center justify-between text-xs font-mono text-foreground-muted pt-2 border-t border-zinc-800/60">
                 <Link
-                  href="/Privacy"
+                  href="/privacy"
                   onClick={() => setMobileOpen(false)}
                   className="hover:text-zinc-300 transition-colors"
                 >
@@ -533,14 +531,14 @@ export default function Navbar() {
                 </Link>
                 <span>·</span>
                 <Link
-                  href="/Terms"
+                  href="/terms"
                   onClick={() => setMobileOpen(false)}
                   className="hover:text-zinc-300 transition-colors"
                 >
                   Terms of Service
                 </Link>
                 <span>·</span>
-                <span className="text-zinc-600">Enterprise AI</span>
+                <span className="text-foreground-muted">Enterprise AI</span>
               </div>
             </div>
           </div>

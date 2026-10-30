@@ -121,7 +121,7 @@ export default function Nexus3DBackground({
 
     // ─── Animation Loop ──────────────────────────────────────────────────────
     let animationFrameId: number;
-    let clock = new THREE.Clock();
+    const clock = new THREE.Clock();
 
     const animate = () => {
       const elapsedTime = clock.getElapsedTime();

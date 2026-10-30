@@ -15,7 +15,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 > **Company**: Zamooq — Software Development & Consulting  
 > **Owner & CEO**: Mir Mujeeb Ul Hassan  
 > **Stack**: Next.js 16 · React 19 · TypeScript 5 · Tailwind CSS 4  
-> **Reference Design**: [Ziel Global](https://zielglobal.com/) — Dark editorial aesthetic with lime (#D0FF71) accents
+> **Design tokens**: `app/globals.css` is the source of truth (deep navy #0A0F1E, electric blue #2563EB). The lime palette in §3 below is historical and no longer used.
 
 ---
 
@@ -155,9 +155,9 @@ public/
 
 ### 4.3 Routing Conventions
 
-- **Folder-based routing**: `app/About/page.tsx` → `/About`
+- **Folder-based routing**: `app/about/page.tsx` → `/about`
 - **All page files MUST export a default function component**
-- **Page names are PascalCase folders** (matching current convention: `About`, `Services`, `Work`, `Products`, `BLog`, `Contact`)
+- **Route folders are lowercase** (`about`, `services`, `products`, `insights`, `contact`). `proxy.ts` redirects old and mixed-case URLs; add moved pages to its `MOVED` map, not to `next.config.ts` redirects (those match case-insensitively and would loop)
 - **Dynamic routes**: Use `[slug]` folder convention when needed
 - **Loading states**: Use `loading.tsx` in route folders for Suspense boundaries
 - **Error boundaries**: Use `error.tsx` for route-level error handling

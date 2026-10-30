@@ -243,7 +243,7 @@ export default function FinalCTA({
                       {item.label}
                     </div>
                     {item.sublabel && (
-                      <div className="text-zinc-500 text-[11px] font-mono mt-0.5 leading-tight">
+                      <div className="text-foreground-muted text-[11px] font-mono mt-0.5 leading-tight">
                         {item.sublabel}
                       </div>
                     )}
