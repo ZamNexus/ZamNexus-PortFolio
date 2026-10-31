@@ -1,5 +1,5 @@
 import { clients, confirmed, productStats, type ProductSlug } from "@/lib/siteFacts";
-import { jsonLd } from "@/lib/seo";
+import type { FaqItem } from "@/lib/productFaqs";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
@@ -69,20 +69,9 @@ export function ProductAudience({ id, title, items }: { id: string; title: strin
   );
 }
 
-interface FaqItem {
-  q: string;
-  a: string;
-}
-
 export function ProductFaq({ id, items }: { id: string; items: FaqItem[] }) {
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: items.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
-  };
   return (
     <section aria-labelledby={id} className="max-w-3xl mx-auto px-4 sm:px-6 py-20 border-t border-zinc-800/60">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <Reveal variant="words" replay={false}>
         <p className="reveal-sub text-xs font-mono uppercase tracking-widest font-bold text-accent-text">FAQ</p>
         <h2 id={id} className="mt-3 font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground-strong">

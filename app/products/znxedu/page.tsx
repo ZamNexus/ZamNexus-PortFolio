@@ -13,6 +13,7 @@ import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import Spotlight from "@/components/motion/Spotlight";
+import { productFaqs } from "@/lib/productFaqs";
 import { ProductStats, ProductClients, ProductAudience, ProductFaq, IllustrativeNote } from "@/components/ProductSections";
 
 const ACCENT = "#8B5CF6";
@@ -615,14 +616,7 @@ export default function ZNXEduPage() {
           ]}
         />
 
-        <ProductFaq
-          id="znxedu-faq"
-          items={[
-            { q: "Can it manage several campuses?", a: "Yes. Each campus runs its own day-to-day operations, while head office sees fees, attendance and results across all of them." },
-            { q: "How are parents kept informed?", a: "The parent app shows attendance alerts, fee status, results and school notices." },
-            { q: "Is student data secure?", a: "Records are encrypted, and each member of staff only sees what their role allows." },
-          ]}
-        />
+        <ProductFaq id="znxedu-faq" items={productFaqs.znxedu} />
 
         {/* ── DEMO REQUEST & CLOSING FORM ──────────────────────────────────── */}
         <section

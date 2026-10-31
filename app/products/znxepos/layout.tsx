@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata, jsonLd, breadcrumbs, SITE_URL } from "@/lib/seo";
+import { pageMetadata, jsonLd, breadcrumbs, faqPage, SITE_URL } from "@/lib/seo";
+import { productFaqs } from "@/lib/productFaqs";
 
 export const metadata: Metadata = pageMetadata({
   title: "ZNXePOS | Multi-Branch Retail POS That Works Offline",
@@ -20,6 +21,7 @@ const structuredData = [
     url: `${SITE_URL}/products/znxepos`,
     publisher: { "@id": `${SITE_URL}/#organization` },
   },
+  faqPage(productFaqs.znxepos),
 ];
 
 export default function ZNXePOSLayout({

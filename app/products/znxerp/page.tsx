@@ -13,6 +13,7 @@ import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import Spotlight from "@/components/motion/Spotlight";
+import { productFaqs } from "@/lib/productFaqs";
 import { ProductStats, ProductClients, ProductAudience, ProductFaq, IllustrativeNote } from "@/components/ProductSections";
 
 const ACCENT = "#3B82F6";
@@ -615,14 +616,7 @@ export default function ZNXERPPage() {
           ]}
         />
 
-        <ProductFaq
-          id="znxerp-faq"
-          items={[
-            { q: "Can we migrate from our current system?", a: "Yes. We migrate master data, open balances and history, then run both systems in parallel before cut-over." },
-            { q: "Does it handle multiple companies and currencies?", a: "Yes. Each company keeps its own ledgers in its own currency, with consolidated reporting across the group." },
-            { q: "How does ZNXERP handle quality control?", a: "Incoming material is held in quarantine until the QC lab releases it, and every batch keeps its test results for audit." },
-          ]}
-        />
+        <ProductFaq id="znxerp-faq" items={productFaqs.znxerp} />
 
         {/* ── DEMO REQUEST & CLOSING FORM ──────────────────────────────────── */}
         <section

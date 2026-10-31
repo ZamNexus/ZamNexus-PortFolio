@@ -13,6 +13,7 @@ import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import Spotlight from "@/components/motion/Spotlight";
+import { productFaqs } from "@/lib/productFaqs";
 import { ProductStats, ProductClients, ProductAudience, ProductFaq, IllustrativeNote } from "@/components/ProductSections";
 
 const ACCENT = "#F59E0B";
@@ -632,14 +633,7 @@ export default function ZNXePOSPage() {
           ]}
         />
 
-        <ProductFaq
-          id="znxepos-faq"
-          items={[
-            { q: "What happens if the internet goes down?", a: "Each till keeps its own local database, so sales, returns and receipts carry on. Everything syncs to head office when the connection returns." },
-            { q: "Can we move stock between branches?", a: "Yes. Inter-branch transfers update stock at both stores, and head office sees every branch in one view." },
-            { q: "Does it support wholesale and retail in one system?", a: "Yes. Wholesale customers have their own ledgers, credit limits and pricing, alongside your retail tills." },
-          ]}
-        />
+        <ProductFaq id="znxepos-faq" items={productFaqs.znxepos} />
 
         {/* ── DEMO REQUEST & CLOSING FORM ──────────────────────────────────── */}
         <section

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata, jsonLd, breadcrumbs, SITE_URL } from "@/lib/seo";
+import { pageMetadata, jsonLd, breadcrumbs, faqPage, SITE_URL } from "@/lib/seo";
+import { productFaqs } from "@/lib/productFaqs";
 
 export const metadata: Metadata = pageMetadata({
   title: "ZNXERP | ERP for Manufacturing & Pharmaceutical Plants",
@@ -20,6 +21,7 @@ const structuredData = [
     url: `${SITE_URL}/products/znxerp`,
     publisher: { "@id": `${SITE_URL}/#organization` },
   },
+  faqPage(productFaqs.znxerp),
 ];
 
 export default function ZNXERPLayout({

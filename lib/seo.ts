@@ -39,3 +39,12 @@ export function breadcrumbs(items: { name: string; path: string }[]) {
     })),
   };
 }
+
+// FAQPage structured data from question and answer pairs.
+export function faqPage(items: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  };
+}

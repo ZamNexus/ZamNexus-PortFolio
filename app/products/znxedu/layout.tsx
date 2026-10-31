@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata, jsonLd, breadcrumbs, SITE_URL } from "@/lib/seo";
+import { pageMetadata, jsonLd, breadcrumbs, faqPage, SITE_URL } from "@/lib/seo";
+import { productFaqs } from "@/lib/productFaqs";
 
 export const metadata: Metadata = pageMetadata({
   title: "ZNXEdu | School & Campus Management System",
@@ -20,6 +21,7 @@ const structuredData = [
     url: `${SITE_URL}/products/znxedu`,
     publisher: { "@id": `${SITE_URL}/#organization` },
   },
+  faqPage(productFaqs.znxedu),
 ];
 
 export default function ZNXEduLayout({

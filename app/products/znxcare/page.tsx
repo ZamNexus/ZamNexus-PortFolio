@@ -13,6 +13,7 @@ import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import Spotlight from "@/components/motion/Spotlight";
+import { productFaqs } from "@/lib/productFaqs";
 import { ProductStats, ProductClients, ProductAudience, ProductFaq, IllustrativeNote } from "@/components/ProductSections";
 
 const ACCENT = "#10B981";
@@ -615,14 +616,7 @@ export default function ZNXCarePage() {
           ]}
         />
 
-        <ProductFaq
-          id="znxcare-faq"
-          items={[
-            { q: "Does it connect to our lab analysers?", a: "Yes. ZNXCare uses HL7 interfaces to send orders to analysers and bring results back into the patient record. Tell us which models you use and we'll confirm." },
-            { q: "Can it handle insurance panels?", a: "Yes. Panel eligibility is checked at registration, and claims are prepared from the same record." },
-            { q: "How is patient data protected?", a: "Records are encrypted, access is role-based, and every change is kept in an audit trail." },
-          ]}
-        />
+        <ProductFaq id="znxcare-faq" items={productFaqs.znxcare} />
 
         {/* ── DEMO REQUEST & CLOSING FORM ──────────────────────────────────── */}
         <section
