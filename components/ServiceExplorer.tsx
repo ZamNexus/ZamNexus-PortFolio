@@ -19,7 +19,13 @@ export default function ServiceExplorer() {
   };
 
   return (
-    <div className="explorer" data-auto={!touched}>
+    <div className="explorer explorer--services" data-auto={!touched}>
+      <div className="explorer__head" aria-hidden="true">
+        <span>Choose a service to see how it works</span>
+        <span className="explorer__count">
+          <b>{String(active + 1).padStart(2, "0")}</b> / {String(services.length).padStart(2, "0")}
+        </span>
+      </div>
       <div role="tablist" aria-label="Services" className="explorer__tabs">
         {services.map((s, i) => (
           <button
@@ -28,10 +34,14 @@ export default function ServiceExplorer() {
             role="tab"
             id={`explorer-tab-${s.id}`}
             aria-selected={i === active}
+            data-past={i < active}
             aria-controls="explorer-panel"
             onClick={() => choose(i)}
             className="explorer__tab"
           >
+            <span className="explorer__tab-index" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
             <span className="explorer__tab-name">{s.label}</span>
             <span className="explorer__tab-short">{s.short}</span>
             {i === active && !touched ? (
@@ -47,12 +57,33 @@ export default function ServiceExplorer() {
 
       <div id="explorer-panel" role="tabpanel" aria-labelledby={`explorer-tab-${service.id}`} className="explorer__panel">
         {/* Keyed, so each change replays the draw-in */}
-        <div key={service.id} className="explorer__stage dg-play">
-          <ServiceDiagram id={service.id} instance="explorer" />
-          <p className="explorer__outcome">{service.outcome}</p>
-          <a href={`#${service.id}`} className="explorer__more">
-            What you get with {service.label}
-          </a>
+        <div key={service.id} className="explorer__stage explorer__stage--service dg-play">
+          <div className="explorer__diagram">
+            <div className="explorer__chrome" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <span>{service.id}.diagram</span>
+              <em>live</em>
+            </div>
+            <ServiceDiagram id={service.id} instance="explorer" />
+          </div>
+          <div className="explorer__copy">
+            <span className="explorer__index" aria-hidden="true">
+              {String(active + 1).padStart(2, "0")}
+            </span>
+            <h3 className="explorer__title">{service.label}</h3>
+            <p className="explorer__short">{service.short}</p>
+            <p className="explorer__outcome">{service.outcome}</p>
+            <ul className="explorer__list" aria-label="Typically includes">
+              {service.deliverables.slice(0, 3).map((d) => (
+                <li key={d}>{d}</li>
+              ))}
+            </ul>
+            <a href={`#${service.id}`} className="explorer__more">
+              What you get with {service.label}
+            </a>
+          </div>
         </div>
       </div>
     </div>

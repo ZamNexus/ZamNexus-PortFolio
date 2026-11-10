@@ -10,7 +10,7 @@ interface OgCard {
 }
 
 // Branded 1200x630 social card (navy ground, accent rule, eyebrow, title, subtitle, wordmark).
-export function ogImage({ eyebrow, title, subtitle, accent = "#3B82F6" }: OgCard): ImageResponse {
+export function ogImage({ eyebrow, title, subtitle, accent = "#2DD4BF" }: OgCard): ImageResponse {
   return new ImageResponse(
     (
       <div
@@ -21,28 +21,28 @@ export function ogImage({ eyebrow, title, subtitle, accent = "#3B82F6" }: OgCard
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px 80px",
-          background: "linear-gradient(135deg, #0A0F1E 0%, #111827 60%, #1E293B 100%)",
-          color: "#F8FAFC",
+          background: "#0F1214",
+          color: "#F8FAFB",
           fontFamily: "sans-serif",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ width: 96, height: 6, borderRadius: 3, background: accent }} />
-          <div style={{ marginTop: 36, fontSize: 26, letterSpacing: 4, textTransform: "uppercase", color: "#94A3B8" }}>
+          <div style={{ marginTop: 36, fontSize: 26, letterSpacing: 4, textTransform: "uppercase", color: "#9AA4AD" }}>
             {eyebrow}
           </div>
           <div style={{ marginTop: 20, fontSize: title.length > 48 ? 56 : 68, fontWeight: 700, lineHeight: 1.1, maxWidth: 1000 }}>
             {title}
           </div>
           {subtitle ? (
-            <div style={{ marginTop: 24, fontSize: 30, lineHeight: 1.4, color: "#CBD5E1", maxWidth: 960 }}>{subtitle}</div>
+            <div style={{ marginTop: 24, fontSize: 30, lineHeight: 1.4, color: "#D5DAE0", maxWidth: 960 }}>{subtitle}</div>
           ) : null}
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 28 }}>
           <div style={{ display: "flex", fontWeight: 700 }}>
-            Zam<span style={{ color: "#60A5FA" }}>Nexus</span>
+            Zam<span style={{ color: "#2DD4BF" }}>Nexus</span>
           </div>
-          <div style={{ color: "#94A3B8" }}>zamnexus.com</div>
+          <div style={{ color: "#9AA4AD" }}>zamnexus.com</div>
         </div>
       </div>
     ),

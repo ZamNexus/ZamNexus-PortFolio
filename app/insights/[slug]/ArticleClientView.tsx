@@ -120,7 +120,7 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
 
   return (
     <div
-      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-clip"
+      className="min-h-screen bg-background text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-[#fff] overflow-x-clip"
       style={{ "--rail": article.accent } as CSSProperties}
     >
       {/* Background Cyber Grid */}
@@ -133,10 +133,6 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
           </defs>
           <rect width="100%" height="100%" fill="url(#article-grid)" />
         </svg>
-        <div
-          className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full blur-[180px] opacity-10 pointer-events-none"
-          style={{ background: article.accent }}
-        />
       </div>
 
       <ScrollProgress />
@@ -177,8 +173,8 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
                 className="px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider border"
                 style={{
                   color: article.accent,
-                  borderColor: `${article.accent}50`,
-                  background: `${article.accent}15`,
+                  borderColor: `color-mix(in srgb, ${article.accent} 31%, transparent)`,
+                  background: `color-mix(in srgb, ${article.accent} 8%, transparent)`,
                 }}
               >
                 {article.categoryLabel}
@@ -200,7 +196,7 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
             <div data-enter="5" className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-zinc-800/80">
               <div className="flex items-center gap-3">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center font-mono font-bold text-sm text-black shadow-md"
+                  className="w-10 h-10 rounded-full flex items-center justify-center font-mono font-bold text-sm text-background shadow-md"
                   style={{ background: article.accent }}
                 >
                   {byline.name.charAt(0)}
@@ -263,8 +259,8 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-bold border"
                 style={{
                   color: article.accent,
-                  borderColor: `${article.accent}40`,
-                  background: `${article.accent}15`,
+                  borderColor: `color-mix(in srgb, ${article.accent} 25%, transparent)`,
+                  background: `color-mix(in srgb, ${article.accent} 8%, transparent)`,
                 }}
               >
                 <span>02</span>

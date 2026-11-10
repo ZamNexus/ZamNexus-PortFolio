@@ -238,7 +238,7 @@ export default function Navbar() {
       {!barDismissed && (
         <div
           role="status"
-          className="sticky top-0 inset-x-0 z-[60] h-9 flex items-center justify-center gap-3 px-4 text-center bg-gradient-to-r from-[var(--accent)]/20 via-[#8B5CF6]/20 to-[var(--accent)]/20 border-b border-[var(--accent)]/25 backdrop-blur-sm"
+          className="sticky top-0 inset-x-0 z-[60] h-9 flex items-center justify-center gap-3 px-4 text-center bg-[var(--accent)]/15 border-b border-[var(--accent)]/25 backdrop-blur-sm"
         >
           <p className="min-w-0 text-xs sm:text-[13px] font-medium text-zinc-200 truncate">
             Four platforms for manufacturing, retail, education and healthcare.{" "}
@@ -266,9 +266,9 @@ export default function Navbar() {
           visible || mobileOpen ? "translate-y-0" : "-translate-y-full"
         } ${
           mobileOpen
-            ? "bg-[#090b10] border-b border-white/[0.08]"
+            ? "bg-background border-b border-white/[0.08]"
             : scrolled
-            ? "bg-[#0A0F1E]/85 backdrop-blur-xl border-b border-white/[0.06]"
+            ? "bg-background/85 backdrop-blur-xl border-b border-white/[0.06]"
             : "bg-transparent border-b border-transparent"
         }`}
       >
@@ -279,14 +279,10 @@ export default function Navbar() {
             className="group flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-hover)]/60 rounded-lg"
             aria-label="ZamNexus Home"
           >
-            <Image
-              src="/znx_logo_clean.png"
-              alt="ZamNexus"
-              width={220}
-              height={110}
-              className="h-12 sm:h-14 w-auto object-contain transition-all duration-300 drop-shadow-[0_0_14px_rgba(37,99,235,0.35)] group-hover:drop-shadow-[0_0_20px_rgba(59,130,246,0.55)]"
-              priority
-            />
+            <>
+              <Image src="/znx_logo_teal.png" alt="ZamNexus" width={220} height={110} className="logo-dark h-12 sm:h-14 w-auto object-contain transition-all duration-300" priority />
+              <Image src="/znx_logo_teal_light.png" alt="" aria-hidden="true" width={220} height={110} className="logo-light h-12 sm:h-14 w-auto object-contain transition-all duration-300" priority />
+            </>
           </Link>
 
           {/* ── CENTER: Inline Nav with dropdowns + morphing indicator ── */}
@@ -445,7 +441,7 @@ export default function Navbar() {
           aria-modal="true"
           aria-label="Mobile Navigation Menu"
           data-open={mobileOpen}
-          className={`nav-drawer lg:hidden fixed inset-0 top-0 left-0 right-0 bottom-0 w-full h-[100dvh] min-h-screen bg-[#090b10] z-40 flex flex-col transition-transform duration-[220ms] ease-out will-change-transform ${
+          className={`nav-drawer lg:hidden fixed inset-0 top-0 left-0 right-0 bottom-0 w-full h-[100dvh] min-h-screen bg-background z-40 flex flex-col transition-transform duration-[220ms] ease-out will-change-transform ${
             mobileOpen
               ? "translate-x-0 pointer-events-auto visible"
               : "translate-x-full pointer-events-none invisible"

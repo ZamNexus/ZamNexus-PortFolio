@@ -58,14 +58,20 @@ export default function ProductsPage() {
 
         {/* ── PRODUCTS: one block each, its animation beside it, sides alternating ── */}
         <section aria-label="Products" className="max-w-6xl mx-auto px-4 sm:px-6 pb-20 sm:pb-24">
-          <Stagger className="grid grid-cols-1 gap-8">
-            {products.map((p) => (
-              <Spotlight key={p.slug} className="lift-card product-card product-row p-6 sm:p-10" style={{ "--rail": p.accent } as CSSProperties}>
+          <Stagger className="grid grid-cols-1">
+            {products.map((p, i) => (
+              <Spotlight key={p.slug} className="product-card product-row product-row--open" style={{ "--rail": p.accent } as CSSProperties}>
                 <div className="product-card__bar" aria-hidden="true" />
                 <ProductEmblem slug={p.slug} />
                 <div className="product-row__text">
+                  <span className="product-row__index" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                   <div className="flex items-center justify-between gap-4">
-                    <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
+                    <>
+              <Image src={p.logo} alt={p.code} width={165} height={56} className="logo-dark h-11 w-auto object-contain" />
+              <Image src={p.logo.replace(".png", "-light.png")} alt="" aria-hidden="true" width={165} height={56} className="logo-light h-11 w-auto object-contain" />
+            </>
                     <span className="text-xs font-mono uppercase tracking-wider text-foreground-muted">{p.sector}</span>
                   </div>
                   <h2 className="mt-6 text-xl sm:text-2xl font-bold text-foreground-strong">
@@ -94,9 +100,9 @@ export default function ProductsPage() {
         {/* ── COMPARISON ───────────────────────────────────────────────────── */}
         <section aria-labelledby="compare-heading" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-24 border-t border-zinc-800/60">
           <SectionHeader id="compare-heading" title="Which platform is right for you?" />
-          <Reveal className="overflow-x-auto rounded-3xl border border-[var(--border-subtle)]">
+          <Reveal className="compare-open overflow-x-auto">
             <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="bg-surface-2 text-foreground-strong">
+              <thead className="text-foreground-strong">
                 <tr>
                   <th scope="col" className="p-4 font-semibold">Platform</th>
                   <th scope="col" className="p-4 font-semibold">Built for</th>
@@ -123,7 +129,7 @@ export default function ProductsPage() {
           <SectionHeader id="rollout-heading" title="From kick-off to go-live." />
           <Stagger as="ol" className="rollout grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {rollout.map((step, i) => (
-              <li key={step.name} className="rollout__step lift-card p-6">
+              <li key={step.name} className="rollout__step relative pt-6 border-t border-[var(--border-strong)]">
                 <RolloutIcon step={i as 0 | 1 | 2 | 3} />
                 <span className="text-xs font-mono font-bold text-accent-text">Step {i + 1}</span>
                 <h3 className="mt-2 text-lg font-bold text-foreground-strong">{step.name}</h3>

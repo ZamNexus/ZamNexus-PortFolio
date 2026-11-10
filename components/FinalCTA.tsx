@@ -21,6 +21,8 @@ export interface CTASidePanelItem {
 export interface CTASidePanel {
   title: string;
   items: CTASidePanelItem[];
+  /** Number the items 1, 2, 3 instead of ticking them. */
+  numbered?: boolean;
 }
 
 export interface FinalCTAProps {
@@ -36,8 +38,7 @@ export interface FinalCTAProps {
 }
 
 const primaryClass = "liquid-lime-btn text-base py-3.5 sm:py-4 px-7 sm:px-8";
-const secondaryClass =
-  "px-7 py-3.5 sm:py-4 rounded-full border border-[var(--border-subtle)] text-foreground font-semibold text-sm hover:border-[var(--border-strong)] hover:text-foreground-strong active:scale-[0.98] transition-all duration-300 inline-flex items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-text";
+const secondaryClass = "cta-panel__ghost px-7 py-3.5 sm:py-4 rounded-full font-semibold text-sm active:scale-[0.98] transition-all duration-300 inline-flex items-center";
 
 function CTAButton({ btn, primary }: { btn: CTAButtonProps; primary: boolean }) {
   const className = btn.className || (primary ? primaryClass : secondaryClass);
@@ -88,24 +89,22 @@ export default function FinalCTA({
     <section aria-labelledby={headingId} className={`max-w-6xl mx-auto px-6 py-20 ${containerClassName}`}>
       <Reveal
         replay={false}
-        className={`relative isolate overflow-hidden rounded-3xl border border-[var(--border-subtle)] bg-gradient-to-br from-surface via-surface/70 to-background p-8 sm:p-14 lg:p-16 ${
+        className={`cta-panel relative isolate overflow-hidden rounded-3xl p-8 sm:p-14 lg:p-16 ${
           hasSidePanel
-            ? "flex flex-col lg:flex-row items-center justify-between gap-12"
+            ? "flex flex-col lg:flex-row items-stretch justify-between gap-10 lg:gap-16"
             : "text-center flex flex-col items-center justify-center"
         } ${className}`}
       >
-        <div className="noise-overlay" aria-hidden="true" />
-        <div className="final-cta__glow" aria-hidden="true" />
 
-        <div className={`relative z-10 ${hasSidePanel ? "max-w-xl text-left" : "max-w-2xl mx-auto"}`}>
-          <p className="text-base font-semibold text-accent-text mb-3">{eyebrow}</p>
+        <div className={`relative z-10 ${hasSidePanel ? "max-w-xl text-left flex flex-col justify-center" : "max-w-2xl mx-auto"}`}>
+          <p className="cta-panel__eyebrow">{eyebrow}</p>
           <h2
             id={headingId}
-            className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground-strong tracking-tight leading-[1.1] text-balance"
+            className="cta-panel__title font-heading text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08] text-balance"
           >
             {headline}
           </h2>
-          <p className="mt-4 text-foreground-muted text-base sm:text-lg leading-relaxed">{description}</p>
+          <p className="cta-panel__text mt-4 text-base sm:text-lg leading-relaxed">{description}</p>
 
           <div className={`mt-8 flex flex-wrap items-center gap-4 ${hasSidePanel ? "" : "justify-center"}`}>
             <CTAButton btn={primaryButton} primary />
@@ -114,19 +113,17 @@ export default function FinalCTA({
         </div>
 
         {hasSidePanel && sidePanel ? (
-          <div className="relative z-10 w-full lg:w-80 p-6 sm:p-7 rounded-2xl bg-background/80 border border-[var(--border-subtle)] shrink-0">
-            <p className="text-sm font-semibold text-foreground-strong border-b border-[var(--border-subtle)] pb-3">
-              {sidePanel.title}
-            </p>
-            <Stagger as="ul" className="mt-4 space-y-3.5">
-              {sidePanel.items.map((item) => (
-                <li key={item.label} className="flex items-start gap-3 text-sm">
-                  <span className="text-success font-bold mt-0.5" aria-hidden="true">
-                    ✓
+          <div className="cta-panel__side relative z-10 w-full lg:w-[22rem] p-6 sm:p-8 rounded-2xl shrink-0">
+            <p className="cta-panel__side-title">{sidePanel.title}</p>
+            <Stagger as="ol" className="cta-panel__steps">
+              {sidePanel.items.map((item, i) => (
+                <li key={item.label}>
+                  <span className="cta-panel__num" aria-hidden="true">
+                    {sidePanel.numbered ? i + 1 : "✓"}
                   </span>
                   <span>
-                    <span className="block font-semibold text-foreground">{item.label}</span>
-                    {item.sublabel ? <span className="block text-foreground-muted mt-0.5">{item.sublabel}</span> : null}
+                    <span className="cta-panel__step-label">{item.label}</span>
+                    {item.sublabel ? <span className="cta-panel__step-text">{item.sublabel}</span> : null}
                   </span>
                 </li>
               ))}

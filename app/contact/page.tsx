@@ -6,12 +6,10 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import PillTab from "@/components/PillTab";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
-import Spotlight from "@/components/motion/Spotlight";
 import { submitLead } from "@/lib/submitLead";
 import { validateLead, type FieldErrors, type LeadField } from "@/lib/validateLead";
 import FieldError, { errorProps } from "@/components/FieldError";
@@ -31,6 +29,12 @@ const projectIntents = [
   { id: "znxepos", label: "ZNXePOS" },
   { id: "znxedu", label: "ZNXEdu" },
   { id: "znxcare", label: "ZNXCare" },
+];
+
+// The choices fall into two kinds, so they are shown as two short groups instead of one long pile.
+const intentGroups = [
+  { title: "Engineering services", items: projectIntents.slice(0, 6) },
+  { title: "Ready-made platforms", items: projectIntents.slice(6) },
 ];
 
 const timelineOptions = [
@@ -108,117 +112,53 @@ const flagComponents: Record<string, React.FC<{ className?: string }>> = {
   "United Arab Emirates": UAEFlag,
 };
 
-// ─── Office Locations Data ────────────────────────────────────────────────────
+// ─── Offices ──────────────────────────────────────────────────────────────────
 
-const offices = [
-  {
-    country: "United Kingdom",
-    region: "EUROPE",
-    address: "34 Beaconsfield, Luton, LU2 0RW",
-    pending: false,
-    accent: "#3B82F6",
-  },
-  {
-    country: "Pakistan",
-    region: "SOUTH ASIA",
-    address: "Suite #1, 2nd Floor, I-9 Markaz, Islamabad",
-    pending: false,
-    accent: "#10B981",
-  },
-  {
-    country: "United Arab Emirates",
-    region: "MIDDLE EAST",
-    address: null,
-    pending: true,
-    accent: "#F59E0B",
-  },
-] as const;
+interface Office {
+  country: string;
+  place: string;
+  address: string | null;
+}
 
-// ─── Office Locations Section Component ───────────────────────────────────────
+const offices: Office[] = [
+  { country: "United Kingdom", place: "Luton", address: "34 Beaconsfield, Luton, LU2 0RW" },
+  { country: "Pakistan", place: "Islamabad", address: "Suite #1, 2nd Floor, I-9 Markaz, Islamabad" },
+  { country: "United Arab Emirates", place: "United Arab Emirates", address: null },
+];
 
-function OfficeLocationsSection() {
+// The offices as stops on one route line; a stop with no address yet is drawn dashed.
+function OfficeRoute() {
   return (
-    <section
-      aria-labelledby="offices-heading"
-      className="max-w-7xl mx-auto px-6 pb-24 border-t border-zinc-800/60 pt-20"
-    >
-      {/* Section header */}
-      <Reveal variant="words" replay={false} className="mb-10">
-        <span className="reveal-sub text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold">
-          Global Presence
-        </span>
-        <h2
-          id="offices-heading"
-          className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-2"
-        >
-          <SplitWords text="Our Offices" />
-        </h2>
-        <p className="reveal-sub mt-2 text-sm text-foreground-muted max-w-md">
-          Reach us at either office, or by email. We reply within one business day.
-        </p>
-      </Reveal>
+    <section aria-labelledby="offices-heading" className="ct-divide">
+      <div className="max-w-6xl mx-auto px-6 pt-24 pb-28">
+        <Reveal className="mb-12 max-w-xl">
+          <h2 id="offices-heading" className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            Where to find us
+          </h2>
+          <p className="mt-3 text-foreground-muted leading-relaxed">Two offices today, and a third on the way.</p>
+        </Reveal>
 
-      {/* Cards grid: 1-col mobile → 3-col desktop */}
-      <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {offices.map((office) => {
-          const FlagIcon = flagComponents[office.country];
-          return (
-            <Spotlight
-              key={office.country}
-              as="div"
-              className="lift-card p-6 group"
-              style={{ "--rail": office.accent } as CSSProperties}
-            >
-              {/* Accent top bar, drawn as the card arrives */}
-              <div className="product-card__bar" aria-hidden="true" />
-
-              {/* Subtle corner glow on hover */}
-              <div
-                className="absolute -top-10 -right-10 w-28 h-28 rounded-full blur-[50px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                style={{ background: office.accent }}
-              />
-
-              <div className="relative z-10 flex flex-col gap-3">
-                {/* Flag + Region */}
-                <div className="flex items-center justify-between">
+        <Stagger as="ol" className="ct-route">
+          {offices.map((office) => {
+            const FlagIcon = flagComponents[office.country];
+            return (
+              <li key={office.country} className="ct-stop" data-pending={office.address === null}>
+                <span className="ct-stop__dot" aria-hidden="true" />
+                <div className="flex items-center gap-3">
                   {FlagIcon ? <FlagIcon className="w-8 h-5" /> : null}
-                  <span
-                    className="text-[10px] font-mono font-bold uppercase tracking-[0.15em]"
-                    style={{ color: office.accent }}
-                  >
-                    {office.region}
-                  </span>
+                  <h3 className="text-xl font-bold text-white">{office.place}</h3>
                 </div>
-
-              {/* Country name */}
-              <h3 className="text-sm font-bold text-white leading-snug">
-                {office.country}
-              </h3>
-
-              {/* Address or pending placeholder */}
-              {office.pending ? (
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span
-                    className="w-1.5 h-1.5 rounded-full flex-shrink-0 animate-pulse"
-                    style={{ background: office.accent }}
-                  />
-                  <span
-                    className="text-xs font-mono font-semibold"
-                    style={{ color: office.accent }}
-                  >
-                    Address coming soon
-                  </span>
-                </div>
-              ) : (
-                <p className="text-xs text-zinc-400 leading-relaxed font-mono">
-                  {office.address}
-                </p>
-              )}
-            </div>
-          </Spotlight>
-        );
-      })}
-      </Stagger>
+                {office.place !== office.country && <p className="ct-stop__country">{office.country}</p>}
+                {office.address ? (
+                  <p className="ct-stop__address">{office.address}</p>
+                ) : (
+                  <p className="ct-stop__address ct-stop__address--pending">Address coming soon</p>
+                )}
+              </li>
+            );
+          })}
+        </Stagger>
+      </div>
     </section>
   );
 }
@@ -243,15 +183,16 @@ export default function ContactPage() {
     website: "",
   });
 
-  // Live progress through the four steps (drives the meter above the form)
+  // Live progress through the four steps (drives the rail and the summary)
   const live = validateLead(formData, ["name", "email", "message"]);
-  const progress = [
-    { label: "Services", done: selectedIntents.length > 0 },
-    { label: "Timing", done: Boolean(selectedTimeline) },
-    { label: "Details", done: !live.name && !live.email && !live.phone },
-    { label: "Project", done: !live.message },
+  const done = [
+    selectedIntents.length > 0,
+    Boolean(selectedTimeline),
+    !live.name && !live.email && !live.phone,
+    !live.message,
   ];
-  const doneCount = progress.filter((p) => p.done).length;
+  const doneCount = done.filter(Boolean).length;
+  const selectedLabels = projectIntents.filter((i) => selectedIntents.includes(i.id)).map((i) => i.label);
 
   const toggleIntent = (id: string) => {
     if (selectedIntents.includes(id)) {
@@ -304,7 +245,7 @@ export default function ContactPage() {
     const failure = await submitLead({
       source: "contact",
       ...formData,
-      interests: projectIntents.filter((i) => selectedIntents.includes(i.id)).map((i) => i.label),
+      interests: selectedLabels,
       timeline: selectedTimeline,
     });
     setSending(false);
@@ -312,12 +253,18 @@ export default function ContactPage() {
     else setSubmitted(true);
   };
 
+  // The marker on the rail: the step number, or a tick once the step is complete.
+  const node = (index: number) => (
+    <span className="ct-node" aria-hidden="true">
+      {done[index] ? "✓" : index + 1}
+    </span>
+  );
+
   return (
     <div
       suppressHydrationWarning
-      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-black overflow-x-clip"
+      className="min-h-screen bg-background text-zinc-100 font-sans selection:bg-[var(--accent-hover)] selection:text-[#fff] overflow-x-clip"
     >
-      {/* Dynamic Background Network */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         <svg className="absolute inset-0 w-full h-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -327,43 +274,22 @@ export default function ContactPage() {
           </defs>
           <rect width="100%" height="100%" fill="url(#contact-grid)" />
         </svg>
-
-        {/* Ambient Halo Glows */}
-        <div className="absolute top-[10%] right-[15%] w-[600px] h-[600px] rounded-full bg-blue-600/[0.05] blur-[180px] pointer-events-none" />
-        <div className="absolute top-[40%] left-[5%] w-[650px] h-[650px] rounded-full bg-violet-600/[0.05] blur-[180px] pointer-events-none" />
       </div>
 
       <ScrollProgress />
       <Navbar />
 
       <main className="relative z-10">
-
         {/* ── HERO ──────────────────────────────────────────────────────────── */}
-        <section
-          aria-labelledby="contact-hero-heading"
-          className="max-w-7xl mx-auto px-6 pt-40 pb-16 text-center flex flex-col items-center"
-        >
-          {/* Top Category Badge */}
-          <div
-            data-enter="1"
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/80 text-[11px] sm:text-xs font-mono font-medium text-[var(--accent-hover)] mb-6 sm:mb-8 backdrop-blur-xl shadow-lg max-w-full text-center"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-            <span>Contact</span>
-          </div>
-
-          {/* Heading */}
+        <section aria-labelledby="contact-hero-heading" className="relative max-w-6xl mx-auto px-6 pt-40 pb-20">
+          <div className="ct-hero-glow" aria-hidden="true" />
           <h1
             id="contact-hero-heading"
-            className="text-2xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white max-w-5xl mx-auto leading-[1.12] break-words"
+            className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-3xl leading-[1.05]"
           >
             <SplitWords mode="load" text="Tell us what you need." />
           </h1>
-
-          <p
-            data-enter="4"
-            className="mt-6 text-base sm:text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed"
-          >
+          <p data-enter="4" className="mt-6 text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed">
             Send a short brief and a senior engineer will reply within one business day. Prefer email?{" "}
             <a href={`mailto:${OFFICIAL_EMAIL}`} className="text-accent-text hover:underline">
               {OFFICIAL_EMAIL}
@@ -371,337 +297,308 @@ export default function ContactPage() {
           </p>
         </section>
 
-        {/* ── INTERACTIVE BRIEF BUILDER + DIRECT CHANNELS ──────────────────── */}
+        {/* ── THE BRIEF: four steps on a rail, with small tiles beside it ──── */}
         <section
           aria-labelledby="brief-builder-heading"
-          className="max-w-7xl mx-auto px-4 sm:px-6 pb-28 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start"
+          className="max-w-6xl mx-auto px-6 pb-28 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-x-20 gap-y-14 items-start"
         >
           <h2 id="brief-builder-heading" className="sr-only">Send us a brief</h2>
 
-          {/* Left Column: Direct VIP Communication Channels & SLA Guarantee */}
-          <div data-enter="5" className="lg:col-span-4 space-y-6 lg:sticky lg:top-32">
-            {/* Direct Channel Card */}
-            <div className="p-5 sm:p-8 rounded-3xl bg-zinc-900/50 border border-zinc-800/80 backdrop-blur-md shadow-xl space-y-6 relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--accent-hover)] to-transparent" />
+          <div data-enter="5">
+            <AnimatePresence mode="wait" initial={false}>
+              {!submitted ? (
+                <motion.form
+                  key="contact-form"
+                  onSubmit={handleSubmit}
+                  noValidate
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4 }}
+                  className="relative"
+                >
+                  <ol className="ct-steps">
+                    {/* Step 1: what they need */}
+                    <li className="ct-step" data-done={done[0]}>
+                      {node(0)}
+                      <div className="min-w-0">
+                        <h3 id="intent-label" className="ct-title">What can we help with?</h3>
+                        <p className="ct-hint">Choose any that apply.</p>
+                        <div role="group" aria-labelledby="intent-label">
+                          {intentGroups.map((group) => (
+                            <div key={group.title} className="ct-group">
+                              <p className="ct-group__title">{group.title}</p>
+                              <div className="ct-chips">
+                                {group.items.map((intent) => (
+                                  <button
+                                    key={intent.id}
+                                    id={`domain-chip-${intent.id}`}
+                                    type="button"
+                                    role="checkbox"
+                                    aria-checked={selectedIntents.includes(intent.id)}
+                                    onClick={() => toggleIntent(intent.id)}
+                                    className="ct-chip"
+                                  >
+                                    <span className="ct-chip__box" aria-hidden="true" />
+                                    {intent.label}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </li>
 
-              <div>
-                <span className="text-xs font-mono uppercase tracking-widest text-[var(--accent-hover)] font-bold block mb-1">
-                  Direct
-                </span>
-                <h3 className="text-xl font-bold text-white">Talk to us directly</h3>
-              </div>
+                    {/* Step 2: timing */}
+                    <li className="ct-step" data-done={done[1]}>
+                      {node(1)}
+                      <div className="min-w-0">
+                        <h3 id="timeline-label" className="ct-title">When do you want to start?</h3>
+                        <div role="radiogroup" aria-labelledby="timeline-label" className="ct-chips mt-4">
+                          {timelineOptions.map((timeline) => (
+                            <button
+                              key={timeline}
+                              type="button"
+                              role="radio"
+                              aria-checked={selectedTimeline === timeline}
+                              onClick={() => setSelectedTimeline(timeline)}
+                              className="ct-chip ct-chip--radio"
+                            >
+                              <span className="ct-chip__box" aria-hidden="true" />
+                              {timeline}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </li>
 
-              {/* Email with copy button */}
-              <div className="p-4 rounded-2xl bg-zinc-950/70 border border-zinc-800/80 space-y-2.5">
-                <div className="flex flex-wrap items-center justify-between gap-1 text-xs font-mono text-foreground-muted">
-                  <span>Email</span>
-                </div>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 min-w-0">
-                  <a
-                    href={`mailto:${OFFICIAL_EMAIL}`}
-                    className="font-mono text-xs sm:text-sm font-bold text-white hover:text-[var(--accent-hover)] transition-colors break-words whitespace-normal min-w-0 flex-1 leading-snug py-0.5"
-                  >
-                    {OFFICIAL_EMAIL}
-                  </a>
+                    {/* Step 3: who to reply to */}
+                    <li className="ct-step" data-done={done[2]}>
+                      {node(2)}
+                      <div className="min-w-0">
+                        <h3 className="ct-title">Who should we reply to?</h3>
+                        <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-5">
+                          <div>
+                            <label htmlFor="contact-name" className="ct-label">Full name (required)</label>
+                            <input
+                              type="text"
+                              required
+                              id="contact-name"
+                              {...errorProps("contact-name", fieldErrors.name)}
+                              name="name"
+                              value={formData.name}
+                              onChange={handleChange}
+                              placeholder="Your name"
+                              className="ct-input brief-input"
+                            />
+                            <FieldError id="contact-name" message={fieldErrors.name} />
+                          </div>
+
+                          <div>
+                            <label htmlFor="contact-email" className="ct-label">Work email (required)</label>
+                            <input
+                              type="email"
+                              required
+                              id="contact-email"
+                              {...errorProps("contact-email", fieldErrors.email)}
+                              name="email"
+                              value={formData.email}
+                              onChange={handleChange}
+                              placeholder="you@company.com"
+                              className="ct-input brief-input"
+                            />
+                            <FieldError id="contact-email" message={fieldErrors.email} />
+                          </div>
+
+                          <div>
+                            <label htmlFor="contact-company" className="ct-label">Company</label>
+                            <input
+                              type="text"
+                              id="contact-company"
+                              name="company"
+                              value={formData.company}
+                              onChange={handleChange}
+                              placeholder="Company name"
+                              className="ct-input brief-input"
+                            />
+                          </div>
+
+                          <div>
+                            <label htmlFor="contact-phone" className="ct-label">Phone or WhatsApp</label>
+                            <input
+                              type="tel"
+                              id="contact-phone"
+                              {...errorProps("contact-phone", fieldErrors.phone)}
+                              name="phone"
+                              value={formData.phone}
+                              onChange={handleChange}
+                              placeholder="+44 …"
+                              className="ct-input brief-input"
+                            />
+                            <FieldError id="contact-phone" message={fieldErrors.phone} />
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+
+                    {/* Step 4: the project */}
+                    <li className="ct-step" data-done={done[3]}>
+                      {node(3)}
+                      <div className="min-w-0">
+                        <label htmlFor="contact-message" className="ct-title block">
+                          Tell us about the project (required)
+                        </label>
+                        <textarea
+                          required
+                          rows={5}
+                          id="contact-message"
+                          {...errorProps("contact-message", fieldErrors.message)}
+                          name="message"
+                          value={formData.message}
+                          onChange={handleChange}
+                          placeholder="What are you trying to achieve, and what systems do you use today?"
+                          className="ct-input brief-input mt-5 resize-none"
+                        />
+                        <FieldError id="contact-message" message={fieldErrors.message} />
+
+                        {error && (
+                          <p role="alert" className="mt-4 text-sm text-red-400 font-mono">
+                            {error}
+                          </p>
+                        )}
+
+                        <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+                          <p className="text-[12px] text-foreground-muted max-w-sm leading-relaxed">
+                            We use these details only to reply to you. See our{" "}
+                            <Link href="/privacy" className="underline hover:text-foreground">Privacy Policy</Link>.
+                          </p>
+                          <motion.button
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.98 }}
+                            type="submit"
+                            disabled={sending}
+                            className="liquid-lime-btn text-sm py-3.5 px-8 cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+                          >
+                            <span>{sending ? "Sending…" : "Send brief"}</span>
+                            <span className={`arrow-icon w-7 h-7 text-xs ${sending ? "brief-sending" : ""}`} aria-hidden="true">
+                              {sending ? "" : "→"}
+                            </span>
+                          </motion.button>
+                        </div>
+                      </div>
+                    </li>
+                  </ol>
+
+                  {/* Honeypot: hidden from people, filled by bots */}
+                  <input
+                    type="text"
+                    name="website"
+                    value={formData.website}
+                    onChange={handleChange}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="absolute -left-[9999px] w-px h-px opacity-0"
+                  />
+                </motion.form>
+              ) : (
+                <motion.div
+                  key="success-message"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="py-10 max-w-lg space-y-5"
+                >
+                  <svg viewBox="0 0 64 64" className="brief-success" aria-hidden="true">
+                    <circle cx={32} cy={32} r={30} pathLength={1} />
+                    <path d="M20 33l8 8 16-18" pathLength={1} />
+                  </svg>
+                  <h3 className="text-3xl font-extrabold text-white tracking-tight">
+                    Thanks, {formData.name || "there"}. We&apos;ve got your brief.
+                  </h3>
+                  <p className="text-zinc-400 leading-relaxed">
+                    A senior engineer will reply to{" "}
+                    <span className="text-white font-semibold">{formData.email}</span> within one business day. If it&apos;s
+                    urgent, email {OFFICIAL_EMAIL}.
+                  </p>
                   <button
                     type="button"
-                    onClick={handleCopyEmail}
-                    className="w-full sm:w-auto px-3 py-1.5 rounded-lg text-xs font-mono bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-all duration-150 ease-out cursor-pointer shrink-0 font-medium active:scale-95 border border-zinc-700/60 text-center"
+                    onClick={() => {
+                      setSubmitted(false);
+                      setFormData({ name: "", email: "", company: "", phone: "", message: "", website: "" });
+                    }}
+                    className="px-6 py-2.5 rounded-full border border-zinc-700 bg-zinc-800/80 text-zinc-300 hover:text-white text-sm transition-colors cursor-pointer"
                   >
-                    {copiedEmail ? "✓ Copied" : "Copy"}
+                    Send another brief
                   </button>
-                </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Beside the rail: a live summary and the direct channels, each its own small tile */}
+          <aside data-enter="6" className="grid gap-3 lg:sticky lg:top-28" aria-label="Your brief and direct contact">
+            <div className="ct-tile">
+              <div className="flex items-center justify-between gap-3">
+                <p className="ct-tile__title">Your brief so far</p>
+                <span className="ct-count">{doneCount} of {done.length}</span>
               </div>
+              <div className="ct-meter" aria-hidden="true">
+                <span style={{ "--p": doneCount / done.length } as CSSProperties} />
+              </div>
+              <ul className="ct-mini" aria-label="Selected services">
+                {selectedLabels.map((label) => (
+                  <li key={label}>{label}</li>
+                ))}
+              </ul>
+              <p className="mt-3 text-[13px] text-foreground-muted">
+                Start: <span className="text-foreground-strong">{selectedTimeline}</span>
+              </p>
+            </div>
 
-              {/* WhatsApp Direct Advisory Channel */}
-              <a
-                href="https://wa.me/447859043361"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center justify-between p-4 rounded-2xl bg-emerald-950/30 border border-emerald-800/50 hover:bg-emerald-950/50 hover:border-emerald-600/60 hover:scale-[1.01] transition-all duration-150 ease-out cursor-pointer shadow-md"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0 group-hover:border-emerald-400/50 group-hover:bg-emerald-500/20 transition-colors duration-150">
-                    <svg className="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.816 2.791.817h.001c3.181 0 5.767-2.587 5.768-5.766.001-3.181-2.585-5.768-5.769-5.803zm3.376 8.212c-.145.409-.844.757-1.181.777-.338.021-.767.126-2.529-.603-1.897-.785-3.085-2.735-3.178-2.86-.093-.125-.765-1.02-.765-1.944 0-.924.474-1.378.643-1.567.169-.189.37-.236.493-.236.124 0 .248.001.356.006.113.006.265-.043.415.318.156.376.533 1.303.58 1.399.047.095.078.207.016.332-.063.125-.094.203-.187.312-.094.109-.197.243-.281.327-.094.093-.193.195-.083.383.11.189.489.807 1.05 1.306.723.644 1.332.844 1.521.938.189.094.301.079.412-.048.112-.128.479-.558.607-.749.128-.19.257-.159.432-.095.176.064 1.115.526 1.307.622.193.095.321.143.368.223.047.08.047.465-.098.874zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.662 1.435 5.176L2 22l4.98-1.306A9.957 9.957 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.636 0-3.161-.469-4.455-1.283l-.32-.202-2.964.777.791-2.89-.221-.351A8.163 8.163 0 0 1 3.8 12c0-4.521 3.679-8.2 8.2-8.2 4.521 0 8.2 3.679 8.2 8.2 0 4.521-3.679 8.2-8.2 8.2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-xs font-mono text-emerald-400 font-bold">Phone / WhatsApp</div>
-                    <div className="text-xs text-zinc-300 font-medium font-mono">+44 7859 043361</div>
-                  </div>
-                </div>
-                <span className="text-emerald-400 group-hover:translate-x-1 transition-transform duration-150">→</span>
-              </a>
-
-              {/* Reply-time promise */}
-              <div className="pt-4 border-t border-zinc-800/60 flex items-start gap-3 text-sm">
-                <span className="text-success font-bold" aria-hidden="true">✓</span>
-                <div>
-                  <div className="font-semibold text-white">Reply within one business day</div>
-                  <div className="text-foreground-muted">From a senior engineer, not a sales team.</div>
-                </div>
+            <div className="ct-tile">
+              <p className="ct-tile__title">Email</p>
+              <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+                <a
+                  href={`mailto:${OFFICIAL_EMAIL}`}
+                  className="font-mono text-sm font-bold text-white hover:text-[var(--accent-text)] transition-colors break-all"
+                >
+                  {OFFICIAL_EMAIL}
+                </a>
+                <button type="button" onClick={handleCopyEmail} className="ct-copy">
+                  {copiedEmail ? "Copied" : "Copy"}
+                </button>
               </div>
             </div>
 
-          </div>
+            <a
+              href="https://wa.me/447859043361"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ct-tile ct-tile--link group"
+            >
+              <span className="ct-wa" aria-hidden="true">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.699c.969.54 1.771.816 2.791.817h.001c3.181 0 5.767-2.587 5.768-5.766.001-3.181-2.585-5.768-5.769-5.803zm3.376 8.212c-.145.409-.844.757-1.181.777-.338.021-.767.126-2.529-.603-1.897-.785-3.085-2.735-3.178-2.86-.093-.125-.765-1.02-.765-1.944 0-.924.474-1.378.643-1.567.169-.189.37-.236.493-.236.124 0 .248.001.356.006.113.006.265-.043.415.318.156.376.533 1.303.58 1.399.047.095.078.207.016.332-.063.125-.094.203-.187.312-.094.109-.197.243-.281.327-.094.093-.193.195-.083.383.11.189.489.807 1.05 1.306.723.644 1.332.844 1.521.938.189.094.301.079.412-.048.112-.128.479-.558.607-.749.128-.19.257-.159.432-.095.176.064 1.115.526 1.307.622.193.095.321.143.368.223.047.08.047.465-.098.874zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.662 1.435 5.176L2 22l4.98-1.306A9.957 9.957 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18.2c-1.636 0-3.161-.469-4.455-1.283l-.32-.202-2.964.777.791-2.89-.221-.351A8.163 8.163 0 0 1 3.8 12c0-4.521 3.679-8.2 8.2-8.2 4.521 0 8.2 3.679 8.2 8.2 0 4.521-3.679 8.2-8.2 8.2z" />
+                </svg>
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold text-white">Phone or WhatsApp</span>
+                <span className="block font-mono text-[13px] text-foreground-muted">+44 7859 043361</span>
+              </span>
+              <span className="ct-tile__go" aria-hidden="true">→</span>
+            </a>
 
-          {/* Right Column: Interactive Brief Builder Form */}
-          <div data-enter="6" className="lg:col-span-8">
-            <div className="p-8 sm:p-12 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 backdrop-blur-md shadow-2xl relative overflow-hidden">
-              <AnimatePresence mode="wait" initial={false}>
-                {!submitted ? (
-                  <motion.form
-                    key="contact-form"
-                    onSubmit={handleSubmit}
-                    noValidate
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.4 }}
-                    className="space-y-8"
-                  >
-                    {/* Progress meter: each step ticks as it is completed */}
-                    <div className="brief-progress" aria-hidden="true">
-                      <ol className="brief-progress__steps">
-                        {progress.map((p) => (
-                          <li key={p.label} data-done={p.done} className="brief-progress__step">
-                            <svg viewBox="0 0 20 20" className="brief-progress__tick">
-                              <circle cx={10} cy={10} r={9} />
-                              <path d="M5.5 10.5l3 3 6-7" />
-                            </svg>
-                            {p.label}
-                          </li>
-                        ))}
-                      </ol>
-                      <div className="brief-progress__rail">
-                        <span style={{ "--p": doneCount / progress.length } as CSSProperties} />
-                      </div>
-                    </div>
-
-                    {/* Step 1: Interactive Intent Selector */}
-                    <div>
-                      <p id="intent-label" className="text-xs font-mono uppercase tracking-wider text-foreground font-bold mb-3 flex items-center justify-between">
-                        <span>1. What can we help with?</span>
-                        <span className="text-foreground-muted font-normal normal-case tracking-normal">Choose any</span>
-                      </p>
-                      <div
-                        role="group"
-                        aria-labelledby="intent-label"
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5"
-                      >
-                        {projectIntents.map((intent) => {
-                          const isSelected = selectedIntents.includes(intent.id);
-                          return (
-                            <PillTab
-                              key={intent.id}
-                              id={`domain-chip-${intent.id}`}
-                              variant="card"
-                              isSelected={isSelected}
-                              onClick={() => toggleIntent(intent.id)}
-                              label={intent.label}
-                              ariaLabel={intent.label}
-                              role="checkbox"
-                              accent="var(--accent-hover)"
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Step 2: Timeline Expectation */}
-                    <div>
-                      <p id="timeline-label" className="text-xs font-mono uppercase tracking-wider text-foreground font-bold mb-3">
-                        2. When do you want to start?
-                      </p>
-                      <div role="radiogroup" aria-labelledby="timeline-label" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                        {timelineOptions.map((timeline) => {
-                          const isSelected = selectedTimeline === timeline;
-                          return (
-                            <PillTab
-                              key={timeline}
-                              variant="card"
-                              size="sm"
-                              isSelected={isSelected}
-                              onClick={() => setSelectedTimeline(timeline)}
-                              label={timeline}
-                              accent="#06B6D4"
-                              role="radio"
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Step 3: Contact & Company Details */}
-                    <div>
-                      <p className="text-xs font-mono uppercase tracking-wider text-foreground font-bold mb-4">
-                        3. Your details
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                          <label htmlFor="contact-name" className="text-sm text-foreground mb-1.5 block">Full name (required)</label>
-                          <input
-                            type="text"
-                            required
-                            id="contact-name"
-                            {...errorProps("contact-name", fieldErrors.name)}
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="Your name"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input data-[invalid]:border-danger"
-                          />
-                          <FieldError id="contact-name" message={fieldErrors.name} />
-                        </div>
-
-                        <div>
-                          <label htmlFor="contact-email" className="text-sm text-foreground mb-1.5 block">Work email (required)</label>
-                          <input
-                            type="email"
-                            required
-                            id="contact-email"
-                            {...errorProps("contact-email", fieldErrors.email)}
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="you@company.com"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input data-[invalid]:border-danger"
-                          />
-                          <FieldError id="contact-email" message={fieldErrors.email} />
-                        </div>
-
-                        <div>
-                          <label htmlFor="contact-company" className="text-sm text-foreground mb-1.5 block">Company</label>
-                          <input
-                            type="text"
-                            id="contact-company"
-                            name="company"
-                            value={formData.company}
-                            onChange={handleChange}
-                            placeholder="Company name"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input"
-                          />
-                        </div>
-
-                        <div>
-                          <label htmlFor="contact-phone" className="text-sm text-foreground mb-1.5 block">Phone or WhatsApp</label>
-                          <input
-                            type="tel"
-                            id="contact-phone"
-                            {...errorProps("contact-phone", fieldErrors.phone)}
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            placeholder="+44 …"
-                            className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input data-[invalid]:border-danger"
-                          />
-                          <FieldError id="contact-phone" message={fieldErrors.phone} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Step 4: Project Scope & Architecture Goals */}
-                    <div>
-                      <label htmlFor="contact-message" className="text-xs font-mono uppercase tracking-wider text-foreground font-bold mb-3 block">
-                        4. Tell us about the project (required)
-                      </label>
-                      <textarea
-                        required
-                        rows={4}
-                        id="contact-message"
-                        {...errorProps("contact-message", fieldErrors.message)}
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        placeholder="What are you trying to achieve, and what systems do you use today?"
-                        className="w-full px-4 py-3.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-400 focus:outline-none focus:border-[var(--accent-hover)] brief-input resize-none data-[invalid]:border-danger"
-                      />
-                      <FieldError id="contact-message" message={fieldErrors.message} />
-                    </div>
-
-                    {/* Honeypot: hidden from people, filled by bots */}
-                    <input
-                      type="text"
-                      name="website"
-                      value={formData.website}
-                      onChange={handleChange}
-                      tabIndex={-1}
-                      autoComplete="off"
-                      aria-hidden="true"
-                      className="absolute -left-[9999px] w-px h-px opacity-0"
-                    />
-
-                    {error && (
-                      <p role="alert" className="text-sm text-red-400 font-mono">
-                        {error}
-                      </p>
-                    )}
-
-                    {/* Submit Button */}
-                    <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
-                      <div className="text-[11px] font-mono text-foreground-muted">
-                        We use these details only to reply to you. See our{" "}
-                        <Link href="/privacy" className="underline hover:text-foreground">Privacy Policy</Link>.
-                      </div>
-                      <motion.button
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.98 }}
-                        type="submit"
-                        disabled={sending}
-                        className="liquid-lime-btn text-sm py-3.5 px-8 cursor-pointer disabled:opacity-60 disabled:cursor-wait"
-                      >
-                        <span>{sending ? "Sending…" : "Send brief"}</span>
-                        <span className={`arrow-icon w-7 h-7 text-xs ${sending ? "brief-sending" : ""}`} aria-hidden="true">
-                          {sending ? "" : "→"}
-                        </span>
-                      </motion.button>
-                    </div>
-                  </motion.form>
-                ) : (
-                  <motion.div
-                    key="success-message"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="py-16 text-center space-y-6"
-                  >
-                    <svg viewBox="0 0 64 64" className="brief-success mx-auto" aria-hidden="true">
-                      <circle cx={32} cy={32} r={30} pathLength={1} />
-                      <path d="M20 33l8 8 16-18" pathLength={1} />
-                    </svg>
-                    <div className="text-xs font-mono text-emerald-400 font-bold uppercase tracking-widest">
-                      Brief received
-                    </div>
-                    <h3 className="text-3xl font-extrabold text-white tracking-tight">
-                      Thanks, {formData.name || "there"}. We&apos;ve got your brief.
-                    </h3>
-                    <p className="text-zinc-400 text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
-                      A senior engineer will reply to{" "}
-                      <span className="text-white font-semibold">{formData.email}</span> within one business day. If it&apos;s
-                      urgent, email {OFFICIAL_EMAIL}.
-                    </p>
-                    <div className="pt-4">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSubmitted(false);
-                          setFormData({ name: "", email: "", company: "", phone: "", message: "", website: "" });
-                        }}
-                        className="px-6 py-2.5 rounded-full border border-zinc-700 bg-zinc-800/80 text-zinc-300 hover:text-white text-xs font-mono transition-colors cursor-pointer"
-                      >
-                        Send another brief
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+            <div className="ct-tile">
+              <p className="text-sm font-semibold text-white">Reply within one business day</p>
+              <p className="mt-1 text-[13px] text-foreground-muted">From a senior engineer, not a sales team.</p>
             </div>
-          </div>
+          </aside>
         </section>
-        {/* ── GLOBAL OFFICES ─────────────────────────────────────────────── */}
-        <OfficeLocationsSection />
 
+        {/* ── OFFICES ───────────────────────────────────────────────────────── */}
+        <OfficeRoute />
       </main>
 
       <Footer />

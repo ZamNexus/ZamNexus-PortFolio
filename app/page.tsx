@@ -7,8 +7,7 @@ import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import ScrollProgress from "@/components/motion/ScrollProgress";
-import HeroBackground from "@/components/HeroBackground";
-import TechMarquee from "@/components/TechMarquee";
+import ClientMarquee from "@/components/ClientMarquee";
 import ProductStage from "@/components/ProductStage";
 import ServiceRows from "@/components/ServiceRows";
 import { clients, company, confirmed } from "@/lib/siteFacts";
@@ -25,41 +24,44 @@ const textLink =
 
 export default function HomePage() {
   const approvedClients = confirmed(clients).map((c) => c.name);
-  // Plain facts until client names are approved (lib/siteFacts.ts).
+  // Shown only once approved in lib/siteFacts.ts: client names first, then the founding year. Offices live on Contact.
   const proof = approvedClients.length
-    ? `Trusted by ${approvedClients.join(", ")}.`
-    : `${company.foundingYear.confirmed ? `Established ${company.foundingYear.value}. ` : ""}Offices in Luton and Islamabad.`;
+    ? null
+    : company.foundingYear.confirmed
+      ? `Established ${company.foundingYear.value}.`
+      : null;
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans overflow-x-clip">
       <ScrollProgress />
-      <HeroBackground />
       <Navbar />
 
       <main className="relative z-10">
         {/* ── HERO ─────────────────────────────────────────────────────────── */}
         <section aria-labelledby="home-hero-heading" className="max-w-6xl mx-auto px-4 sm:px-6 pt-32 sm:pt-36 pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-end">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             <h1
               id="home-hero-heading"
-              className="lg:col-span-8 font-heading text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-[4.4rem] font-bold tracking-[-0.035em] text-foreground-strong text-balance"
+              className="lg:col-span-7 font-heading text-[2.6rem] leading-[1.02] sm:text-6xl lg:text-[4.4rem] font-bold tracking-[-0.035em] text-foreground-strong text-balance"
             >
               <SplitWords mode="load" text="Software that runs your operations, and the engineers who build the rest." />
             </h1>
-            <div className="lg:col-span-4 lg:pb-3">
+            <div className="lg:col-span-5 lg:pt-3">
               <p data-enter="5" className="text-lg text-foreground-muted leading-relaxed">
-                Four platforms for manufacturing, retail, education and healthcare, plus custom AI, cloud, Microsoft and
-                Salesforce work for organisations in the UK, Pakistan and the UAE.
+                ZamNexus builds the systems organisations run on: four ready-to-deploy platforms, plus senior engineers for
+                custom AI, cloud, SaaS, Microsoft and Salesforce work across the UK, Pakistan and the UAE. The people
+                who scope your project build it, and support it after go-live.
               </p>
-              <div data-enter="6" className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
-                <Link href="/contact" className="liquid-lime-btn text-base py-3.5 px-7">
-                  Book a consultation
-                </Link>
-                <Link href="/products" className={textLink}>
-                  See the products
-                </Link>
-              </div>
-              <p data-enter="7" className="mt-8 text-sm text-foreground-muted">{proof}</p>
+              <p data-enter="6" className="mt-8 border-l-2 border-accent pl-4 font-heading text-xl leading-snug tracking-[-0.01em] text-foreground-strong">
+                Good systems go unnoticed. The people running them get their evenings back.
+              </p>
+              <p data-enter="7" className="hero-platforms">
+                <Link href="/products/znxerp">ZNXERP</Link>
+                <Link href="/products/znxepos">ZNXePOS</Link>
+                <Link href="/products/znxedu">ZNXEdu</Link>
+                <Link href="/products/znxcare">ZNXCare</Link>
+              </p>
+              {proof ? <p data-enter="8" className="mt-4 text-sm text-foreground-muted">{proof}</p> : null}
             </div>
           </div>
         </section>
@@ -84,6 +86,8 @@ export default function HomePage() {
           <ProductStage />
         </section>
 
+        <ClientMarquee />
+
         {/* ── SERVICES ─────────────────────────────────────────────────────── */}
         <section aria-labelledby="home-services" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <SectionHeader
@@ -99,8 +103,6 @@ export default function HomePage() {
             </Link>
           </p>
         </section>
-
-        <TechMarquee />
 
         {/* ── HOW WE WORK ──────────────────────────────────────────────────── */}
         <section aria-labelledby="home-how" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
