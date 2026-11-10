@@ -15,6 +15,5 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   return ogImage({
     eyebrow: `Insights · ${article?.categoryLabel ?? "Engineering"}`,
     title: article?.seoTitle ?? "Engineering insights",
-    accent: article?.accent,
   });
 }

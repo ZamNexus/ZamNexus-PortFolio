@@ -16,7 +16,7 @@ import Spotlight from "@/components/motion/Spotlight";
 import { productFaqs } from "@/lib/productFaqs";
 import { ProductStats, ProductClients, ProductAudience, ProductFaq, IllustrativeNote } from "@/components/ProductSections";
 
-const ACCENT = "#3B82F6";
+const ACCENT = "var(--accent-text)";
 
 // ─── 4-Stage Industrial Production Lifecycle Workflow ────────────────────────
 
@@ -67,56 +67,48 @@ const industrialWorkflow = [
 
 const modules = [
   {
-    icon: "💰",
     code: "MOD-FIN",
     label: "Finance & Multi-Ledgers",
     desc: "Real-time P&L, multi-currency general ledgers, accounts payable/receivable, and automated tax compliance.",
     bullets: ["Instant Balance Sheet", "Audit-Ready Trail", "Bank Reconciliation"],
   },
   {
-    icon: "👥",
     code: "MOD-HRM",
     label: "Human Resources & Payroll",
     desc: "Automated salary disbursements, tax deductions, biometric attendance, and staff performance grading.",
     bullets: ["One-Click Payroll Run", "Leave & Shift Matrix", "Statutory Compliance"],
   },
   {
-    icon: "📦",
     code: "MOD-PRC",
     label: "Procurement & PO Workflows",
     desc: "Multi-tier approval matrices, vendor scoring, automated purchase requisitions, and price history.",
     bullets: ["Automated PO Routing", "Vendor B2B Portal", "Budget Guardrails"],
   },
   {
-    icon: "🏭",
     code: "MOD-WMS",
     label: "Inventory & Smart Warehouse",
     desc: "Multi-location warehouse tracking, automated batch & serial numbers, and dynamic reorder triggers.",
     bullets: ["Barcoded Binning", "FIFO / LIFO Rules", "Cross-Docking Dispatch"],
   },
   {
-    icon: "⚙️",
     code: "MOD-MES",
     label: "Manufacturing Execution (MES)",
     desc: "BOM formulation, machine scheduling, shop-floor yield tracking, and scrap reduction analytics.",
     bullets: ["Dynamic BOM Formula", "WIP Routing", "Machine Uptime Logs"],
   },
   {
-    icon: "📈",
     code: "MOD-CRM",
     label: "Sales Pipeline & CRM",
     desc: "B2B client management, automated quotation generation, delivery orders, and customer credit limits.",
     bullets: ["Quote-to-Invoice Flow", "Credit Control Engine", "Contract Tracking"],
   },
   {
-    icon: "✅",
     code: "MOD-QAC",
     label: "Quality Assurance & QC",
     desc: "Incoming raw material sampling, in-process testing checkpoints, and automated COA generation.",
     bullets: ["COA Generation", "Non-Conformance Logs", "Sample Quarantine"],
   },
   {
-    icon: "📊",
     code: "MOD-MIS",
     label: "Executive MIS Analytics",
     desc: "High-level visual KPI feeds, drill-down financial analytics, and predictive cash-flow modeling.",
@@ -174,7 +166,7 @@ export default function ZNXERPPage() {
   return (
     <div
       suppressHydrationWarning
-      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#3B82F6] selection:text-white overflow-x-clip"
+      className="min-h-screen bg-background text-zinc-100 font-sans selection:bg-accent selection:text-white overflow-x-clip"
       style={{ "--rail": ACCENT } as CSSProperties}
     >
       {/* Background Cyber Grid */}
@@ -189,8 +181,6 @@ export default function ZNXERPPage() {
         </svg>
 
         {/* Ambient Halos */}
-        <div className="absolute top-[15%] left-[5%] w-[650px] h-[650px] rounded-full bg-blue-600/[0.06] blur-[180px] pointer-events-none" />
-        <div className="absolute bottom-[20%] right-[8%] w-[600px] h-[600px] rounded-full bg-cyan-600/[0.04] blur-[180px] pointer-events-none" />
       </div>
 
       <ScrollProgress />
@@ -251,7 +241,7 @@ export default function ZNXERPPage() {
             {/* The product's event flow, then confirmed figures only (lib/siteFacts.ts) */}
             <div data-enter="6" className="lg:col-span-5 space-y-6">
               <ProductScene slug="znxerp" />
-              <ProductStats slug="znxerp" accent={ACCENT} />
+              <ProductStats slug="znxerp" accent={ACCENT} animate />
             </div>
           </div>
         </section>
@@ -280,127 +270,80 @@ export default function ZNXERPPage() {
             </p>
           </Reveal>
 
-          {/* Workflow Stepper Navigation */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-            {industrialWorkflow.map((item, idx) => {
-              const isCurrent = idx === activeWorkflowIdx;
-              return (
-                <button
-                  key={item.step}
-                  onClick={() => {
-                    setActiveWorkflowIdx(idx);
-                    setStageTouched(true);
-                  }}
-                  className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer relative overflow-hidden group ${
-                    isCurrent
-                      ? "bg-zinc-900/90 shadow-xl"
-                      : "bg-zinc-950/40 hover:bg-zinc-900/40 border-zinc-800/80"
-                  }`}
-                  style={{
-                    borderColor: isCurrent ? ACCENT : undefined,
-                    boxShadow: isCurrent ? `0 0 20px ${ACCENT}25` : undefined,
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border"
-                      style={{
-                        borderColor: isCurrent ? `${ACCENT}60` : "#27272a",
-                        background: isCurrent ? `${ACCENT}15` : "#18181b",
-                        color: isCurrent ? ACCENT : "#71717a",
-                      }}
-                    >
-                      STAGE {item.step}
-                    </span>
-                    <span className="text-[9px] font-mono text-foreground-muted">
-                      {idx < activeWorkflowIdx ? "✓ COMPLETE" : isCurrent ? "● ACTIVE" : "PENDING"}
-                    </span>
-                  </div>
-                  <div className="text-xs font-bold font-mono text-white whitespace-normal break-words">
-                    {item.phase}
-                  </div>
-                  {isCurrent && !stageTouched ? (
-                    <span
-                      className="explorer__timer stage-timer"
-                      aria-hidden="true"
-                      onAnimationEnd={() => setActiveWorkflowIdx((activeWorkflowIdx + 1) % industrialWorkflow.length)}
-                    />
-                  ) : null}
-                </button>
-              );
-            })}
+          {/* The plant line: four stations on one conveyor, with the batch moving to the stage being shown */}
+          <div className="plant-line" style={{ "--p": activeWorkflowIdx / (industrialWorkflow.length - 1) } as CSSProperties}>
+            <div className="plant-line__track" aria-hidden="true">
+              <span className="plant-line__fill" />
+              <span className="plant-line__batch" />
+            </div>
+            <div role="tablist" aria-label="Production stages" className="plant-line__stations">
+              {industrialWorkflow.map((item, idx) => {
+                const isCurrent = idx === activeWorkflowIdx;
+                const state = idx < activeWorkflowIdx ? "done" : isCurrent ? "active" : "todo";
+                return (
+                  <button
+                    key={item.step}
+                    type="button"
+                    role="tab"
+                    aria-selected={isCurrent}
+                    data-state={state}
+                    onClick={() => {
+                      setActiveWorkflowIdx(idx);
+                      setStageTouched(true);
+                    }}
+                    className="plant-line__station"
+                  >
+                    <span className="plant-line__node">{item.step}</span>
+                    <span className="plant-line__phase">{item.phase}</span>
+                    <span className="plant-line__status">{state === "done" ? "Complete" : state === "active" ? "In progress" : "Next"}</span>
+                    {isCurrent && !stageTouched ? (
+                      <span
+                        className="explorer__timer stage-timer"
+                        aria-hidden="true"
+                        onAnimationEnd={() => setActiveWorkflowIdx((activeWorkflowIdx + 1) % industrialWorkflow.length)}
+                      />
+                    ) : null}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Progress through the lifecycle, up to the stage being shown */}
-          <div className="stage-rail mb-8" aria-hidden="true">
-            <span style={{ "--p": (activeWorkflowIdx + 1) / industrialWorkflow.length } as CSSProperties} />
-          </div>
-
-          {/* Active Stage Deep-Dive Card */}
+          {/* The stage being shown, open on the page */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeFlow.step}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
+              exit={{ opacity: 0, y: -14 }}
               transition={{ duration: 0.3 }}
-              className="p-8 sm:p-10 rounded-3xl bg-zinc-950/80 border border-zinc-800 shadow-2xl relative overflow-hidden"
-              style={{
-                borderLeftWidth: "4px",
-                borderLeftColor: ACCENT,
-              }}
+              className="plant-stage"
             >
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800/70 pb-5 mb-6">
-                <div>
-                  <div className="text-xs font-mono font-bold tracking-wider text-blue-400 uppercase">
-                    Stage {activeFlow.step} {"//"} {activeFlow.phase}
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
-                    {activeFlow.title}
-                  </h3>
-                </div>
-
-                <div className="p-3 px-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 text-right">
-                  <div className="text-xs font-mono text-zinc-400">{activeFlow.telemetryLabel}</div>
-                  <div className="text-xl sm:text-2xl font-mono font-black" style={{ color: ACCENT }}>
-                    {activeFlow.telemetry}
-                  </div>
-                </div>
+              <div className="plant-stage__main">
+                <span className="plant-stage__num" aria-hidden="true">
+                  {activeFlow.step}
+                </span>
+                <p className="plant-stage__eyebrow">{activeFlow.phase}</p>
+                <h3 className="plant-stage__title">{activeFlow.title}</h3>
+                <p className="plant-stage__desc">{activeFlow.desc}</p>
               </div>
 
-              <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-4xl mb-8">
-                {activeFlow.desc}
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-zinc-800/60">
+              <div className="plant-stage__side">
                 <div>
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-foreground-muted font-bold block mb-2">
-                    Subsystems Synchronized in this Phase:
-                  </span>
-                  <div className="stage-items flex flex-wrap gap-2">
+                  <span className="plant-stage__label">Modules working together</span>
+                  <ul className="plant-stage__chips">
                     {activeFlow.subsystems.map((sub) => (
-                      <span
-                        key={sub}
-                        className="px-3 py-1 rounded-lg text-xs font-mono bg-zinc-900 border border-zinc-800 text-zinc-200"
-                      >
-                        {sub}
-                      </span>
+                      <li key={sub}>{sub}</li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
-
                 <div>
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-foreground-muted font-bold block mb-2">
-                    Automated Verified Outputs:
-                  </span>
-                  <div className="stage-items space-y-1.5">
+                  <span className="plant-stage__label">What comes out</span>
+                  <ul className="plant-stage__outputs">
                     {activeFlow.outputs.map((out) => (
-                      <div key={out} className="flex items-center gap-2 text-xs font-mono text-zinc-300">
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} />
-                        <span>{out}</span>
-                      </div>
+                      <li key={out}>{out}</li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               </div>
             </motion.div>
@@ -517,12 +460,12 @@ export default function ZNXERPPage() {
 
           <div className="module-map">
           <Stagger className="module-map__row module-map__row--top grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {modules.slice(0, 4).map((mod) => (
+            {modules.slice(0, 4).map((mod, i) => (
               <Spotlight key={mod.label} as="div" className="lift-card module-card p-6 flex flex-col justify-between group">
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl p-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800" aria-hidden="true">
-                      {mod.icon}
+                    <span className="module-card__num" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="text-[10px] font-mono text-foreground-muted font-bold group-hover:text-blue-400">
                       {mod.code}
@@ -569,12 +512,12 @@ export default function ZNXERPPage() {
           </div>
 
           <Stagger className="module-map__row module-map__row--bottom grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {modules.slice(4).map((mod) => (
+            {modules.slice(4).map((mod, i) => (
               <Spotlight key={mod.label} as="div" className="lift-card module-card p-6 flex flex-col justify-between group">
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl p-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800" aria-hidden="true">
-                      {mod.icon}
+                    <span className="module-card__num" aria-hidden="true">
+                      {String(i + 5).padStart(2, "0")}
                     </span>
                     <span className="text-[10px] font-mono text-foreground-muted font-bold group-hover:text-blue-400">
                       {mod.code}

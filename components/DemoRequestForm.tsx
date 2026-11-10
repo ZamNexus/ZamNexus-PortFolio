@@ -68,8 +68,8 @@ export default function DemoRequestForm({
         <div
           className="w-16 h-16 rounded-full border flex items-center justify-center text-2xl mx-auto"
           style={{
-            background: `${accentColor}20`,
-            borderColor: `${accentColor}40`,
+            background: `color-mix(in srgb, ${accentColor} 13%, transparent)`,
+            borderColor: `color-mix(in srgb, ${accentColor} 25%, transparent)`,
             color: accentColor,
           }}
         >
@@ -192,12 +192,12 @@ export default function DemoRequestForm({
         <div
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold border"
           style={{
-            background: `${accentColor}10`,
-            borderColor: `${accentColor}30`,
+            background: `color-mix(in srgb, ${accentColor} 6%, transparent)`,
+            borderColor: `color-mix(in srgb, ${accentColor} 19%, transparent)`,
             color: accentColor,
           }}
         >
-          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: accentColor }} aria-hidden="true" />
+          <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: "var(--accent)" }} aria-hidden="true" />
           {productName}
         </div>
       </div>
@@ -242,7 +242,7 @@ export default function DemoRequestForm({
         type="submit"
         id={`${uid}-submit`}
         disabled={sending}
-        className="w-full py-4 rounded-full font-bold text-base text-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(37,99,235,0.35)] disabled:opacity-60 disabled:cursor-wait"
+        className="w-full py-4 rounded-full font-bold text-base text-[#fff] transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-wait"
         style={{ background: accentColor }}
       >
         {sending ? "Sending…" : `Request Your ${productName} Demo →`}

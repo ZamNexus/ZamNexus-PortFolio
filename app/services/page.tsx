@@ -7,9 +7,9 @@ import ProcessTimeline from "@/components/ProcessTimeline";
 import ServiceDiagram from "@/components/ServiceDiagram";
 import ServiceExplorer from "@/components/ServiceExplorer";
 import Reveal from "@/components/motion/Reveal";
+import Spotlight from "@/components/motion/Spotlight";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
-import Spotlight from "@/components/motion/Spotlight";
 import Parallax from "@/components/motion/Parallax";
 import { services } from "@/lib/catalog";
 import { jsonLd } from "@/lib/seo";
@@ -124,6 +124,39 @@ export default function ServicesPage() {
                   <Reveal variant="draw">
                     <ServiceDiagram id={s.id} />
                   </Reveal>
+                </div>
+
+                <Reveal variant="draw" replay={false} className="service-detail">
+                  <div>
+                    <h3 className="service-detail__label">Good fit when</h3>
+                    <ul className="service-detail__fit">
+                      {s.goodFor.map((g) => (
+                        <li key={g}>{g}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="service-detail__label">How we approach it</h3>
+                    <ol className="service-detail__steps service-detail__steps--short">
+                      {s.approach.map((a, i) => (
+                        <li key={a.title}>
+                          <span className="service-detail__num" aria-hidden="true">
+                            {i + 1}
+                          </span>
+                          <strong>{a.title}</strong>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </Reveal>
+
+                <div className="service-stack">
+                  <span className="service-detail__label">Works with</span>
+                  <ul>
+                    {s.stack.map((tool) => (
+                      <li key={tool}>{tool}</li>
+                    ))}
+                  </ul>
                 </div>
 
                 <Spotlight as="div" className="deliverables mt-10">

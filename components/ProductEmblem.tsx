@@ -104,11 +104,33 @@ const emblems: Record<ProductSlug, () => React.JSX.Element> = {
   znxcare: Care,
 };
 
+// The three stages along the foot of each panel, in the order the product handles its work.
+const flows: Record<ProductSlug, [string, string, string]> = {
+  znxerp: ["Goods in", "QC release", "Dispatch"],
+  znxepos: ["Scan", "Sell", "Sync"],
+  znxedu: ["Admit", "Teach", "Inform"],
+  znxcare: ["Register", "Consult", "Dispense"],
+};
+
 export default function ProductEmblem({ slug }: ProductEmblemProps) {
   const Emblem = emblems[slug];
   return (
     <div className={`emblem emblem--${slug}`} aria-hidden="true">
-      <Emblem />
+      <div className="emblem__chrome">
+        <i />
+        <i />
+        <i />
+        <span>{slug}.live</span>
+        <em>live</em>
+      </div>
+      <div className="emblem__stage">
+        <Emblem />
+      </div>
+      <ol className="emblem__flow">
+        {flows[slug].map((step) => (
+          <li key={step}>{step}</li>
+        ))}
+      </ol>
     </div>
   );
 }

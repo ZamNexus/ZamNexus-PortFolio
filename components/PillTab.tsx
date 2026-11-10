@@ -79,7 +79,6 @@ export default function PillTab({
         } ${className}`}
         style={{
           borderColor: isSelected ? (accent || "var(--accent-hover)") : undefined,
-          boxShadow: isSelected && accent ? `0 0 16px ${accent}30` : undefined,
         }}
       >
         <div className="flex items-center gap-2.5 min-w-0 flex-1">
@@ -108,7 +107,7 @@ export default function PillTab({
           aria-hidden="true"
           className={`shrink-0 w-4 h-4 rounded-md border flex items-center justify-center text-[10px] font-mono font-bold transition-all duration-150 ease-out ${
             isSelected
-              ? "bg-[var(--accent-hover)] border-[var(--accent-hover)] text-black scale-100 opacity-100 shadow-sm"
+              ? "bg-[var(--accent-hover)] border-[var(--accent-hover)] text-[#fff] scale-100 opacity-100 shadow-sm"
               : "border-zinc-700/80 bg-zinc-900/60 text-transparent scale-90 opacity-40 group-hover:border-zinc-600"
           }`}
           style={{
@@ -149,7 +148,7 @@ export default function PillTab({
         aria-labelledby={labelId}
         className={`relative ${sizeClasses} rounded-xl font-mono font-bold cursor-pointer flex items-center justify-center gap-2 min-w-0 ${baseTransition} active:scale-[0.98] ${
           isSelected
-            ? "text-black shadow-lg"
+            ? "text-[#fff] shadow-lg"
             : "text-zinc-400 hover:text-white hover:bg-zinc-800/40"
         } ${className}`}
       >
@@ -193,7 +192,6 @@ export default function PillTab({
       } ${className}`}
       style={{
         borderColor: isSelected ? (accent || "var(--accent-hover)") : undefined,
-        boxShadow: isSelected && accent ? `0 0 14px ${accent}25` : undefined,
       }}
     >
       {icon && <span className="shrink-0 leading-none" aria-hidden="true">{icon}</span>}

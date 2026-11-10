@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { Schibsted_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
+
+// Applies the saved colour theme before first paint so there is no flash.
+const THEME_SCRIPT = `try{var t=localStorage.getItem("zn-theme");if(t&&t==="paper")document.documentElement.setAttribute("data-theme",t)}catch(e){}`;
 
 // One family for headings and body; Geist Mono only for real codes and data.
 const schibsted = Schibsted_Grotesk({
@@ -34,6 +38,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${schibsted.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: THEME_SCRIPT,
+          }}
+        />
         {/*
           Synchronously intercepts and blocks browser extension attributes
           (Bitdefender's `bis_skin_checked`, Grammarly, etc.) BEFORE React hydrates,
@@ -108,7 +117,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   name: "ZamNexus",
                   legalName: "ZamNexus Limited",
                   url: "https://zamnexus.com",
-                  logo: "https://zamnexus.com/znx_logo_clean.png",
+                  logo: "https://zamnexus.com/znx_logo_teal.png",
                   foundingDate: "2009",
                   founder: {
                     "@type": "Person",
@@ -146,6 +155,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         {children}
         <ChatWidget />
+        <ThemeSwitcher />
       </body>
     </html>
   );
