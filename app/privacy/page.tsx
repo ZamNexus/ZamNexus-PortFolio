@@ -20,7 +20,7 @@ const tableOfContents = [
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-[#090b10] text-zinc-300 font-sans selection:bg-[var(--accent-hover)] selection:text-black">
+    <div className="min-h-screen bg-background text-zinc-300 font-sans selection:bg-[var(--accent-hover)] selection:text-[#fff]">
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-5 sm:px-10 lg:px-14 pt-36 pb-24">

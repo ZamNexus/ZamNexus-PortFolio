@@ -16,7 +16,7 @@ import Spotlight from "@/components/motion/Spotlight";
 import { productFaqs } from "@/lib/productFaqs";
 import { ProductStats, ProductClients, ProductAudience, ProductFaq, IllustrativeNote } from "@/components/ProductSections";
 
-const ACCENT = "#8B5CF6";
+const ACCENT = "var(--accent-text)";
 
 // ─── 4-Stage Campus Operational & Academic Lifecycle ─────────────────────────
 
@@ -67,56 +67,48 @@ const campusWorkflow = [
 
 const modules = [
   {
-    icon: "🎓",
     code: "MOD-ADM",
     label: "Digital Admissions & Enrollment",
     desc: "Paperless applicant portal, automated document checks, entrance exam scoring, and instant student ID allocation.",
     bullets: ["Online Application Flow", "Document Verification", "Merit List Generator"],
   },
   {
-    icon: "💳",
     code: "MOD-FEE",
     label: "Automated Fee Billing & Bank Link",
     desc: "Recurring voucher generation, direct integration with banking APIs, credit card processing, and automated overdue alerts.",
     bullets: ["Direct 1Link/Bank APIs", "Installment Plans", "Instant Digital Receipts"],
   },
   {
-    icon: "⏱️",
     code: "MOD-ATT",
     label: "Biometric & RFID Attendance",
     desc: "Seamless hardware integration with turnstiles and biometric sensors, triggering instant parent SMS/app alerts upon entry.",
     bullets: ["Instant Parent SMS Alert", "Faculty Clock-In Matrix", "Automated Leave Tracking"],
   },
   {
-    icon: "📝",
     code: "MOD-EXM",
     label: "Gradebook & Exam Architecture",
     desc: "Custom grading scales, GPA/CGPA calculations, automated report card compilation, and immutable transcript generation.",
     bullets: ["Dynamic Report Card PDFs", "Curved Grading Models", "Online Result Publishing"],
   },
   {
-    icon: "🗓️",
     code: "MOD-SCH",
     label: "Clash-Free Timetable Engine",
     desc: "Algorithmic scheduling optimizing teacher availability, room capacity, and course combinations with zero scheduling conflicts.",
     bullets: ["Zero-Clash Scheduling", "Instant Teacher Substitution", "Room Allocation Engine"],
   },
   {
-    icon: "📚",
     code: "MOD-LIB",
     label: "Smart Campus Library",
     desc: "Barcode-driven checkout and returns, Dewey decimal cataloging, digital repository access, and automatic overdue fine logging.",
     bullets: ["Barcode Borrow/Return", "E-Book Repository", "Automated Fine Ledgers"],
   },
   {
-    icon: "🚌",
     code: "MOD-FLT",
     label: "Fleet & Transport Telemetry",
     desc: "Real-time school bus GPS tracking, designated stop route management, student pickup check-ins, and driver performance logs.",
     bullets: ["Live Bus GPS on App", "Safe Stop Validation", "Maintenance & Fuel Logs"],
   },
   {
-    icon: "📱",
     code: "MOD-APP",
     label: "Parent & Student Mobile Hub",
     desc: "Native mobile app for parents to pay fees, inspect live attendance, check daily homework, and message faculty directly.",
@@ -174,7 +166,7 @@ export default function ZNXEduPage() {
   return (
     <div
       suppressHydrationWarning
-      className="min-h-screen bg-[#090b10] text-zinc-100 font-sans selection:bg-[#8B5CF6] selection:text-white overflow-x-clip"
+      className="min-h-screen bg-background text-zinc-100 font-sans selection:bg-accent selection:text-white overflow-x-clip"
       style={{ "--rail": ACCENT } as CSSProperties}
     >
       {/* Background Cyber Grid */}
@@ -189,8 +181,6 @@ export default function ZNXEduPage() {
         </svg>
 
         {/* Ambient Halos */}
-        <div className="absolute top-[15%] left-[5%] w-[650px] h-[650px] rounded-full bg-violet-600/[0.06] blur-[180px] pointer-events-none" />
-        <div className="absolute bottom-[20%] right-[8%] w-[600px] h-[600px] rounded-full bg-purple-600/[0.04] blur-[180px] pointer-events-none" />
       </div>
 
       <ScrollProgress />
@@ -218,8 +208,8 @@ export default function ZNXEduPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <div className="lg:col-span-7">
-              <div data-enter="2" className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-xs font-mono font-bold text-violet-400 mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
+              <div data-enter="2" className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 text-xs font-mono font-bold text-blue-400 mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                 ZNXEdu · School & campus management
               </div>
 
@@ -251,7 +241,7 @@ export default function ZNXEduPage() {
             {/* The product's event flow, then confirmed figures only (lib/siteFacts.ts) */}
             <div data-enter="6" className="lg:col-span-5 space-y-6">
               <ProductScene slug="znxedu" />
-              <ProductStats slug="znxedu" accent={ACCENT} />
+              <ProductStats slug="znxedu" accent={ACCENT} animate />
             </div>
           </div>
         </section>
@@ -266,7 +256,7 @@ export default function ZNXEduPage() {
           className="stage-auto max-w-7xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <Reveal variant="words" replay={false} className="text-center max-w-3xl mx-auto mb-14">
-            <span className="text-xs font-mono uppercase tracking-widest text-violet-400 font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-blue-400 font-bold">
               Academic & Operational Lifecycle
             </span>
             <h2
@@ -280,127 +270,80 @@ export default function ZNXEduPage() {
             </p>
           </Reveal>
 
-          {/* Stepper Buttons */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-            {campusWorkflow.map((item, idx) => {
-              const isCurrent = idx === activeWorkflowIdx;
-              return (
-                <button
-                  key={item.step}
-                  onClick={() => {
-                    setActiveWorkflowIdx(idx);
-                    setStageTouched(true);
-                  }}
-                  className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer relative overflow-hidden group ${
-                    isCurrent
-                      ? "bg-zinc-900/90 shadow-xl"
-                      : "bg-zinc-950/40 hover:bg-zinc-900/40 border-zinc-800/80"
-                  }`}
-                  style={{
-                    borderColor: isCurrent ? ACCENT : undefined,
-                    boxShadow: isCurrent ? `0 0 20px ${ACCENT}25` : undefined,
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className="text-[10px] font-mono font-bold px-2 py-0.5 rounded border"
-                      style={{
-                        borderColor: isCurrent ? `${ACCENT}60` : "#27272a",
-                        background: isCurrent ? `${ACCENT}15` : "#18181b",
-                        color: isCurrent ? ACCENT : "#71717a",
-                      }}
-                    >
-                      STAGE {item.step}
-                    </span>
-                    <span className="text-[9px] font-mono text-foreground-muted">
-                      {idx < activeWorkflowIdx ? "✓ COMPLETE" : isCurrent ? "● ACTIVE" : "PENDING"}
-                    </span>
-                  </div>
-                  <div className="text-xs font-bold font-mono text-white whitespace-normal break-words">
-                    {item.phase}
-                  </div>
-                  {isCurrent && !stageTouched ? (
-                    <span
-                      className="explorer__timer stage-timer"
-                      aria-hidden="true"
-                      onAnimationEnd={() => setActiveWorkflowIdx((activeWorkflowIdx + 1) % campusWorkflow.length)}
-                    />
-                  ) : null}
-                </button>
-              );
-            })}
+          {/* The plant line: four stations on one conveyor, with the batch moving to the stage being shown */}
+          <div className="plant-line" style={{ "--p": activeWorkflowIdx / (campusWorkflow.length - 1) } as CSSProperties}>
+            <div className="plant-line__track" aria-hidden="true">
+              <span className="plant-line__fill" />
+              <span className="plant-line__batch" />
+            </div>
+            <div role="tablist" aria-label="Production stages" className="plant-line__stations">
+              {campusWorkflow.map((item, idx) => {
+                const isCurrent = idx === activeWorkflowIdx;
+                const state = idx < activeWorkflowIdx ? "done" : isCurrent ? "active" : "todo";
+                return (
+                  <button
+                    key={item.step}
+                    type="button"
+                    role="tab"
+                    aria-selected={isCurrent}
+                    data-state={state}
+                    onClick={() => {
+                      setActiveWorkflowIdx(idx);
+                      setStageTouched(true);
+                    }}
+                    className="plant-line__station"
+                  >
+                    <span className="plant-line__node">{item.step}</span>
+                    <span className="plant-line__phase">{item.phase}</span>
+                    <span className="plant-line__status">{state === "done" ? "Complete" : state === "active" ? "In progress" : "Next"}</span>
+                    {isCurrent && !stageTouched ? (
+                      <span
+                        className="explorer__timer stage-timer"
+                        aria-hidden="true"
+                        onAnimationEnd={() => setActiveWorkflowIdx((activeWorkflowIdx + 1) % campusWorkflow.length)}
+                      />
+                    ) : null}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Progress through the lifecycle, up to the stage being shown */}
-          <div className="stage-rail mb-8" aria-hidden="true">
-            <span style={{ "--p": (activeWorkflowIdx + 1) / campusWorkflow.length } as CSSProperties} />
-          </div>
-
-          {/* Active Stage Deep-Dive Card */}
+          {/* The stage being shown, open on the page */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeFlow.step}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
+              exit={{ opacity: 0, y: -14 }}
               transition={{ duration: 0.3 }}
-              className="p-8 sm:p-10 rounded-3xl bg-zinc-950/80 border border-zinc-800 shadow-2xl relative overflow-hidden"
-              style={{
-                borderLeftWidth: "4px",
-                borderLeftColor: ACCENT,
-              }}
+              className="plant-stage"
             >
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-800/70 pb-5 mb-6">
-                <div>
-                  <div className="text-xs font-mono font-bold tracking-wider text-violet-400 uppercase">
-                    Stage {activeFlow.step} {"//"} {activeFlow.phase}
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
-                    {activeFlow.title}
-                  </h3>
-                </div>
-
-                <div className="p-3 px-5 rounded-2xl bg-zinc-900/60 border border-zinc-800 text-right">
-                  <div className="text-xs font-mono text-zinc-400">{activeFlow.telemetryLabel}</div>
-                  <div className="text-xl sm:text-2xl font-mono font-black" style={{ color: ACCENT }}>
-                    {activeFlow.telemetry}
-                  </div>
-                </div>
+              <div className="plant-stage__main">
+                <span className="plant-stage__num" aria-hidden="true">
+                  {activeFlow.step}
+                </span>
+                <p className="plant-stage__eyebrow">{activeFlow.phase}</p>
+                <h3 className="plant-stage__title">{activeFlow.title}</h3>
+                <p className="plant-stage__desc">{activeFlow.desc}</p>
               </div>
 
-              <p className="text-sm sm:text-base text-zinc-300 leading-relaxed max-w-4xl mb-8">
-                {activeFlow.desc}
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-zinc-800/60">
+              <div className="plant-stage__side">
                 <div>
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-foreground-muted font-bold block mb-2">
-                    Subsystems Synchronized:
-                  </span>
-                  <div className="stage-items flex flex-wrap gap-2">
+                  <span className="plant-stage__label">Modules working together</span>
+                  <ul className="plant-stage__chips">
                     {activeFlow.subsystems.map((sub) => (
-                      <span
-                        key={sub}
-                        className="px-3 py-1 rounded-lg text-xs font-mono bg-zinc-900 border border-zinc-800 text-zinc-200"
-                      >
-                        {sub}
-                      </span>
+                      <li key={sub}>{sub}</li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
-
                 <div>
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-foreground-muted font-bold block mb-2">
-                    Automated Campus Outputs:
-                  </span>
-                  <div className="stage-items space-y-1.5">
+                  <span className="plant-stage__label">What comes out</span>
+                  <ul className="plant-stage__outputs">
                     {activeFlow.outputs.map((out) => (
-                      <div key={out} className="flex items-center gap-2 text-xs font-mono text-zinc-300">
-                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: ACCENT }} />
-                        <span>{out}</span>
-                      </div>
+                      <li key={out}>{out}</li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               </div>
             </motion.div>
@@ -413,7 +356,7 @@ export default function ZNXEduPage() {
           className="max-w-7xl mx-auto px-6 py-16 border-t border-zinc-800/60"
         >
           <Reveal variant="words" replay={false} className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-xs font-mono uppercase tracking-widest text-violet-400 font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-blue-400 font-bold">
               Campus Telemetry Engine
             </span>
             <h2
@@ -489,7 +432,7 @@ export default function ZNXEduPage() {
 
             <div className="mt-6 pt-4 border-t border-zinc-800/60 flex items-center justify-between text-[11px] font-mono text-foreground-muted">
               <span>Encrypted Student Records · Role-Based Access</span>
-              <span className="text-emerald-400">● Live Campus Cluster</span>
+              <span className="text-blue-400">● Live Campus Cluster</span>
             </div>
           </div>
         </section>
@@ -501,7 +444,7 @@ export default function ZNXEduPage() {
           className="max-w-7xl mx-auto px-6 py-20 border-t border-zinc-800/60"
         >
           <Reveal variant="words" replay={false} className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-mono uppercase tracking-widest text-violet-400 font-bold">
+            <span className="text-xs font-mono uppercase tracking-widest text-blue-400 font-bold">
               Subsystem Grid
             </span>
             <h2
@@ -517,14 +460,14 @@ export default function ZNXEduPage() {
 
           <div className="module-map">
           <Stagger className="module-map__row module-map__row--top grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {modules.slice(0, 4).map((mod) => (
+            {modules.slice(0, 4).map((mod, i) => (
               <Spotlight key={mod.label} as="div" className="lift-card module-card p-6 flex flex-col justify-between group">
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl p-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800" aria-hidden="true">
-                      {mod.icon}
+                    <span className="module-card__num" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-[10px] font-mono text-foreground-muted font-bold group-hover:text-violet-400">
+                    <span className="text-[10px] font-mono text-foreground-muted font-bold group-hover:text-blue-400">
                       {mod.code}
                     </span>
                   </div>
@@ -569,14 +512,14 @@ export default function ZNXEduPage() {
           </div>
 
           <Stagger className="module-map__row module-map__row--bottom grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {modules.slice(4).map((mod) => (
+            {modules.slice(4).map((mod, i) => (
               <Spotlight key={mod.label} as="div" className="lift-card module-card p-6 flex flex-col justify-between group">
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl p-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800" aria-hidden="true">
-                      {mod.icon}
+                    <span className="module-card__num" aria-hidden="true">
+                      {String(i + 5).padStart(2, "0")}
                     </span>
-                    <span className="text-[10px] font-mono text-foreground-muted font-bold group-hover:text-violet-400">
+                    <span className="text-[10px] font-mono text-foreground-muted font-bold group-hover:text-blue-400">
                       {mod.code}
                     </span>
                   </div>
@@ -626,7 +569,7 @@ export default function ZNXEduPage() {
         >
           <div className="p-8 sm:p-14 rounded-3xl bg-zinc-900/50 border border-zinc-800 shadow-2xl">
             <Reveal variant="words" replay={false} className="text-center mb-10">
-              <span className="text-xs font-mono uppercase tracking-widest text-violet-400 font-bold">
+              <span className="text-xs font-mono uppercase tracking-widest text-blue-400 font-bold">
                 Deploy ZNXEdu
               </span>
               <h2 id="demo-heading" className="text-3xl font-extrabold text-white mt-2">

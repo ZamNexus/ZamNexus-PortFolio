@@ -4,18 +4,26 @@ import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import Spotlight from "@/components/motion/Spotlight";
+import RollingValue from "@/components/RollingValue";
 
 // Shared sections for the four product pages. Figures and client names come from lib/siteFacts.ts
 // and render only once confirmed, so the pages can't publish an unverified claim.
 
-export function ProductStats({ slug, accent }: { slug: ProductSlug; accent: string }) {
+interface ProductStatsProps {
+  slug: ProductSlug;
+  accent: string;
+  // Roll the figures up from zero when they scroll into view.
+  animate?: boolean;
+}
+
+export function ProductStats({ slug, accent, animate = false }: ProductStatsProps) {
   return (
     <dl className="grid grid-cols-2 gap-3">
-      {confirmed(productStats[slug]).map((item) => (
+      {confirmed(productStats[slug]).map((item, index) => (
         <div key={item.label} className="p-5 rounded-2xl bg-surface/80 border border-[var(--border-subtle)]">
           <dt className="sr-only">{item.label}</dt>
           <dd className="text-2xl sm:text-3xl font-bold font-mono" style={{ color: accent }}>
-            {item.value}
+            {animate && /\d/.test(item.value) ? <RollingValue value={item.value} delay={index * 180} /> : item.value}
           </dd>
           <dd className="text-sm text-foreground mt-1">{item.label}</dd>
         </div>

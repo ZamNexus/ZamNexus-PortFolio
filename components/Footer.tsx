@@ -52,14 +52,14 @@ const technologies = ["AWS", "Microsoft Azure", "Dynamics 365", "Salesforce"];
 
 export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) {
   return (
-    <footer className="bg-[#050608] text-[var(--foreground-muted)] pt-16 px-4 sm:px-6 relative z-10">
+    <footer className="bg-background-secondary border-t border-[var(--border-subtle)] text-[var(--foreground-muted)] pt-16 px-4 sm:px-6 relative z-10">
       <div className="max-w-6xl mx-auto">
         {/* ── PRE-FOOTER CTA ──────────────────────────────────────────────── */}
         {!hideCTA && (
           <FinalCTA
-            eyebrow="Let's talk"
-            headline="Tell us what you need to run better."
-            description="Send a short brief and a senior engineer will reply within one business day."
+            eyebrow="Your move"
+            headline="Bring us the problem you keep working around."
+            description="Send a short brief. A senior engineer, not a salesperson, replies within one business day with questions, a view and a next step."
             primaryButton={{
               label: "Book a consultation",
               href: "/contact",
@@ -67,6 +67,15 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
             secondaryButton={{
               label: "See the products",
               href: "/products",
+            }}
+            sidePanel={{
+              title: "What happens next",
+              numbered: true,
+              items: [
+                { label: "You send a short brief", sublabel: "What you need, and the systems you run today." },
+                { label: "A senior engineer replies", sublabel: "Within one business day, with questions and a first view." },
+                { label: "We agree the next step", sublabel: "A scoping call or a demo, shaped around your sector." },
+              ],
             }}
             containerClassName="max-w-none px-0 py-0 mb-16"
           />
@@ -76,13 +85,10 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
           <Reveal className="lg:col-span-5 space-y-5">
             <Link href="/" className="inline-flex items-center" aria-label="ZamNexus home">
-              <Image
-                src="/znx_logo_clean.png"
-                alt="ZamNexus"
-                width={280}
-                height={145}
-                className="h-16 sm:h-20 w-auto object-contain"
-              />
+              <>
+              <Image src="/znx_logo_teal.png" alt="ZamNexus" width={280} height={145} className="logo-dark h-16 sm:h-20 w-auto object-contain" />
+              <Image src="/znx_logo_teal_light.png" alt="" aria-hidden="true" width={280} height={145} className="logo-light h-16 sm:h-20 w-auto object-contain" />
+            </>
             </Link>
             <p className="text-base leading-relaxed max-w-md">
               Business platforms for manufacturing, retail, education and healthcare, and the engineers to build what
@@ -126,7 +132,7 @@ export default function Footer({ hideCTA = false }: { hideCTA?: boolean } = {}) 
         <Reveal variant="draw" className="footer-rule">
           <span aria-hidden="true" />
         </Reveal>
-        <div className="pt-8 pb-10 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-4">
+        <div className="pt-8 pb-24 sm:pb-10 sm:pr-44 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-4">
           <div className="space-y-1">
             <p>© {company.legalName}. All rights reserved.</p>
             <p>

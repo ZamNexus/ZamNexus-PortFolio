@@ -27,7 +27,7 @@ export const products: Product[] = [
       "Stock movements post to the ledger as they happen",
     ],
     modules: "Finance, HR & payroll, procurement, inventory, production, sales, QC, reporting",
-    accent: "#3B82F6",
+    accent: "var(--accent-text)",
     logo: "/product-logos/znxerp.png",
   },
   {
@@ -42,7 +42,7 @@ export const products: Product[] = [
       "Retail and wholesale accounts in one system",
     ],
     modules: "POS, multi-branch stock, offline sync, promotions & loyalty, wholesale ledgers, cash control",
-    accent: "#F59E0B",
+    accent: "var(--accent-text)",
     logo: "/product-logos/znxepos.png",
   },
   {
@@ -57,7 +57,7 @@ export const products: Product[] = [
       "Clash-free timetables for every campus",
     ],
     modules: "Admissions, fees & bank link, attendance, timetabling, exams, parent app, HR & payroll",
-    accent: "#8B5CF6",
+    accent: "var(--accent-text)",
     logo: "/product-logos/znxedu.png",
   },
   {
@@ -72,7 +72,7 @@ export const products: Product[] = [
       "Barcode-checked pharmacy dispensing",
     ],
     modules: "Registration, triage, OPD & IPD, clinical records, laboratory, pharmacy, billing & insurance",
-    accent: "#10B981",
+    accent: "var(--accent-text)",
     logo: "/product-logos/znxcare.png",
   },
 ];
@@ -153,6 +153,12 @@ export interface Service {
   short: string;
   outcome: string;
   deliverables: string[];
+  /** Situations where this service is the right call. */
+  goodFor: string[];
+  /** How the work usually goes, in three steps. */
+  approach: { title: string; text: string }[];
+  /** Tools and platforms we work with for this service. */
+  stack: string[];
   related?: { label: string; href: string };
 }
 
@@ -173,6 +179,17 @@ export const services: Service[] = [
       "Process automation across ERP and CRM",
       "Guardrails, logging and audit trails",
     ],
+    goodFor: [
+      "Staff re-key data between systems or chase approvals by email",
+      "Documents arrive in many formats and someone has to read each one",
+      "You want AI inside a process, but need to explain what it did and why",
+    ],
+    approach: [
+      { title: "Pick the right first process", text: "We assess where AI helps and where plain automation is safer, then shortlist use cases by value and risk." },
+      { title: "Build with a person in the loop", text: "Agents read, draft and prepare. People approve anything that matters, with checkpoints built into the flow." },
+      { title: "Record every step", text: "Each action is logged, so a decision can be reviewed and explained after the fact." },
+    ],
+    stack: ["Retrieval over your documents (RAG)", "OCR and extraction", "Multi-step agents", "ERP and CRM connectors"],
     related: { label: "Multi-agent AI in regulated supply chains", href: "/insights/agentic-ai-regulated-supply-chains" },
   },
   {
@@ -191,6 +208,17 @@ export const services: Service[] = [
       "Roles, permissions and audit logs",
       "CI/CD with zero-downtime releases",
     ],
+    goodFor: [
+      "You have a product idea and need a team to take it to paying customers",
+      "An internal tool is ready to become a product other companies can use",
+      "Your current product can't isolate customer data or take payments cleanly",
+    ],
+    approach: [
+      { title: "Shape the product and its architecture", text: "We agree what the first release must do and design the technical foundations to carry it." },
+      { title: "Build the foundations first", text: "Tenancy, roles, permissions and billing go in early, so they aren't bolted on later." },
+      { title: "Release without downtime", text: "Automated pipelines ship changes safely, so customers aren't interrupted." },
+    ],
+    stack: ["Stripe", "Paddle", "CI/CD pipelines", "Multi-tenant data models"],
     related: { label: "AWS Serverless vs Kubernetes for multi-tenant SaaS", href: "/insights/aws-serverless-scaling-postmortem" },
   },
   {
@@ -209,6 +237,17 @@ export const services: Service[] = [
       "Zero-trust security reviews",
       "Cloud cost reviews",
     ],
+    goodFor: [
+      "Your cloud bill grows faster than your usage",
+      "Traffic comes in peaks and servers sit idle in between",
+      "Infrastructure was set up by hand and nobody could rebuild it",
+    ],
+    approach: [
+      { title: "Review what runs today", text: "We look at the architecture, the security posture and what each part costs." },
+      { title: "Define it as code", text: "Infrastructure goes into version control, so it can be repeated, reviewed and audited." },
+      { title: "Watch it properly", text: "Monitoring, tracing and alerts mean you see problems before your customers do." },
+    ],
+    stack: ["AWS Lambda", "Step Functions", "EventBridge", "SQS", "Terraform", "AWS CDK", "Node.js and TypeScript"],
   },
   {
     id: "integration",
@@ -226,6 +265,17 @@ export const services: Service[] = [
       "Data migration, cleansing and verification",
       "Azure API Management or MuleSoft gateways",
     ],
+    goodFor: [
+      "The same data is typed into two or three systems",
+      "A legacy system is risky to touch but blocks new work",
+      "You need to replace old software without stopping the business",
+    ],
+    approach: [
+      { title: "Map the systems and the risks", text: "We document what talks to what and where the data lives before changing anything." },
+      { title: "Put an API in front of legacy", text: "New work connects through a clean interface while the old system keeps running." },
+      { title: "Migrate piece by piece", text: "Parts move across one at a time and data is checked at each step: the strangler-fig pattern." },
+    ],
+    stack: ["REST", "GraphQL", "Azure API Management", "MuleSoft"],
     related: { label: "The strangler fig pattern", href: "/insights/strangler-fig-legacy-modernization" },
   },
   {
@@ -243,6 +293,17 @@ export const services: Service[] = [
       "Copilot setup",
       "Data migration and user training",
     ],
+    goodFor: [
+      "Sales, service and finance work in separate tools",
+      "A Dynamics 365 project has stalled or run past its plan",
+      "Teams want Power Apps or Copilot, set up properly",
+    ],
+    approach: [
+      { title: "Fit the platform to your process", text: "We configure Dynamics 365 around how your teams actually work." },
+      { title: "Customise and connect", text: "Power Apps, Power Automate and Azure integration cover what the standard setup doesn't." },
+      { title: "Migrate and train", text: "Data is moved and checked, and your users are trained before go-live." },
+    ],
+    stack: ["Dynamics 365 Sales", "Customer Service", "Field Service", "Power Apps", "Power Automate", "Copilot", "Azure"],
   },
   {
     id: "salesforce",
@@ -259,5 +320,16 @@ export const services: Service[] = [
       "Data migration and clean-up",
       "Admin training",
     ],
+    goodFor: [
+      "Salesforce was set up generically and doesn't match how you sell",
+      "Customer data sits in ERP or finance systems, not in the CRM",
+      "Your team doesn't trust the data in it",
+    ],
+    approach: [
+      { title: "Configure around your process", text: "Sales Cloud and Service Cloud are shaped to the way you sell and serve." },
+      { title: "Connect the rest of the stack", text: "ERP and finance systems are integrated so the CRM holds the full picture." },
+      { title: "Clean the data and train admins", text: "Records are migrated and cleaned, and your admins are trained to run it themselves." },
+    ],
+    stack: ["Sales Cloud", "Service Cloud", "Agentforce"],
   },
 ];

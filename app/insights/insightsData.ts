@@ -54,7 +54,7 @@ export const featuredInsight: InsightArticle = {
   id: "zero-downtime-retail-mesh",
   category: "retail",
   categoryLabel: "Retail & Edge Engineering",
-  accent: "#F59E0B", // Amber
+  accent: "var(--accent-text)", // Amber
   title: "The Zero-Downtime Retail Mesh: How Local SQLite Caching & Delta-Sync Eliminate POS Outages",
   seoTitle: "Offline-First Retail POS: SQLite Caching & Delta-Sync",
   subtitle:
@@ -137,7 +137,7 @@ export const articles: InsightArticle[] = [
     id: "sub-second-multi-currency-ledgers",
     category: "enterprise",
     categoryLabel: "Enterprise Architecture",
-    accent: "#3B82F6",
+    accent: "var(--accent-text)",
     title: "Sub-Second Multi-Currency Ledger Posting: Architectural Lessons from Industrial Pharma ERP",
     seoTitle: "Real-Time Multi-Currency Ledger Posting in Pharma ERP",
     subtitle:
@@ -218,7 +218,7 @@ export const articles: InsightArticle[] = [
     id: "agentic-ai-regulated-supply-chains",
     category: "ai",
     categoryLabel: "Agentic AI & LLMs",
-    accent: "#8B5CF6",
+    accent: "var(--accent-text)",
     title: "Autonomous Multi-Agent AI in Regulated Supply Chains: Moving from Chat to Verified Action",
     seoTitle: "Multi-Agent AI in Regulated Supply Chains, With Guardrails",
     subtitle:
@@ -299,7 +299,7 @@ export const articles: InsightArticle[] = [
     id: "biometric-campus-iot-latency",
     category: "enterprise",
     categoryLabel: "Campus Engineering",
-    accent: "#8B5CF6",
+    accent: "var(--accent-text)",
     title: "Biometric Turnstiles & Instant 1.2s Parent Alerts: Building Ultra-Low-Latency Campus IoT",
     seoTitle: "Biometric Turnstiles & Instant Parent Alerts in Campus IoT",
     subtitle:
@@ -380,7 +380,7 @@ export const articles: InsightArticle[] = [
     id: "hl7-pacs-clinical-automation",
     category: "healthcare",
     categoryLabel: "Healthcare & EHR",
-    accent: "#10B981",
+    accent: "var(--accent-text)",
     title: "HL7 and PACS Automation in Tertiary Hospitals: Eliminating Clinical Data Friction",
     seoTitle: "HL7 & PACS Automation in Hospitals: Ending Data Friction",
     subtitle:
@@ -461,7 +461,7 @@ export const articles: InsightArticle[] = [
     id: "strangler-fig-legacy-modernization",
     category: "cloud",
     categoryLabel: "Cloud Architecture",
-    accent: "#06B6D4",
+    accent: "var(--accent-text)",
     title: "The Strangler Fig Pattern: Modernizing Monolithic Legacy Systems Without Downtime",
     seoTitle: "Strangler Fig Pattern: Modernise Legacy Systems Safely",
     subtitle:
@@ -542,7 +542,7 @@ export const articles: InsightArticle[] = [
     id: "aws-serverless-scaling-postmortem",
     category: "cloud",
     categoryLabel: "Cloud-Native Engineering",
-    accent: "#6366F1",
+    accent: "var(--accent-text)",
     title: "AWS Serverless vs Kubernetes: A Cost & Scaling Post-Mortem for Multi-Tenant SaaS",
     seoTitle: "AWS Serverless vs Kubernetes for Multi-Tenant SaaS",
     subtitle:

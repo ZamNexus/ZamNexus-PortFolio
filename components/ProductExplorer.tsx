@@ -50,7 +50,10 @@ export default function ProductExplorer() {
         <div key={product.slug} className="explorer__stage explorer__stage--product">
           <ProductScene slug={product.slug} />
           <div className="explorer__copy">
-            <Image src={product.logo} alt={product.code} width={130} height={40} className="h-7 w-auto object-contain" />
+            <>
+              <Image src={product.logo} alt={product.code} width={165} height={56} className="logo-dark h-11 w-auto object-contain" />
+              <Image src={product.logo.replace(".png", "-light.png")} alt="" aria-hidden="true" width={165} height={56} className="logo-light h-11 w-auto object-contain" />
+            </>
             <p className="explorer__outcome">{product.purpose}</p>
             <ul className="explorer__points">
               {product.outcomes.map((o) => (

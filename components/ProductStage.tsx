@@ -6,91 +6,123 @@ import Link from "next/link";
 import ProductScene from "@/components/ProductScene";
 import { products } from "@/lib/catalog";
 
-// Homepage products: on desktop the product nearest the middle of the window takes the sticky
-// stage beside the list, and its scene plays there in its colour. On phones each product carries
-// its own scene inline. Every product is a plain link either way.
-export default function ProductStage() {
-  const [active, setActive] = useState(0);
-  const itemRefs = useRef<(HTMLElement | null)[]>([]);
+interface Pitch {
+  hook: string;
+  story: string;
+}
+
+// The creative line and the short story for each platform. The facts restate the outcomes in lib/catalog.ts.
+const pitches: Record<string, Pitch> = {
+  znxerp: {
+    hook: "Every batch, from goods-in to dispatch, on one thread.",
+    story:
+      "Most plants run on spreadsheets stitched to a ledger. ZNXERP replaces the stitching: a delivery lands, QC holds it, production draws it down, and finance sees the cost the moment it moves.",
+  },
+  znxepos: {
+    hook: "The till that never stops selling.",
+    story:
+      "A dropped connection should not cost you a Saturday. Every branch keeps trading offline and syncs quietly afterwards, so the stock head office sees is the stock on the shelf.",
+  },
+  znxedu: {
+    hook: "Fewer chasing calls. More time for teaching.",
+    story:
+      "Fees reconcile with the bank by themselves, timetables stop clashing, and parents hear about arrival as it happens, so the school office stops being a switchboard.",
+  },
+  znxcare: {
+    hook: "One record that follows the patient.",
+    story:
+      "From registration to pharmacy it is the same chart. Lab results land in it on their own and every dispensed item is barcode-checked, so clinicians spend their time with patients, not screens.",
+  },
+};
+
+interface RowProps {
+  index: number;
+  product: (typeof products)[number];
+}
+
+// One platform per row. Rows alternate: text left with the animation right, then the reverse.
+// Each side slides in from its own edge the first time the row scrolls into view.
+function StageRow({ index, product }: RowProps) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [seen, setSeen] = useState(false);
+  const flip = index % 2 === 1;
+  const pitch = pitches[product.slug];
 
   useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const mid = window.innerHeight / 2;
-      let best = 0;
-      let bestDistance = Infinity;
-      itemRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const box = el.getBoundingClientRect();
-        const distance = Math.abs(box.top + box.height / 2 - mid);
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          best = i;
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setSeen(true);
+          observer.disconnect();
         }
-      });
-      setActive(best);
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) cancelAnimationFrame(frame);
-    };
+      },
+      { threshold: 0.25 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
-  const current = products[active];
-
   return (
-    <div className="stage" style={{ "--rail": current.accent } as CSSProperties}>
-      <ol className="stage__list">
-        {products.map((p, i) => (
-          <li
-            key={p.slug}
-            ref={(el) => {
-              itemRefs.current[i] = el;
-            }}
-            data-active={i === active}
-            className="stage__item"
-            style={{ "--rail": p.accent } as CSSProperties}
-          >
-            <Image src={p.logo} alt={p.code} width={130} height={40} className="h-7 w-auto object-contain" />
-            <h3 className="mt-5 font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground-strong">{p.category}</h3>
-            <p className="mt-3 text-foreground-muted leading-relaxed max-w-[46ch]">{p.purpose}</p>
-            <ul className="stage__outcomes">
-              {p.outcomes.map((o) => (
-                <li key={o}>{o}</li>
-              ))}
-            </ul>
-            <Link href={`/products/${p.slug}`} className="stage__link">
-              See {p.code}
-            </Link>
-            <div className="stage__inline">
-              <ProductScene slug={p.slug} />
-            </div>
-          </li>
-        ))}
-      </ol>
-
-      <div className="stage__sticky" aria-hidden="true">
-        <div key={current.slug} className="stage__scene">
-          <ProductScene slug={current.slug} />
-          <p className="stage__caption">
-            <span className="stage__dot" />
-            {current.code}: {current.sector}
-          </p>
-        </div>
-        <div className="stage__pips">
-          {products.map((p, i) => (
-            <span key={p.slug} data-active={i === active} />
+    <article
+      ref={ref}
+      data-flip={flip}
+      data-seen={seen}
+      className="stage-row"
+      style={{ "--rail": product.accent } as CSSProperties}
+    >
+      <div className="stage-row__copy">
+        <p className="stage-row__eyebrow">
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          {product.sector}
+        </p>
+        <Image
+          src={product.logo}
+          alt={product.code}
+          width={165}
+          height={56}
+          className="logo-dark mt-5 h-14 w-auto object-contain"
+        />
+        <Image
+          src={product.logo.replace(".png", "-light.png")}
+          alt=""
+          aria-hidden="true"
+          width={165}
+          height={56}
+          className="logo-light mt-5 h-14 w-auto object-contain"
+        />
+        <h3 className="mt-6 font-heading text-3xl sm:text-4xl font-bold leading-[1.08] tracking-[-0.025em] text-foreground-strong text-balance">
+          {pitch.hook}
+        </h3>
+        <p className="mt-4 text-foreground-muted leading-relaxed max-w-[48ch]">{pitch.story}</p>
+        <ul className="stage-row__outcomes">
+          {product.outcomes.map((o) => (
+            <li key={o}>{o}</li>
           ))}
-        </div>
+        </ul>
+        <Link href={`/products/${product.slug}`} className="stage-row__link">
+          See {product.code}
+        </Link>
       </div>
+
+      <div className="stage-row__visual" aria-hidden="true">
+        <ProductScene slug={product.slug} />
+        <p className="stage-row__caption">
+          <span />
+          {product.code}: {product.category}
+        </p>
+      </div>
+    </article>
+  );
+}
+
+export default function ProductStage() {
+  return (
+    <div className="stage-rows">
+      {products.map((p, i) => (
+        <StageRow key={p.slug} index={i} product={p} />
+      ))}
     </div>
   );
 }
