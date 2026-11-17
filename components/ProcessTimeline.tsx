@@ -10,6 +10,8 @@ interface ProcessTimelineProps {
 
 // A sequence told in order: the line fills as the reader scrolls through it, and each step
 // lights when the line reaches it, revealing what the client signs off at that step. Rendered fully lit on the server and under reduced motion.
+// Vertical on phones and tablets; one horizontal track across the page from 1024px (see .process in globals.css),
+// with a fill for each direction so CSS can show the one that matches the layout.
 export default function ProcessTimeline({ steps }: ProcessTimelineProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
@@ -24,7 +26,8 @@ export default function ProcessTimeline({ steps }: ProcessTimelineProps) {
   return (
     <div ref={ref} className="process">
       <span className="process__rail" aria-hidden="true">
-        <motion.span className="process__fill" style={reduced ? undefined : { scaleY: scrollYProgress }} />
+        <motion.span className="process__fill process__fill--v" style={reduced ? undefined : { scaleY: scrollYProgress }} />
+        <motion.span className="process__fill process__fill--h" style={reduced ? undefined : { scaleX: scrollYProgress }} />
       </span>
       <ol className="process__list">
         {steps.map((step, i) => (

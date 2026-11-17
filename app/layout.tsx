@@ -4,9 +4,21 @@ import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
+import { company } from "@/lib/siteFacts";
 
 // Applies the saved colour theme before first paint so there is no flash.
 const THEME_SCRIPT = `try{var t=localStorage.getItem("zn-theme");if(t&&t==="paper")document.documentElement.setAttribute("data-theme",t)}catch(e){}`;
+
+// Keeps the Next.js dev overlay from crashing on extension and clipboard promise rejections.
+// Development only: in production it would hide real errors from monitoring.
+const REJECTION_GUARD =
+  process.env.NODE_ENV === "production"
+    ? ""
+    : `window.addEventListener('unhandledrejection', function(event) {
+                    try {
+                      if (event && typeof event.preventDefault === 'function') event.preventDefault();
+                    } catch(_) {}
+                  }, true);`;
 
 // One family for headings and body; Geist Mono only for real codes and data.
 const schibsted = Schibsted_Grotesk({
@@ -53,19 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             __html: `
               (function() {
                 try {
-                  // Catch and suppress unhandled promise rejections (extensions, clipboard permissions, aborts)
-                  // so that Next.js development overlay does not crash the page
-                  window.addEventListener('unhandledrejection', function(event) {
-                    try {
-                      if (event && typeof event.preventDefault === 'function') {
-                        event.preventDefault();
-                      }
-                      if (event && event.reason) {
-                        console.warn('[Handled Promise Rejection Intercepted]', event.reason);
-                      }
-                    } catch(_) {}
-                  }, true);
-
+                  ${REJECTION_GUARD}
                   var blocked = ['bis_skin_checked', 'bis_register', 'data-new-gr-c-s-check-loaded', 'data-gr-ext-installed'];
                   var origSet = Element.prototype.setAttribute;
                   Element.prototype.setAttribute = function(name, val) {
@@ -118,7 +118,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   legalName: "ZamNexus Limited",
                   url: "https://zamnexus.com",
                   logo: "https://zamnexus.com/znx_logo_teal.png",
-                  foundingDate: "2009",
+                  // Published only once ZamNexus confirms the year (lib/siteFacts.ts).
+                  ...(company.foundingYear.confirmed ? { foundingDate: company.foundingYear.value } : {}),
                   founder: {
                     "@type": "Person",
                     name: "Mir Mujeeb Ul Hassan",

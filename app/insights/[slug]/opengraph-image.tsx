@@ -1,19 +1,21 @@
 import { ogImage, ogSize } from "@/lib/ogImage";
-import { getInsightBySlug, getAllInsightSlugs } from "../insightsData";
+import { getPublishedArticle, getPublishedInsights } from "@/lib/cms/public";
 
 export const alt = "ZamNexus engineering insight";
 export const size = ogSize;
 export const contentType = "image/png";
+export const revalidate = 300;
 
-export function generateStaticParams() {
-  return getAllInsightSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams() {
+  const { articles } = await getPublishedInsights();
+  return articles.map((a) => ({ slug: a.id }));
 }
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const article = getInsightBySlug(slug);
+  const found = await getPublishedArticle(slug);
   return ogImage({
-    eyebrow: `Insights · ${article?.categoryLabel ?? "Engineering"}`,
-    title: article?.seoTitle ?? "Engineering insights",
+    eyebrow: `Insights · ${found?.view.categoryLabel ?? "Engineering"}`,
+    title: found?.article.seoTitle || found?.article.title || "Engineering insights",
   });
 }

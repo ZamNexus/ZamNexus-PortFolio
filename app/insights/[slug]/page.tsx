@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getInsightBySlug, getAllInsightSlugs } from "../insightsData";
+import { getPublishedArticle, getPublishedInsights, getRelatedInsights, toBlueprint } from "@/lib/cms/public";
 import { pageMetadata, jsonLd, breadcrumbs, SITE_URL } from "@/lib/seo";
+import CmsArticleView from "@/components/cms/CmsArticleView";
 import ArticleClientView from "./ArticleClientView";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-// Only the articles in insightsData exist; any other slug is a real 404, not a "coming soon" page.
-export const dynamicParams = false;
-
-const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
-
-// "September 2026" -> "2026-09" (ISO 8601 year-month) for structured data.
-function isoMonth(date: string): string | undefined {
-  const [month, year] = date.toLowerCase().split(" ");
-  const m = MONTHS.indexOf(month);
-  return m >= 0 && year ? `${year}-${String(m + 1).padStart(2, "0")}` : undefined;
-}
+// Articles are read from the content store. Pages are built on first visit and refreshed whenever the admin
+// panel publishes, edits, unpublishes or deletes (and at least every five minutes, for scheduled articles).
+// A slug that is not published is a real 404, never a "coming soon" page.
+export const revalidate = 300;
+export const dynamicParams = true;
 
 // Trims at a word boundary so search snippets don't end mid-word.
 function snippet(text: string, max = 155): string {
@@ -26,51 +21,71 @@ function snippet(text: string, max = 155): string {
   return text.slice(0, text.lastIndexOf(" ", max - 1)).replace(/[,;:]$/, "") + "…";
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const article = getInsightBySlug(slug);
-  if (!article) return {};
-  return pageMetadata({
-    title: article.seoTitle,
-    description: snippet(article.subtitle),
-    path: `/insights/${article.id}`,
-    type: "article",
-  });
+export async function generateStaticParams() {
+  const { articles } = await getPublishedInsights();
+  return articles.map((a) => ({ slug: a.id }));
 }
 
-export async function generateStaticParams() {
-  return getAllInsightSlugs().map((slug) => ({ slug }));
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const found = await getPublishedArticle(slug);
+  if (!found) return {};
+  const { article } = found;
+  const meta = pageMetadata({
+    title: article.seoTitle || article.title,
+    description: article.seoDescription || snippet(article.excerpt),
+    path: `/insights/${article.slug}`,
+    type: "article",
+  });
+  // A social sharing image chosen in the admin panel replaces the generated card.
+  if (!article.socialImage) return meta;
+  return {
+    ...meta,
+    openGraph: { ...meta.openGraph, images: [{ url: article.socialImage }] },
+    twitter: { ...meta.twitter, images: [article.socialImage] },
+  };
 }
 
 export default async function InsightArticlePage({ params }: PageProps) {
   const { slug } = await params;
-  const article = getInsightBySlug(slug);
-  if (!article) notFound();
+  const found = await getPublishedArticle(slug);
+  if (!found) notFound();
+  const { article, view } = found;
+  const related = await getRelatedInsights(article.slug, 2);
 
-  const path = `/insights/${article.id}`;
+  const path = `/insights/${article.slug}`;
   const structuredData = [
     breadcrumbs([
       { name: "Home", path: "/" },
       { name: "Insights", path: "/insights" },
-      { name: article.seoTitle, path },
+      { name: article.seoTitle || article.title, path },
     ]),
     {
       "@context": "https://schema.org",
       "@type": "Article",
       headline: article.title,
-      description: article.subtitle,
-      datePublished: isoMonth(article.date),
-      // Bylines are pending confirmation that the named authors are real staff, so credit the organisation.
-      author: { "@id": `${SITE_URL}/#organization` },
+      description: article.seoDescription || article.excerpt,
+      datePublished: article.publishedAt ?? undefined,
+      dateModified: article.updatedAt,
+      image: article.socialImage ?? article.coverImage ?? undefined,
+      keywords: article.tags.length ? article.tags.join(", ") : undefined,
+      // The original blueprints are credited to the organisation until their named authors are confirmed as staff.
+      author: article.legacy ? { "@id": `${SITE_URL}/#organization` } : { "@type": "Person", name: article.author },
       publisher: { "@id": `${SITE_URL}/#organization` },
       mainEntityOfPage: `${SITE_URL}${path}`,
     },
   ];
 
+  const blueprint = toBlueprint(article, view);
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
-      <ArticleClientView article={article} />
+      {blueprint ? (
+        <ArticleClientView article={blueprint} related={related} coverImage={article.coverImage} />
+      ) : (
+        <CmsArticleView article={article} view={view} related={related} />
+      )}
     </>
   );
 }

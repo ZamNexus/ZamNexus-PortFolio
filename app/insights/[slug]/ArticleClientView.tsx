@@ -1,20 +1,20 @@
 "use client";
 
 import { useState, type CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
 import Spotlight from "@/components/motion/Spotlight";
-import Walkthrough from "@/components/Walkthrough";
 import ServiceIndex from "@/components/ServiceIndex";
-import PipelineDiagram from "@/components/PipelineDiagram";
+import { KeyFigures, ProblemFix, StepsFlow, Takeaways } from "@/components/article/ArticleBlocks";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FinalCTA from "@/components/FinalCTA";
 import type { InsightArticle } from "../insightsData";
-import { allInsights } from "../insightsData";
+import type { InsightView } from "@/lib/cms/public";
 import { company } from "@/lib/siteFacts";
 
 interface RelatedOffer {
@@ -72,9 +72,11 @@ const relatedOffer: Record<string, RelatedOffer> = {
 
 interface ArticleClientViewProps {
   article: InsightArticle;
+  related: InsightView[];
+  coverImage?: string | null;
 }
 
-export default function ArticleClientView({ article }: ArticleClientViewProps) {
+export default function ArticleClientView({ article, related: relatedInsights, coverImage }: ArticleClientViewProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -112,11 +114,6 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
     { id: "how-it-works", name: "How it works" },
     { id: "takeaways", name: "Takeaways" },
   ];
-
-  // Related insights (first 2 from other articles)
-  const relatedInsights = allInsights
-    .filter((item) => item.id !== article.id)
-    .slice(0, 2);
 
   return (
     <div
@@ -162,7 +159,9 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
               <span>/</span>
               <Link href="/insights" className="hover:text-zinc-300 transition-colors">Insights</Link>
               <span>/</span>
-              <span style={{ color: article.accent }} className="font-bold">{article.categoryLabel}</span>
+              <Link href={`/insights/topic/${article.category}`} style={{ color: article.accent }} className="font-bold hover:underline underline-offset-4">
+                {article.categoryLabel}
+              </Link>
             </div>
           </nav>
 
@@ -219,69 +218,40 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
             </div>
           </header>
 
-          {/* ── QUICK SYSTEM SPECS RIBBON (Scannable Metrics) ──────────────── */}
-          <section id="overview" aria-labelledby="specs-heading" data-enter="6" className="scroll-mt-28 p-6 rounded-2xl bg-zinc-950/80 border border-zinc-800/80 shadow-xl">
-            <h2 id="specs-heading" className="text-xs font-mono uppercase tracking-widest text-foreground-muted font-bold mb-4">
-              Production Architecture Benchmark Targets
-            </h2>
-            <Stagger className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {article.specs.map((spec) => (
-                <div key={spec.label} className="p-3.5 rounded-xl bg-zinc-900/60 border border-zinc-800/60">
-                  <div className="text-[11px] font-mono text-foreground-muted mb-1">{spec.label}</div>
-                  <div className="text-lg sm:text-xl font-mono font-bold text-white tracking-tight" style={{ color: article.accent }}>
-                    {spec.value}
-                  </div>
-                </div>
-              ))}
-            </Stagger>
-          </section>
-
-          {/* ── THE PROBLEM & THE SOLUTION (Side-by-Side Cards) ─────────────── */}
-          <Stagger as="section" id="problem" className="scroll-mt-28 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* The Challenge Card */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">
-                <span>01</span>
-                <span>The Architectural Bottleneck</span>
-              </div>
-              <h3 className="text-xl font-bold text-white">{article.challenge.title}</h3>
-              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                {article.challenge.description}
-              </p>
-              <div className="p-3 rounded-xl bg-rose-950/20 border border-rose-900/40 text-xs font-mono text-rose-300">
-                <span className="font-bold">Business Impact:</span> {article.challenge.impact}
-              </div>
+          {coverImage ? (
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-zinc-800/80 bg-zinc-900/40">
+              <Image src={coverImage} alt="" fill sizes="(min-width: 1280px) 880px, 100vw" className="object-cover" priority />
             </div>
+          ) : null}
 
-            {/* The Solution Card */}
-            <div className="article-solution p-6 sm:p-8 rounded-3xl bg-zinc-900/40 border border-zinc-800/80 space-y-4">
-              <div
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-bold border"
-                style={{
-                  color: article.accent,
-                  borderColor: `color-mix(in srgb, ${article.accent} 25%, transparent)`,
-                  background: `color-mix(in srgb, ${article.accent} 8%, transparent)`,
-                }}
-              >
-                <span>02</span>
-                <span>The Engineered Resolution</span>
-              </div>
-              <h3 className="text-xl font-bold text-white">{article.solution.title}</h3>
-              <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                {article.solution.description}
-              </p>
-              <Stagger as="ul" className="space-y-2 pt-1">
-                {article.solution.highlights.map((h, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-zinc-300 font-mono">
-                    <svg className="tick tick--success" viewBox="0 0 20 20" aria-hidden="true">
-                      <path d="M4 10.5l4 4 8-9" />
-                    </svg>
-                    <span>{h}</span>
-                  </li>
-                ))}
-              </Stagger>
-            </div>
-          </Stagger>
+          {/* ── KEY FIGURES ────────────────────────────────────────────────── */}
+          <KeyFigures
+            id="overview"
+            headingId="specs-heading"
+            heading="Production Architecture Benchmark Targets"
+            items={article.specs}
+            accent={article.accent}
+            enter="6"
+          />
+
+          {/* ── THE PROBLEM & THE SOLUTION ─────────────────────────────────── */}
+          <ProblemFix
+            id="problem"
+            accent={article.accent}
+            problem={{
+              label: "The Architectural Bottleneck",
+              title: article.challenge.title,
+              text: article.challenge.description,
+              impactLabel: "Business Impact:",
+              impact: article.challenge.impact,
+            }}
+            fix={{
+              label: "The Engineered Resolution",
+              title: article.solution.title,
+              text: article.solution.description,
+              points: article.solution.highlights,
+            }}
+          />
 
           {/* ── FULL SUMMARY / EXECUTIVE NARRATIVE ─────────────────────────── */}
           <Reveal as="section" id="deep-dive" variant="words" replay={false} className="scroll-mt-28 p-8 rounded-3xl bg-zinc-950/70 border border-zinc-800/80 space-y-4">
@@ -297,44 +267,25 @@ export default function ArticleClientView({ article }: ArticleClientViewProps) {
           </Reveal>
 
           {/* ── SEQUENTIAL ARCHITECTURE PIPELINE FLOW ──────────────────────── */}
-          <section id="how-it-works" aria-labelledby="pipeline-heading" className="scroll-mt-28">
-            <Reveal variant="draw" className="mb-12">
-              <PipelineDiagram steps={article.pipeline} accent={article.accent} uid={`article-${article.id}`} />
-            </Reveal>
-            <Walkthrough
-              headingId="pipeline-heading"
-              title="Step-by-step data and logic flow."
-              intro="The pipeline in order, from the first event to the final posting."
-              steps={article.pipeline.map((p) => ({ code: p.step, name: p.title, detail: p.detail }))}
-            />
-          </section>
+          <StepsFlow
+            id="how-it-works"
+            headingId="pipeline-heading"
+            heading="Step-by-step data and logic flow."
+            intro="The pipeline in order, from the first event to the final posting."
+            steps={article.pipeline}
+            accent={article.accent}
+            uid={`article-${article.id}`}
+          />
 
-          {/* ── KEY TAKEAWAYS CALLOUT ──────────────────────────────────────── */}
-          <section id="takeaways" className="scroll-mt-28 p-8 rounded-3xl bg-zinc-900/60 border border-zinc-800 space-y-6">
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest font-bold" style={{ color: article.accent }}>
-              <span>★</span>
-              <span>Principal Architect Takeaways</span>
-            </div>
-
-            <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {article.keyTakeaways.map((point, i) => (
-                <div key={i} className="p-4 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-xs font-mono text-zinc-300 flex items-start gap-2.5">
-                  <span className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: article.accent }} />
-                  <span className="leading-relaxed">{point}</span>
-                </div>
-              ))}
-            </Stagger>
-
-            {/* Tech Stack Pills */}
-            <div className="pt-4 border-t border-zinc-800/60 flex flex-wrap items-center gap-2">
-              <span className="text-xs font-mono text-foreground-muted mr-2">Target Stack:</span>
-              {article.techStack.map((tech) => (
-                <span key={tech} className="px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-700/80 text-[11px] font-mono text-zinc-300">
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </section>
+          {/* ── KEY TAKEAWAYS ──────────────────────────────────────────────── */}
+          <Takeaways
+            id="takeaways"
+            heading="Principal Architect Takeaways"
+            points={article.keyTakeaways}
+            stackLabel="Target Stack:"
+            stack={article.techStack}
+            accent={article.accent}
+          />
 
           {/* ── RELATED PRODUCT OR SERVICE ─────────────────────────────────── */}
           {related ? (

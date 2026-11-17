@@ -333,3 +333,24 @@ export const services: Service[] = [
     stack: ["Sales Cloud", "Service Cloud", "Agentforce"],
   },
 ];
+
+// The six steps of an engagement, shared by the Services page (full timeline) and the About page (names only).
+// signoff: what the client approves before the next step starts.
+export interface EngagementStep {
+  name: string;
+  text: string;
+  signoff: string;
+}
+
+export const engagementSteps: EngagementStep[] = [
+  {
+    name: "Discover",
+    text: "We map your processes, systems and goals, and agree what success looks like.",
+    signoff: "Agreed goals and success measures",
+  },
+  { name: "Design", text: "Architecture, scope and a fixed milestone plan you sign off.", signoff: "Signed-off scope and milestone plan" },
+  { name: "Build", text: "Working software at regular intervals, demonstrated to you.", signoff: "Each demo reviewed with you" },
+  { name: "Integrate & test", text: "Connected to your systems and tested with your data.", signoff: "Test results you approve" },
+  { name: "Go live", text: "A planned cut-over with a rollback plan.", signoff: "Approved cut-over and rollback plan" },
+  { name: "Support & improve", text: "Monitoring, fixes and a roadmap after launch.", signoff: "Agreed support and roadmap" },
+];
