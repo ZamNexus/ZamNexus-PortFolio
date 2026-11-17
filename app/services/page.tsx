@@ -6,26 +6,14 @@ import ServiceIndex from "@/components/ServiceIndex";
 import ProcessTimeline from "@/components/ProcessTimeline";
 import ServiceDiagram from "@/components/ServiceDiagram";
 import ServiceExplorer from "@/components/ServiceExplorer";
+import ServicesHeroArt from "@/components/ServicesHeroArt";
+import HeroScreen from "@/components/HeroScreen";
 import Reveal from "@/components/motion/Reveal";
 import Spotlight from "@/components/motion/Spotlight";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
-import Parallax from "@/components/motion/Parallax";
-import { services } from "@/lib/catalog";
+import { engagementSteps, services } from "@/lib/catalog";
 import { jsonLd } from "@/lib/seo";
-
-const steps = [
-  {
-    name: "Discover",
-    text: "We map your processes, systems and goals, and agree what success looks like.",
-    signoff: "Agreed goals and success measures",
-  },
-  { name: "Design", text: "Architecture, scope and a fixed milestone plan you sign off.", signoff: "Signed-off scope and milestone plan" },
-  { name: "Build", text: "Working software at regular intervals, demonstrated to you.", signoff: "Each demo reviewed with you" },
-  { name: "Integrate & test", text: "Connected to your systems and tested with your data.", signoff: "Test results you approve" },
-  { name: "Go live", text: "A planned cut-over with a rollback plan.", signoff: "Approved cut-over and rollback plan" },
-  { name: "Support & improve", text: "Monitoring, fixes and a roadmap after launch.", signoff: "Agreed support and roadmap" },
-];
 
 // Answers marked as pending client confirmation in Phase 3 are left out until confirmed.
 const faqs = [
@@ -59,39 +47,36 @@ export default function ServicesPage() {
       <Navbar />
 
       <main className="relative z-10">
-        {/* ── HERO ─────────────────────────────────────────────────────────── */}
-        <section aria-labelledby="services-hero" className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-36 sm:pt-44 pb-16">
-          <Parallax className="services-hero__grid" range={40} />
-          <h1
-            id="services-hero"
-            className="font-heading text-[2.6rem] leading-[1.04] sm:text-6xl lg:text-[4.4rem] font-bold tracking-[-0.035em] text-foreground-strong max-w-4xl text-balance"
-          >
-            <SplitWords mode="load" text="Engineering services for systems that can't fail." />
-          </h1>
-          <p data-enter="4" className="mt-6 text-lg sm:text-xl text-foreground-muted max-w-3xl leading-relaxed">
-            Six services, one senior team. We scope, build, integrate and support, so you deal with the same people from
-            first call to go-live.
-          </p>
-          {/* Phones and tablets: jump links. Desktop gets the sticky index beside the services. */}
-          <nav aria-label="Jump to a service" data-enter="5" className="mt-10 flex flex-wrap gap-2 lg:hidden">
-            {services.map((s) => (
-              <a
-                key={s.id}
-                href={`#${s.id}`}
-                className="px-4 py-2 rounded-full border border-[var(--border-subtle)] text-sm text-foreground hover:border-[var(--border-strong)] hover:text-foreground-strong active:scale-[0.97] transition-all duration-300"
+        {/* ── HERO: fills the first screen. The honeycomb names the six services and links to each; they are
+            described once, in the explorer and the sections below. ── */}
+        <HeroScreen labelledBy="services-hero" cueHref="#explore" cueLabel="Scroll to the services">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-12 lg:gap-14 items-center">
+            <div>
+              <h1
+                id="services-hero"
+                className="font-heading text-[2.6rem] leading-[1.04] sm:text-6xl lg:text-[3.6rem] xl:text-[4rem] font-bold tracking-[-0.035em] text-foreground-strong max-w-4xl text-balance"
               >
-                {s.name}
-              </a>
-            ))}
-          </nav>
-          <div data-enter="6" className="mt-10">
-            <Link href="/contact" className="liquid-lime-btn text-base py-3.5 px-7">
-              Book a consultation
-            </Link>
+                <SplitWords mode="load" text="Engineering services for systems that can't fail." />
+              </h1>
+              <p data-enter="4" className="mt-6 text-lg sm:text-xl text-foreground-muted max-w-xl leading-relaxed">
+                Six services, one senior team. We scope, build, integrate and support, so you deal with the same people from
+                first call to go-live.
+              </p>
+              <div data-enter="5" className="mt-10">
+                <Link href="/contact" className="liquid-lime-btn text-base py-3.5 px-7">
+                  Book a consultation
+                </Link>
+              </div>
+            </div>
+            <div data-enter="6">
+              <ServicesHeroArt />
+            </div>
           </div>
-          <div data-enter="7" className="mt-16">
-            <ServiceExplorer />
-          </div>
+        </HeroScreen>
+
+        {/* ── EXPLORER: starts below the first screen ───────────────────────── */}
+        <section id="explore" aria-label="Explore the services" className="scroll-mt-12 max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+          <ServiceExplorer />
         </section>
 
         {/* ── THE SIX SERVICES, with a sticky index on desktop ─────────────── */}
@@ -186,25 +171,15 @@ export default function ServicesPage() {
           </div>
         </div>
 
-        {/* ── PROCESS (the only copy on the site) ──────────────────────────── */}
-        <section
-          id="process"
-          aria-labelledby="process-heading"
-          className="max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28 border-t border-[var(--border-subtle)] scroll-mt-28"
-        >
-          <div className="lg:grid lg:grid-cols-12 lg:gap-12">
-            <div className="lg:col-span-5">
-              <div className="lg:sticky lg:top-32">
-                <SectionHeader
-                  id="process-heading"
-                  title="How an engagement runs."
-                  intro="Six steps, each with a sign-off, so you always know where your project stands."
-                />
-              </div>
-            </div>
-            <div className="lg:col-span-7">
-              <ProcessTimeline steps={steps} />
-            </div>
+        {/* ── PROCESS (the only copy on the site), on the page's one deep-teal band ── */}
+        <section id="process" aria-labelledby="process-heading" className="on-dark ink-teal teal-band scroll-mt-28">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+            <SectionHeader
+              id="process-heading"
+              title="How an engagement runs."
+              intro="Six steps, each with a sign-off, so you always know where your project stands."
+            />
+            <ProcessTimeline steps={engagementSteps} />
           </div>
         </section>
 

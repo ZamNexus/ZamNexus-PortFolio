@@ -6,6 +6,9 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
 
 const ANNOUNCEMENT_BAR_HEIGHT = 36;
+// Pages that open on a hero marked data-dark-hero (a dark band in every colour theme). The nav and the
+// announcement bar take the dark styling while they sit over it.
+const DARK_HERO_PATHS = ["/"];
 const ANNOUNCEMENT_DISMISS_KEY = "zn_announcement_dismissed";
 
 function subscribeToStorage(onChange: () => void) {
@@ -91,6 +94,9 @@ export default function Navbar() {
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [visible, setVisible] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  // The homepage hero stays dark in every colour theme, so the nav over it must too (see .on-dark in globals.css).
+  const hasDarkHero = DARK_HERO_PATHS.includes(pathname);
+  const [overHero, setOverHero] = useState(hasDarkHero);
   // Hidden on the server and until the stored choice is read, so it never flashes for people who closed it.
   const storedDismissed = useSyncExternalStore(subscribeToStorage, readDismissed, () => true);
   const [dismissedNow, setDismissedNow] = useState(false);
@@ -103,6 +109,11 @@ export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Publishes the in-flow bar height so full-viewport sections (the homepage hero) can subtract it.
+  useEffect(() => {
+    document.documentElement.style.setProperty("--announce-h", barDismissed ? "0px" : `${ANNOUNCEMENT_BAR_HEIGHT}px`);
+  }, [barDismissed]);
 
   const dismissBar = () => {
     setDismissedNow(true);
@@ -120,6 +131,8 @@ export default function Navbar() {
       const delta = currentY - lastScrollY.current;
 
       setScrolled(currentY > 40);
+      const hero = hasDarkHero ? document.querySelector("[data-dark-hero]") : null;
+      setOverHero(!!hero && hero.getBoundingClientRect().bottom > ANNOUNCEMENT_BAR_HEIGHT + 60);
 
       if (delta > 8 && currentY > 120) {
         if (!mobileOpen) {
@@ -134,8 +147,15 @@ export default function Navbar() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [mobileOpen]);
+    // Sync once for pages opened part-way down or reached by client-side navigation.
+    const frame = window.requestAnimationFrame(handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.cancelAnimationFrame(frame);
+    };
+  }, [mobileOpen, hasDarkHero]);
+
+  const onDark = hasDarkHero && overHero && !mobileOpen;
 
   // ── Lock background scroll & interaction when mobile drawer is open ──
   useEffect(() => {
@@ -238,7 +258,9 @@ export default function Navbar() {
       {!barDismissed && (
         <div
           role="status"
-          className="sticky top-0 inset-x-0 z-[60] h-9 flex items-center justify-center gap-3 px-4 text-center bg-[var(--accent)]/15 border-b border-[var(--accent)]/25 backdrop-blur-sm"
+          className={`sticky top-0 inset-x-0 z-[60] h-9 flex items-center justify-center gap-3 px-4 text-center border-b border-[var(--accent)]/25 backdrop-blur-sm ${
+            hasDarkHero ? "on-dark ink-teal bg-[color-mix(in_srgb,var(--accent)_15%,var(--background))]" : "bg-[var(--accent)]/15"
+          }`}
         >
           <p className="min-w-0 text-xs sm:text-[13px] font-medium text-zinc-200 truncate">
             Four platforms for manufacturing, retail, education and healthcare.{" "}
@@ -262,7 +284,7 @@ export default function Navbar() {
       {/* ── PRIMARY NAV BAR ─────────────────────────────────────────────────── */}
       <header
         style={{ top: barDismissed ? 0 : ANNOUNCEMENT_BAR_HEIGHT }}
-        className={`fixed inset-x-0 z-50 transition-all duration-300 ease-out ${
+        className={`fixed inset-x-0 z-50 transition-all duration-300 ease-out ${onDark ? "on-dark ink-teal" : ""} ${
           visible || mobileOpen ? "translate-y-0" : "-translate-y-full"
         } ${
           mobileOpen

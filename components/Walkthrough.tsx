@@ -12,7 +12,7 @@ export interface WalkStep {
 interface WalkthroughProps {
   headingId: string;
   title: string;
-  intro: string;
+  intro?: string;
   steps: WalkStep[];
 }
 

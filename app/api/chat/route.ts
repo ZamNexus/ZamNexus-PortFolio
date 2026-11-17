@@ -59,15 +59,21 @@ export async function POST(req: Request) {
   }
   const raw = await req.text();
   if (raw.length > MAX_BODY) return Response.json({ error: "too large" }, { status: 413 });
-  const body: { messages?: { role: string; content: string }[] } = (() => {
+  const body: { messages?: unknown } = (() => {
     try {
-      return JSON.parse(raw);
+      const parsed: unknown = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : {};
     } catch {
       return {};
     }
   })();
-  const history = (body.messages ?? [])
-    .filter((m) => (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+  // Anything that isn't an array of { role, content } objects is dropped, so malformed input gets a 400, not a 500.
+  const incoming: { role?: unknown; content?: unknown }[] = Array.isArray(body.messages)
+    ? body.messages.filter((m): m is object => !!m && typeof m === "object")
+    : [];
+  const history = incoming
+    .filter((m): m is { role: "user" | "assistant"; content: string } =>
+      (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
     .slice(-MAX_TURNS)
     .map((m) => ({ role: m.role, content: m.content.slice(0, MAX_LEN) })) as ChatMessage[];
   if (history.at(-1)?.role !== "user") return Response.json({ error: "bad request" }, { status: 400 });

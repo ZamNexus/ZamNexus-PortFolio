@@ -1,3 +1,7 @@
+// SEED DATA ONLY. The public site no longer reads these arrays: articles live in the content store
+// (lib/cms), which is filled from here once, the first time it is created (lib/cms/seed.ts). Edit articles in
+// the admin panel instead. The types below are still shared with the original article page.
+
 export type InsightCategory =
   | "all"
   | "ai"
@@ -632,12 +636,3 @@ export const categories: { id: InsightCategory; label: string }[] = [
   { id: "cloud", label: "Cloud-Native Engineering" },
 ];
 
-export function getInsightBySlug(slug?: string | null): InsightArticle | undefined {
-  if (!slug || typeof slug !== "string") return undefined;
-  const clean = slug.trim().toLowerCase();
-  return allInsights.find((item) => item.id.toLowerCase() === clean);
-}
-
-export function getAllInsightSlugs(): string[] {
-  return allInsights.map((item) => item.id);
-}

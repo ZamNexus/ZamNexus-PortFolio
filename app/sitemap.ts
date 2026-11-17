@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { allInsights } from "./insights/insightsData";
+import { getPublishedInsights, getTopics } from "@/lib/cms/public";
 import { SITE_URL } from "@/lib/seo";
 
 // Update a page's date when its content meaningfully changes; a build-time `new Date()`
@@ -7,15 +7,12 @@ import { SITE_URL } from "@/lib/seo";
 const CONTENT_UPDATED = "2026-10-30";
 const LEGAL_UPDATED = "2026-03-01";
 
-const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+// Publishing refreshes the sitemap at once; this five-minute refresh is the safety net (for scheduled articles,
+// and for a server that restarted before the refresh happened), matching the Insights pages.
+export const revalidate = 300;
 
-function articleDate(date: string): string {
-  const [month, year] = date.toLowerCase().split(" ");
-  const m = MONTHS.indexOf(month);
-  return m >= 0 && year ? `${year}-${String(m + 1).padStart(2, "0")}-01` : CONTENT_UPDATED;
-}
-
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const [{ articles }, topics] = await Promise.all([getPublishedInsights(), getTopics()]);
   const pages: [path: string, lastModified: string][] = [
     ["/", CONTENT_UPDATED],
     ["/services", CONTENT_UPDATED],
@@ -33,6 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     ...pages.map(([path, lastModified]) => ({ url: `${SITE_URL}${path === "/" ? "" : path}`, lastModified })),
-    ...allInsights.map((a) => ({ url: `${SITE_URL}/insights/${a.id}`, lastModified: articleDate(a.date) })),
+    ...topics.map((t) => ({ url: `${SITE_URL}/insights/topic/${t.id}`, lastModified: t.updatedAt })),
+    ...articles.map((a) => ({ url: `${SITE_URL}/insights/${a.id}`, lastModified: a.publishedAt })),
   ];
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { SESSION_COOKIE, verifySession } from "@/lib/auth/session";
 
 // Old URLs whose page was removed or merged, keyed by lowercased path.
 // Lives here rather than in next.config redirects because those match case-insensitively,
@@ -27,6 +28,20 @@ const MOVED: Record<string, string> = {
 // Sends every legacy or mixed-case URL to its final lowercase address in a single 308 hop.
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+
+  // The admin area: anonymous visitors are sent to the sign-in page, and signed-in ones skip it. This is a
+  // convenience layer; every admin page and API handler checks the session again itself.
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    const session = verifySession(request.cookies.get(SESSION_COOKIE)?.value, process.env.ADMIN_SESSION_SECRET);
+    const onLogin = pathname === "/admin/login";
+    if (!session && !onLogin) return NextResponse.redirect(new URL("/admin/login", request.url));
+    if (session && onLogin) return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    const response = NextResponse.next();
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+    response.headers.set("Cache-Control", "no-store");
+    return response;
+  }
+
   const lower = pathname.toLowerCase().replace(/\/+$/, "") || "/";
   const target = MOVED[lower] ?? (lower.startsWith("/solutions/") ? "/services" : lower !== pathname ? lower : null);
   if (!target) return NextResponse.next();

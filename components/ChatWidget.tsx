@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 interface Msg {
@@ -28,6 +29,7 @@ function Rich({ text }: { text: string }) {
 }
 
 export default function ChatWidget() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([GREETING]);
   const [input, setInput] = useState("");
@@ -82,6 +84,9 @@ export default function ChatWidget() {
       setBusy(false);
     }
   }
+
+  // The visitor chat has no place inside the admin panel.
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <div className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-3">

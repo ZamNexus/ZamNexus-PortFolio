@@ -1,17 +1,18 @@
 "use client";
 
 import { useState, type CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/motion/ScrollProgress";
+import HeroScreen from "@/components/HeroScreen";
 import Reveal from "@/components/motion/Reveal";
 import SplitWords from "@/components/motion/SplitWords";
 import { submitLead } from "@/lib/submitLead";
 
-import { featuredInsight, allInsights, categories } from "./insightsData";
-import type { InsightArticle, InsightCategory } from "./insightsData";
+import type { CategoryCount, InsightView } from "@/lib/cms/public";
 
 // The library reads like a trace view: an article's pipeline is a trace, each stage a span.
 // Bar length in the library is reading time on a 10-minute gauge.
@@ -19,59 +20,77 @@ const GAUGE_MINUTES = 10;
 
 const GLYPH: Record<string, string> = { ai: "AI", enterprise: "ERP", retail: "POS", healthcare: "EHR", cloud: "CLD" };
 
-function minutes(article: InsightArticle): number {
-  return parseInt(article.readTime, 10) || 0;
+function minutes(article: InsightView): number {
+  return article.minutes;
 }
 
-function monthParts(article: InsightArticle): { month: string; year: string } {
+function monthParts(article: InsightView): { month: string; year: string } {
   const [month = "", year = ""] = article.date.split(" ");
   return { month: month.slice(0, 3), year };
 }
 
 interface DetailProps {
-  article: InsightArticle;
+  article: InsightView;
   stage: number;
   onStage: (index: number) => void;
 }
 
-// Preview of one article: its stages (click or hover to read one), headline specs and stack.
+// Preview of one article: its description, then (for the original blueprints) its stages, headline specs and
+// stack, or (for newer articles) its tags.
 function Detail({ article, stage, onStage }: DetailProps) {
   const current = article.pipeline[Math.min(stage, article.pipeline.length - 1)];
   return (
     <div className="tr-detail">
-      <div>
-        <p className="tr-cap">Pipeline stages</p>
-        <ol className="tr-stages">
-          {article.pipeline.map((s, i) => (
-            <li key={s.step}>
-              <button
-                type="button"
-                className="tr-stage"
-                aria-pressed={i === stage}
-                onPointerEnter={() => onStage(i)}
-                onFocus={() => onStage(i)}
-                onClick={() => onStage(i)}
-              >
-                <i>{s.step}</i>
-                {s.phase}
-              </button>
-            </li>
-          ))}
-        </ol>
-        <div className="tr-readout">
-          <b>{current.title}</b>
-          {current.detail}
-        </div>
-      </div>
+      {article.coverImage ? (
+        <span className="tr-thumb tr-thumb--wide">
+          <Image src={article.coverImage} alt="" fill sizes="360px" className="object-cover" />
+        </span>
+      ) : null}
+      <p className="tr-excerpt tr-excerpt--full">{article.subtitle}</p>
 
-      <dl className="tr-specs">
-        {article.specs.slice(0, 2).map((spec) => (
-          <div key={spec.label} className="tr-spec">
-            <dd>{spec.value}</dd>
-            <dt>{spec.label}</dt>
+      {article.pipeline.length > 0 ? (
+        <div>
+          <p className="tr-cap">Pipeline stages</p>
+          <ol className="tr-stages">
+            {article.pipeline.map((s, i) => (
+              <li key={s.step}>
+                <button
+                  type="button"
+                  className="tr-stage"
+                  aria-pressed={i === stage}
+                  onPointerEnter={() => onStage(i)}
+                  onFocus={() => onStage(i)}
+                  onClick={() => onStage(i)}
+                >
+                  <i>{s.step}</i>
+                  {s.phase}
+                </button>
+              </li>
+            ))}
+          </ol>
+          <div className="tr-readout">
+            <b>{current.title}</b>
+            {current.detail}
           </div>
-        ))}
-      </dl>
+        </div>
+      ) : article.tags.length > 0 ? (
+        <ul className="tr-tags">
+          {article.tags.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
+      ) : null}
+
+      {article.specs.length > 0 ? (
+        <dl className="tr-specs">
+          {article.specs.slice(0, 2).map((spec) => (
+            <div key={spec.label} className="tr-spec">
+              <dd>{spec.value}</dd>
+              <dt>{spec.label}</dt>
+            </div>
+          ))}
+        </dl>
+      ) : null}
 
       <Link href={`/insights/${article.id}`} className="tr-open">
         Read the full article <span aria-hidden="true">→</span>
@@ -80,9 +99,26 @@ function Detail({ article, stage, onStage }: DetailProps) {
   );
 }
 
-export default function InsightsIndex() {
-  const [selectedCategory, setSelectedCategory] = useState<InsightCategory>("all");
-  const [selection, setSelection] = useState<{ id: string; stage: number }>({ id: allInsights[0].id, stage: 0 });
+interface InsightsIndexProps {
+  articles: InsightView[];
+  categories: CategoryCount[];
+}
+
+export default function InsightsIndex({ articles, categories }: InsightsIndexProps) {
+  // Everything on this page is derived from the published articles it is given, so the count, the filters, the
+  // featured panel and the library can never drift from each other or from what the admin has published.
+  const allInsights = articles;
+  const featuredInsight = articles.find((a) => a.featured) ?? articles[0];
+  const recent = articles.filter((a) => a.id !== featuredInsight?.id).slice(0, 3);
+  const filterList = [{ id: "all", label: "All Insights", count: articles.length }, ...categories];
+  const libraryStats = [
+    { figure: String(articles.length), label: articles.length === 1 ? "article" : "articles" },
+    { figure: String(categories.length), label: categories.length === 1 ? "topic" : "topics" },
+    { figure: String(articles.reduce((sum, a) => sum + minutes(a), 0)), label: "minutes of reading" },
+  ];
+
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selection, setSelection] = useState<{ id: string; stage: number }>({ id: articles[0]?.id ?? "", stage: 0 });
   const [featuredStage, setFeaturedStage] = useState(0);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success">("idle");
@@ -94,8 +130,8 @@ export default function InsightsIndex() {
   const activeStage = active && active.id === selection.id ? selection.stage : 0;
   const select = (id: string, stage = 0) => setSelection({ id, stage });
 
-  const steps = featuredInsight.pipeline;
-  const stepWidth = Math.min(100, (100 / steps.length) * 1.3);
+  const steps = featuredInsight?.pipeline ?? [];
+  const stepWidth = Math.min(100, (100 / Math.max(1, steps.length)) * 1.3);
   const featuredStep = steps[Math.min(featuredStage, steps.length - 1)];
 
   const handleSubscribe = async (e: React.FormEvent) => {
@@ -133,23 +169,56 @@ export default function InsightsIndex() {
 
       <main className="relative z-10">
         {/* ── HERO ─────────────────────────────────────────────────────────── */}
-        <section aria-labelledby="insights-hero-heading" className="max-w-6xl mx-auto px-6 pt-40 pb-20">
-          <h1
-            id="insights-hero-heading"
-            className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-3xl leading-[1.05]"
-          >
-            <SplitWords mode="load" text="Engineering insights from the systems we build." />
-          </h1>
-          <p data-enter="4" className="mt-6 text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed">
-            What we&apos;ve learned building ERP, retail, education and healthcare software, written for the engineers and IT leaders who will run it.
-          </p>
-        </section>
+        <HeroScreen labelledBy="insights-hero-heading" cueHref="#featured" cueLabel="Scroll to the featured article">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,540px)] gap-12 lg:gap-14 items-center">
+            <div>
+              <h1
+                id="insights-hero-heading"
+                className="text-4xl sm:text-6xl lg:text-[3rem] xl:text-[3.6rem] font-extrabold tracking-tight text-white max-w-3xl leading-[1.05]"
+              >
+                <SplitWords mode="load" text="Engineering insights from the systems we build." />
+              </h1>
+              <p data-enter="4" className="mt-6 text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed">
+                What we&apos;ve learned building ERP, retail, education and healthcare software, written for the engineers and IT leaders who will run it.
+              </p>
+              <dl data-enter="5" className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
+                {libraryStats.map((stat) => (
+                  <div key={stat.label} className="flex items-baseline gap-2">
+                    <dt className="order-2 text-foreground-muted">{stat.label}</dt>
+                    <dd className="font-heading text-3xl font-bold tracking-[-0.03em] text-foreground-strong">{stat.figure}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            {/* The most recent articles after the featured one below; each opens its article. */}
+            <div data-enter="6">
+              <p className="text-sm font-semibold text-foreground-strong">Recent articles</p>
+              <ul className="mt-4 border-t border-[var(--border-subtle)]">
+                {recent.map((a) => (
+                  <li key={a.id} className="border-b border-[var(--border-subtle)]">
+                    <Link href={`/insights/${a.id}`} className="group block py-4">
+                      <span className="block text-xs font-semibold text-accent-text">{a.categoryLabel}</span>
+                      <span className="mt-1.5 block font-heading text-lg font-bold leading-snug tracking-[-0.01em] text-foreground-strong transition-colors duration-300 group-hover:text-accent-text">
+                        {a.title}
+                      </span>
+                      <span className="mt-1.5 block text-sm text-foreground-muted">
+                        {a.readTime} · {a.date}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </HeroScreen>
 
         {/* ── FEATURED: the pipeline drawn as a trace ──────────────────────── */}
-        <section aria-labelledby="featured-heading" className="max-w-6xl mx-auto px-6 pb-28">
+        {featuredInsight ? (
+        <section id="featured" aria-labelledby="featured-heading" className="scroll-mt-12 max-w-6xl mx-auto px-6 pb-28">
           <div className="tr-panel">
             <div className="tr-panel__head">
-              <span className="tr-tag">Featured trace</span>
+              <span className="tr-tag">{steps.length > 0 ? "Featured trace" : "Featured article"}</span>
               <span>
                 {featuredInsight.categoryLabel}, {featuredInsight.readTime}, {featuredInsight.date}
               </span>
@@ -173,6 +242,24 @@ export default function InsightsIndex() {
                 </div>
               </div>
 
+              {steps.length === 0 ? (
+                <div className="flex flex-col justify-center gap-6">
+                  {featuredInsight.coverImage ? (
+                    <span className="tr-thumb tr-thumb--wide">
+                      <Image src={featuredInsight.coverImage} alt="" fill sizes="(min-width: 1024px) 560px, 100vw" className="object-cover" priority />
+                    </span>
+                  ) : null}
+                  <p className="text-base sm:text-lg text-foreground-muted leading-relaxed">{featuredInsight.subtitle}</p>
+                  {featuredInsight.tags.length > 0 ? (
+                    <ul className="tr-tags">
+                      {featuredInsight.tags.map((t) => (
+                        <li key={t}>{t}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              ) : null}
+              {steps.length > 0 ? (
               <div>
                 <p className="tr-cap">Pipeline, first stage to last</p>
                 <ol className="tr-wf">
@@ -213,10 +300,12 @@ export default function InsightsIndex() {
                   {featuredStep.detail}
                 </div>
               </div>
+              ) : null}
             </div>
 
           </div>
         </section>
+        ) : null}
 
         {/* ── LIBRARY: every article as a span on a reading-time gauge ──────── */}
         <div className="tr-divide">
@@ -244,8 +333,8 @@ export default function InsightsIndex() {
 
           <div className="mt-10">
             <div role="group" aria-label="Filter articles by topic" className="flex flex-wrap gap-x-7 gap-y-1">
-              {categories.map((cat) => {
-                const count = cat.id === "all" ? allInsights.length : allInsights.filter((a) => a.category === cat.id).length;
+              {filterList.map((cat) => {
+                const count = cat.count;
                 return (
                   <button
                     key={cat.id}
@@ -264,6 +353,11 @@ export default function InsightsIndex() {
 
           <div className="mt-10 grid lg:grid-cols-[minmax(0,1fr)_360px] gap-x-14 gap-y-6 items-start">
             <ol key={selectedCategory} className="tr-list">
+              {visible.length === 0 ? (
+                <li className="tr-row">
+                  <p className="text-foreground-muted">No articles have been published yet. Check back soon.</p>
+                </li>
+              ) : null}
               {visible.map((article, i) => {
                 const isActive = active?.id === article.id;
                 const when = monthParts(article);
@@ -287,12 +381,18 @@ export default function InsightsIndex() {
                     </div>
                     <div className="min-w-0">
                       <div className="tr-meta">
-                        <span className="tr-glyph">{GLYPH[article.category] ?? "ZNX"}</span>
+                        <span className="tr-glyph">{GLYPH[article.category] ?? article.categoryLabel.slice(0, 3).toUpperCase()}</span>
                         <span>{article.categoryLabel}</span>
                       </div>
                       <Link href={`/insights/${article.id}`} className="tr-title">
                         {article.title}
                       </Link>
+                      <p className="tr-excerpt">{article.subtitle}</p>
+                      {article.coverImage ? (
+                        <span className="tr-thumb">
+                          <Image src={article.coverImage} alt="" fill sizes="240px" className="object-cover" />
+                        </span>
+                      ) : null}
                       <div className="tr-gauge">
                         <div className="tr-gauge__track">
                           <div className="tr-gauge__fill" style={{ "--w": `${(minutes(article) / GAUGE_MINUTES) * 100}%` } as CSSProperties}>

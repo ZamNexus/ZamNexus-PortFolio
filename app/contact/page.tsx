@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/motion/ScrollProgress";
+import HeroScreen from "@/components/HeroScreen";
+import BriefDemo from "@/components/BriefDemo";
 import Reveal from "@/components/motion/Reveal";
 import Stagger from "@/components/motion/Stagger";
 import SplitWords from "@/components/motion/SplitWords";
@@ -281,26 +283,39 @@ export default function ContactPage() {
 
       <main className="relative z-10">
         {/* ── HERO ──────────────────────────────────────────────────────────── */}
-        <section aria-labelledby="contact-hero-heading" className="relative max-w-6xl mx-auto px-6 pt-40 pb-20">
+        <HeroScreen labelledBy="contact-hero-heading" cueHref="#brief" cueLabel="Scroll to the brief form">
           <div className="ct-hero-glow" aria-hidden="true" />
-          <h1
-            id="contact-hero-heading"
-            className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-3xl leading-[1.05]"
-          >
-            <SplitWords mode="load" text="Tell us what you need." />
-          </h1>
-          <p data-enter="4" className="mt-6 text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed">
-            Send a short brief and a senior engineer will reply within one business day. Prefer email?{" "}
-            <a href={`mailto:${OFFICIAL_EMAIL}`} className="text-accent-text hover:underline">
-              {OFFICIAL_EMAIL}
-            </a>
-          </p>
-        </section>
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] gap-12 lg:gap-16 items-center">
+            <div>
+              <h1
+                id="contact-hero-heading"
+                className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white max-w-3xl leading-[1.05]"
+              >
+                <SplitWords mode="load" text="Tell us what you need." />
+              </h1>
+              <p data-enter="4" className="mt-6 text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed">
+                Send a short brief and a senior engineer will reply within one business day. Prefer email?{" "}
+                <a href={`mailto:${OFFICIAL_EMAIL}`} className="text-accent-text hover:underline">
+                  {OFFICIAL_EMAIL}
+                </a>
+              </p>
+              <div data-enter="5" className="mt-8">
+                <Link href="#brief" className="liquid-lime-btn text-base py-3.5 px-7">
+                  Start your brief
+                </Link>
+              </div>
+            </div>
+            <div data-enter="6">
+              <BriefDemo />
+            </div>
+          </div>
+        </HeroScreen>
 
         {/* ── THE BRIEF: four steps on a rail, with small tiles beside it ──── */}
         <section
+          id="brief"
           aria-labelledby="brief-builder-heading"
-          className="max-w-6xl mx-auto px-6 pb-28 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-x-20 gap-y-14 items-start"
+          className="scroll-mt-16 max-w-6xl mx-auto px-6 pt-10 pb-28 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-x-20 gap-y-14 items-start"
         >
           <h2 id="brief-builder-heading" className="sr-only">Send us a brief</h2>
 
