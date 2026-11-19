@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef, useCallback, useSyncExternalStore } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const ANNOUNCEMENT_BAR_HEIGHT = 36;
 // Pages that open on a hero marked data-dark-hero (a dark band in every colour theme). The nav and the
@@ -425,23 +426,29 @@ export default function Navbar() {
             />
           </nav>
 
-          {/* ── RIGHT: CTA ── */}
-          <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
-            <Link href="/contact" className="nav-cta">
-              <span>Book a consultation</span>
-              <span className="nav-cta-arrow" aria-hidden="true">→</span>
-            </Link>
-          </div>
+          {/* ── RIGHT: CTA, then the theme switch at the far edge; below lg also the menu button ── */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <div className="hidden lg:flex">
+              <Link href="/contact" className="nav-cta">
+                <span>Book a consultation</span>
+                <span className="nav-cta-arrow" aria-hidden="true">→</span>
+              </Link>
+            </div>
 
-          {/* ── MOBILE / TABLET CONTROLS ── */}
-          <div className="lg:hidden flex items-center gap-2">
-            <Link href="/contact" className="nav-cta nav-cta--compact">
-              <span>Book a consultation</span>
-            </Link>
+            {/* On the narrowest phones the compact CTA steps aside for the theme switch; the menu still has it. */}
+            <div className="flex lg:hidden max-[389px]:hidden">
+              <Link href="/contact" className="nav-cta nav-cta--compact">
+                <span>Book a consultation</span>
+              </Link>
+            </div>
+
+            {/* A hairline sets the preference apart from the call to action (desktop). */}
+            <span className="nav-divider hidden lg:block" aria-hidden="true" />
+            <ThemeToggle />
 
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2.5 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-hover)]"
+              className="lg:hidden p-2.5 rounded-lg text-zinc-300 hover:text-white hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-hover)]"
               aria-label={mobileOpen ? "Close Navigation Menu" : "Open Navigation Menu"}
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-drawer"

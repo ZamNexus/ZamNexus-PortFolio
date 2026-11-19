@@ -5678,14 +5678,11 @@ a.about-fact-chip:focus-visible {
   .teal-band.ink-teal { border-radius: 24px; }
 }
 
-:root[data-theme="paper"] .dark-band.ink-teal { border-radius: 0 0 36px 36px; }
-
+/* The home hero has square corners in both themes: in Light it is dark right down to its edge, which the teal
+   horizon line marks (no rounded corners, so the page colour never shows at its foot); in the dark themes it
+   melts into the page colour. */
 :root:not([data-theme="paper"]) .dark-band.ink-teal {
   background: linear-gradient(to bottom, transparent 58%, var(--page-bg) 100%), var(--hero-surface);
-}
-
-@media (max-width: 640px) {
-  :root[data-theme="paper"] .dark-band.ink-teal { border-radius: 0 0 24px 24px; }
 }
 
 /* The home hero is a clean surface: it does not take the dot grid that other dark bands carry. */
@@ -7150,4 +7147,201 @@ a.about-fact-chip:focus-visible {
   .client-logos__row { flex-wrap: wrap; justify-content: center; }
   .client-logos__row li[aria-hidden] { display: none; }
   .client-logos__viewport { mask-image: none; }
+}
+
+/* Navbar: a hairline between the call to action and the theme switch, fading out at both ends. No display
+   here, so the hidden/lg:block utilities on it decide where it shows. */
+.nav-divider {
+  width: 1px;
+  height: 26px;
+  margin-inline: 2px;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--foreground-muted) 55%, transparent), transparent);
+}
+
+/* ── Theme switch (components/ThemeToggle) ─────────────────────────────────────────────────────────────── */
+/* A plain pill: a sun on the left, a moon on the right, and a teal disc behind the one in use. No animation.
+   Built from the theme tokens, so it reads on the dark home hero, on dark pages and on Light pages alike. */
+.theme-toggle {
+  --tt-w: 64px;
+  --tt-h: 32px;
+  --tt-knob: calc(var(--tt-h) - 6px);
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  flex-shrink: 0;
+  width: var(--tt-w);
+  height: var(--tt-h);
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--foreground-muted) 40%, transparent);
+  background: color-mix(in srgb, var(--foreground) 7%, transparent);
+  cursor: pointer;
+}
+
+.theme-toggle:hover { border-color: var(--border-strong); }
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
+
+.theme-toggle__thumb {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: var(--tt-knob);
+  height: var(--tt-knob);
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+}
+
+.theme-toggle__icon {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  color: var(--foreground-muted);
+}
+
+.theme-toggle__moon { color: #FFFFFF; }
+
+:root[data-theme="paper"] .theme-toggle__thumb { right: auto; left: 2px; }
+:root[data-theme="paper"] .theme-toggle__sun { color: #FFFFFF; }
+:root[data-theme="paper"] .theme-toggle__moon { color: var(--foreground-muted); }
+
+@media (max-width: 639px) {
+  .theme-toggle { --tt-w: 58px; --tt-h: 30px; }
+  .theme-toggle__icon { width: 14px; height: 14px; }
+}
+
+/* Switching themes: the new one spreads from the switch (clip-path animated in ThemeToggle). Scoped to the
+   switch so no other view transition is affected. */
+:root.theme-switching::view-transition-old(root),
+:root.theme-switching::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* ── Chat assistant (components/ChatWidget) ────────────────────────────────────────────────────────────── */
+/* Inside the panel (your messages, Send): the site's teal pairing in both themes, bright teal with dark ink text
+   in the dark theme and the deep brand teal with paper-white text in Light. Both pairs are above 4.5:1. */
+.chat-fill {
+  background: var(--accent-text);
+  color: var(--background);
+  transition:
+    background-color 250ms var(--ease-out),
+    box-shadow 250ms var(--ease-out),
+    transform 250ms var(--ease-out),
+    opacity 250ms var(--ease-out);
+}
+
+.chat-send { cursor: pointer; }
+.chat-send:hover:not(:disabled) { background: color-mix(in srgb, var(--accent-text) 84%, #fff); }
+:root[data-theme="paper"] .chat-send:hover:not(:disabled) { background: var(--accent-hover); }
+.chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* The launcher is white in the dark theme, and in Light while it sits over the dark home hero
+   (data-on-hero, set by ChatWidget). Below the hero in Light it takes the brand teal. Every colour comes from
+   the --cl-* values, so the change is one set of overrides and it fades as you scroll. */
+.chat-launcher {
+  --cl-bg: var(--accent-text);
+  --cl-bg-hover: color-mix(in srgb, var(--accent-text) 84%, #fff);
+  --cl-ink: var(--background);
+  --cl-disc: var(--background);
+  --cl-glyph: var(--accent-text);
+  --cl-glow: color-mix(in srgb, var(--accent-text) 65%, transparent);
+  --cl-ring: rgb(255 255 255 / 0.14);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 20px 0 6px;
+  border-radius: 999px;
+  background: var(--cl-bg);
+  color: var(--cl-ink);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  box-shadow:
+    0 12px 32px -10px var(--cl-glow),
+    0 0 0 1px var(--cl-ring),
+    inset 0 1px 0 rgb(255 255 255 / 0.28);
+  transition:
+    background-color 300ms var(--ease-out),
+    color 300ms var(--ease-out),
+    box-shadow 300ms var(--ease-out),
+    transform 250ms var(--ease-out);
+}
+
+:root[data-theme="paper"] .chat-launcher { --cl-bg-hover: var(--accent-hover); }
+
+:root:not([data-theme="paper"]) .chat-launcher,
+:root .chat-launcher[data-on-hero="true"] {
+  --cl-bg: #FFFFFF;
+  --cl-bg-hover: #E8F6F2;
+  --cl-ink: #0F1214;
+  --cl-disc: #0F766E;
+  --cl-glyph: #FFFFFF;
+  --cl-glow: rgb(0 0 0 / 0.5);
+  --cl-ring: rgb(15 18 20 / 0.08);
+}
+
+.chat-launcher__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--cl-disc);
+  color: var(--cl-glyph);
+  transition: background-color 300ms var(--ease-out), color 300ms var(--ease-out);
+}
+
+.chat-launcher__icon svg { width: 20px; height: 20px; }
+.chat-launcher__dot { fill: var(--cl-disc); transition: fill 300ms var(--ease-out); }
+
+/* On hover the launcher lifts and the dots in the bubble "type". */
+.chat-launcher:hover {
+  background: var(--cl-bg-hover);
+  transform: translateY(-2px);
+  box-shadow:
+    0 16px 40px -10px var(--cl-glow),
+    0 0 0 1px var(--cl-ring),
+    inset 0 1px 0 rgb(255 255 255 / 0.32);
+}
+
+.chat-launcher:active { transform: translateY(0) scale(0.98); }
+
+.chat-launcher:focus-visible,
+.chat-send:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 3px;
+}
+
+.chat-launcher:hover .chat-launcher__dot { animation: chat-typing 1s ease-in-out infinite; }
+.chat-launcher:hover .chat-launcher__dot:nth-of-type(2) { animation-delay: 0.15s; }
+.chat-launcher:hover .chat-launcher__dot:nth-of-type(3) { animation-delay: 0.3s; }
+
+@keyframes chat-typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 1; }
+  30% { transform: translateY(-1.5px); opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-fill,
+  .chat-launcher,
+  .chat-launcher__icon,
+  .chat-launcher__dot {
+    transition: none;
+  }
+  .chat-launcher:hover .chat-launcher__dot {
+    animation: none;
+  }
+  .chat-launcher:hover,
+  .chat-launcher:active {
+    transform: none;
+  }
 }
