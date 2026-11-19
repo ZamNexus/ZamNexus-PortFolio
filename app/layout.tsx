@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Schibsted_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
-import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
 import { company } from "@/lib/siteFacts";
 
@@ -156,7 +155,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         {children}
         <ChatWidget />
-        <ThemeSwitcher />
       </body>
     </html>
   );
